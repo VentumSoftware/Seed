@@ -1,5 +1,5 @@
 const FtpSrv = require('ftp-srv');
-const ftpServer = new FtpSrv({ url: "ftp://0.0.0.0:20", greeting: "HOLA DESDE FTP" });
+const ftpServer = new FtpSrv({ /*url: "ftp://0.0.0.0:20",*/ greeting: "HOLA DESDE FTP" });
 const path = require('path');
 
 ftpServer.on('login', ({ connection, username, password }, resolve, reject) => {
