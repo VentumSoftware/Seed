@@ -47,6 +47,7 @@ const cloneRepo = (owner, repository, path, authToken, folder) => {
         const apiUrl = "https://api.github.com/repos/" + owner + "/" + repository + "/contents/" + path;
 
         console.log("github@cloneRepo: cloning repo from: " + apiUrl);
+        console.log("github@cloneRepo: TOKEN: " + authToken);
         fetch(apiUrl, {
                 method: 'GET',
                 headers: {
