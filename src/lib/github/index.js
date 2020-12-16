@@ -52,7 +52,6 @@ const cloneRepo = (owner, repository, path, authToken, folder) => {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/vnd.github.v3+json',
-                    // 'Authorization': 'Bearer ' + authToken
                     'Authorization': 'Bearer ' + authToken
                 }
             })
