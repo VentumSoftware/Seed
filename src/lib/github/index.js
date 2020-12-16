@@ -107,6 +107,7 @@ const cloneRepo = (owner, repository, path, authToken, folder) => {
             })
             .then(() => resolve())
             .catch((err) => {
+                console.log(err);
                 reject(err);
             });
     });
