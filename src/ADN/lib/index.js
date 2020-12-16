@@ -1,4 +1,4 @@
-const repo = require('../../seedLib/bds');
+const repo = require('../../seedLib/repo');
 const queue = require('../../seedLib/queues');
 const crypto = require('../../lib/encryptation');
 const seedUtils = require('../../lib/utils');
@@ -13,6 +13,7 @@ const encrypt = crypto.encrypt;
 const compareEncrypted = crypto.compareEncrypted;
 const createJWT = crypto.createJWT;
 const decodeJWT = crypto.decodeJWT;
+
 
 const login = (user, pass) => {
     var findUserCmd = {
@@ -87,7 +88,7 @@ const deleteUsers = (query, queryOptions) => {
     };
 
     return cmd(deleteUsersCmd);
-}
+};
 
 const copyFile = seedUtils.copyFile;
 const copyFolder = seedUtils.copyFolderContent;

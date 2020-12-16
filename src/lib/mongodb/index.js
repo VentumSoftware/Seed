@@ -1,8 +1,14 @@
+const { mongo } = require('mongoose');
+
 const MongoClient = require('mongodb').MongoClient;
 
 var url = null;
 var client = null;
 var dbs = {};
+
+/*---------------------------------INICIALIZACION DE MONGODB -------------------------------------------------
+--------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------*/
 
 const getClient = () => {
     return new Promise((resolve, reject) => {
@@ -43,7 +49,8 @@ const getDb = (db) => {
     }
 };
 
-//--------------------------------------------------------------------------------------------
+//----------------------------------- IMPLEMENTACION DE FUNCIONES AUXILIARES --------------------------------------------
+//----------------------------------------------- DE CONSULTA -----------------------------------------------------
 
 //Me aseguro de que el query y el query options sean objetos
 function formatQuery(query) {
@@ -63,13 +70,14 @@ function aggregate(database, collection, pipeline, options) {
     console.log(`mongo@aggregate: db: ${database} col: ${collection} pipeline: ${pipeline} options:${options}`);
     // pipeline = formatQuery(pipeline);
     //options = formatQuery(options);
+    options.allowDiskUse = true; // con esto me deja hacer querys q usen mas de 100mb
     return new Promise((resolve, reject) => {
         getDb(database)
             .then((db) => {
                 return db.collection(collection);
             })
             .then((col) => {
-                return col.aggregate(JSON.parse(pipeline), JSON.parse(options)).toArray();
+                return col.aggregate(JSON.parse(pipeline), { "allowDiskUse": true }).toArray();
             })
             .then((res) => {
                 console.log(`mongo@aggregate: result: ${res}`);
@@ -129,6 +137,31 @@ function get(database, collection, query, queryOptions) {
             });
     })
 };
+//FUNCION PARA ACTUALIZAR LOS VALORES DE UN DOCUMENTO
+function update(database, collection, query, updateValues) {
+    console.log(`mongo@Update: db: ${database} col: ${collection} q: ${query} values: ${updateValues}`);
+    query = formatQuery(query);
+    valuesToUpdate = formatQuery(updateValues); //$set operator PARA HACER UPDATE
+
+    return new Promise((resolve, reject) => {
+        getDb(database)
+            .then((db) => {
+                return db.collection(collection);
+            })
+            .then((col) => { //TODO: VERIFICAR QUE LA QUERY TENGA LA ESTRUCTURA SIGUIENTE: updateOne(queryFilter, queryToUpdate) 
+                //queryToUpdate es una expresión con el operador $set.
+                return col.updateOne(query, valuesToUpdate); // {usuario: "Pepito"} , {$set: {codigos: [920,910]}}
+            })
+            .then((res) => {
+                console.log(`mongo@update: result: ${res}`);
+                resolve(res);
+            })
+            .catch((err) => {
+                console.log(`mongo@update: error:${err}`);
+                reject(err);
+            })
+    });
+}
 
 // Funcion que me devuelve la cantidad de elementos de la collecion que coinciden con el query
 function getCount(database, collection, query, queryOptions) {
@@ -183,7 +216,7 @@ function deleteMany(database, collection, query, queryOptions) {
     });
 };
 
-//-------------------------------------------------------------------------------------------
+//----------------------------- IMPLEMENTACION DE LAS FUNCIONES A INVOCAR EXTERNAMENTE ------------------------------------
 
 // TODO: Verifico que el msg tenga el formato correcto
 const validateMsg = (msg) => {
@@ -200,6 +233,8 @@ const query = (msg) => {
                 return post(msg.db, msg.collection, msg.content)
             case 'GET':
                 return get(msg.db, msg.collection, msg.query, msg.queryOptions)
+            case 'UPDATE':
+                return update(msg.db, msg.collection, msg.query, msg.update);
             case 'DELETE_ONE':
                 return deleteOne(msg.db, msg.collection, msg.query, msg.queryOptions)
             case 'DELETE':
@@ -218,6 +253,10 @@ const query = (msg) => {
 
 const setup = (data) => {
     return new Promise((resolve, reject) => {
+        if (data == null) {
+            console.log("Mongodb not set.");
+            resolve();
+        }
         try {
             if (client) client.close();
             client = null;
@@ -225,9 +264,13 @@ const setup = (data) => {
             url = data.url;
             getDb(data.dfltDb)
                 .then(db => resolve())
-                .catch(err => reject(err));
+                .catch(e => {
+                    console.log(e);
+                    resolve();
+                });
         } catch (err) {
-            reject(err);
+            console.log(err);
+            resolve();
         }
     });
 };

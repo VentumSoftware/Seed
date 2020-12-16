@@ -1,7 +1,6 @@
 const mkdirp = require('mkdirp');
 const fs = require('fs');
 const path = require('path');
-
 function objFilter(obj, filters) { //U:recibe los filters para limpiar el obj pasado como parametro
     let newObj = {};
     for (let key in obj) {
@@ -140,5 +139,28 @@ const copyFolderContent = (from, to, options) => {
         });
     });
 }
+
+
+
+/*const noSQLQueryValidated = (username, password) => {
+    if (typeof(username) === 'object' || typeof(password) === 'object'){
+        user = JSON.stringify(username);
+        pass = JSON.stringify(password);
+        let regex = /\$/gi;
+        if (regex.test(user) || regex.test(pass)) {
+            console.log(user +"---"+pass);
+            delete username;
+            delete password;
+            console.log("Campos rechazados y reemplazados: " + user + ", "+ pass);
+            return reject();
+        }else {
+            return true;
+        }
+    } else {
+        console.log(username + password);
+        console.log("Validación aprobada!");
+        return true;
+    }    
+}*/
 
 module.exports = { objFilter, copy: copyObject, copyFolderContent, fillObjWithDflt, copyFile };

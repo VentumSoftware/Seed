@@ -1,26 +1,28 @@
 const express = require('express'); // Librería de Node para armar servidores
-const path = require('path'); // Librería para unificar los path independiente del OS en el que estamos
+// const path = require('path'); // Librería para unificar los path independiente del OS en el que estamos
 const config = require('../../config'); // Script de configuracion general
 
 const cookieParser = require('cookie-parser') // Herramienta para parsear las cookies
 const bodyParser = require('body-parser'); // Herramienta para parsear el "cuerpo" de los requests
 const morgan = require('morgan'); // Herramienta para loggear
-const wsHelper = require('../../lib/websocket/index');
-const favicon = require('serve-favicon');
-const ADN = require('../../ADN');
+// const wsHelper = require('../../lib/websocket/index');
+// const favicon = require('serve-favicon');
+// const ADN = require('../../ADN');
 
 const multer = require('multer');
 const upload = multer({ dest: 'public/uploads/' });
-const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-        cb(null, './uploads/');
-    },
-    filename: function(req, file, cb) {
-        cb(null, new Date().toISOString() + file.originalname);
-    }
-});
+// const storage = multer.diskStorage({
+//     destination: function(req, file, cb) {
+//         cb(null, './uploads/');
+//     },
+//     filename: function(req, file, cb) {
+//         cb(null, new Date().toISOString() + file.originalname);
+//     }
+// });
 
-const webSocket = require('../../lib/websocket');
+// const webSocket = require('../../lib/websocket');
+const { connectToBroker } = require('../../lib/mqtt/index');
+//const { credentials } = require('amqplib');
 
 //Seteo el puerto del servidor
 const setPort = (app, adn) => {
@@ -50,7 +52,7 @@ const setMiddleWare = (app, adn) => {
     console.log(`endpoints@setup: 'bodyParser.json' middleware agregado`);
     // Esto lo hago para devolver el favicon.ico
     //TODO: ver q es el favicon y si es necesario esto
-    app.use(favicon(path.join(__dirname, '../../public/assets/icons', 'favicon.ico')));
+    //app.use(favicon(path.join(__dirname, '../../public/assets/icons', 'favicon.ico')));
     // Agrego una función que me devuelve la URL que me resulta cómoda
     app.use((req, res, next) => {
         req.getUrl = () => {
@@ -68,8 +70,7 @@ const setMiddleWare = (app, adn) => {
 
 //Creo los endpoints a partid de la info que levanto del "ADN"
 const setEndpoints = (app, adn) => {
-    // TODO: SEGURIDAD, VALIDACIONES, ETC...
-    //Endpoint genérico:
+
     app.all('/*', function(req, res) {
         var params = req.params[0].split('/');
         var endpoint = adn.endpoints;
@@ -94,10 +95,11 @@ const setEndpoints = (app, adn) => {
     });
 }
 
-const setWebSocketServer = (app, adn) => {
-
-    wsHelper.setup(app, adn.websocket);
-
+const setMQTTClientConnection = (app, adn) => {
+    let url = adn.config.mqtt.url;
+    let credentials = adn.config.mqtt.credentials;
+    let topics = adn.config.mqtt.topics;
+    connectToBroker(url, credentials, topics);
 }
 
 //Configuro el servidor y endpoints
@@ -110,6 +112,7 @@ const setup = (app, adn) => {
             setPublicFolder(app, adn);
             setMiddleWare(app, adn);
             setEndpoints(app, adn);
+            setMQTTClientConnection(app, adn);
             //setWebSocketServer(app, adn); 
 
             resolve(adn);
