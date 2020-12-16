@@ -12,7 +12,7 @@ let vars = {
     ADNGitUser: process.env.ADN_GIT_USER || 'VentumSoftware', // <ADN-GIT-USER>
     ADNGitRepo: process.env.ADN_GIT_REPO || 'ADN-Masterbus-IOT', // <ADN-GIT-USER-REPO>
     //ADNGitAuthToken: process.env.ADN_GIT_AUTH_TOKEN || '29d84d785cd8c440b311721816cb7f8855e51983', // <AUTH-TOKEN>
-    ADNGitAuthToken: 'b3837834ac1bcec251aab397afba21a373ba661e',
+    ADNGitAuthToken: 'cf671b5dfad2d4e9af2b73a64e943fa3e6a740d0',
     //Encryptacion JWT
     //TODO: Esto debería estar acá o en el adn?
     jwtSecret: process.env.JWT_SECRET || "YOUR_secret_key", // key privada que uso para hashear passwords
