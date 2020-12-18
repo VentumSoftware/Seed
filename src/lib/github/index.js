@@ -60,7 +60,6 @@ const cloneRepo = (owner, repository, path, authToken, folder) => {
                 console.log(json);
                 if (json.message == "Bad credentials") {
                     console.log("Bad Credentials!!");
-                    throw error("Bad Credentials!!");
                 } else {
                     logDir(json);
                     //A: descargo de a uno los archivos/carpetas del directorio
