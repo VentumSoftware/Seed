@@ -4,7 +4,6 @@
 const fetch = require('node-fetch');
 const fs = require('fs');
 const pathTool = require('path');
-const { error } = require('console');
 
 // ESCRIBE EL ARCHIVO EN LA RUTA CON EL NOMBRE Y FORMATO LA DATA QUE SE DESCARGA DEL GITHUB 
 //TODO: ver de sacar todos los "syncs" para no bloquear la ejecución del progrma

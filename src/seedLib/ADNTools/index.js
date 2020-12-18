@@ -29,7 +29,7 @@ const downloadADN = (downloadADN) => {
             const repo = config.ADNGitRepo;
             const token = config.ADNGitAuthToken;
             console.log("ADNTools@downloadADN: downloading 'ADN' from github repo: " + user + "/" + repo);
-            github.cloneRepo(user, repo, "", token, "ADN")
+            github.cloneRepo(user, repo, "", token, "src/ADN")
                 .then((res) => resolve(res))
                 .catch(err => reject(err));
         });
@@ -62,7 +62,7 @@ const readyADN = (ADN, options) => {
 const getADN = (options) => {
     options = utils.fillObjWithDflt(options, dftlOptions);
     const ADNAbsFolder = path.join(__dirname, "../../ADN");
-
+    console.log("dir: " + ADNAbsFolder);
     return new Promise((resolve, reject) => {
         downloadADN(options.updateADN)
             .then(() => loadModule(ADNAbsFolder))
