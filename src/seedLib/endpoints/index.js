@@ -1,7 +1,6 @@
 const express = require('express'); // Librería de Node para armar servidores
 // const path = require('path'); // Librería para unificar los path independiente del OS en el que estamos
 const config = require('../../config'); // Script de configuracion general
-
 const cookieParser = require('cookie-parser') // Herramienta para parsear las cookies
 const bodyParser = require('body-parser'); // Herramienta para parsear el "cuerpo" de los requests
 const morgan = require('morgan'); // Herramienta para loggear
@@ -93,6 +92,8 @@ const setEndpoints = (app, adn) => {
         else
             res.send("Endpoint inválido!");
     });
+
+
 }
 
 const setMQTTClientConnection = (app, adn) => {
@@ -101,6 +102,8 @@ const setMQTTClientConnection = (app, adn) => {
     let topics = adn.config.mqtt.topics;
     connectToBroker(url, credentials, topics);
 }
+
+
 
 //Configuro el servidor y endpoints
 const setup = (app, adn) => {

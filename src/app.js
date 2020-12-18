@@ -2,8 +2,9 @@
 const express = require('express');
 const WebSocket = require('ws');
 const url = require('url');
-const config = require('./config')
-    // Herramientas para manipular el "ADN" de la app
+const bodyParser = require('body-parser');
+const config = require('./config');
+// Herramientas para manipular el "ADN" de la app
 const ADNTools = require('./seedLib/ADNTools');
 // Script que administra las colas
 const queues = require('./seedLib/queues');
@@ -13,7 +14,6 @@ const endpoints = require('./seedLib/endpoints');
 const workers = require('./seedLib/workers');
 // Script que administra las bds y colas del sistema
 const bds = require('./seedLib/bds');
-
 
 //TODO: agregar certificados ssl y caa
 // El servidor comienza a escuchar los requests
@@ -65,7 +65,25 @@ const startListening = () => {
 // Inicializo el servidor
 console.log(`App: Inicializando Servidor...`);
 const app = express();
-//const app = require('http').createServer(express);
+
+//Esto sirve para resetear el servidor y cambiar la configuración
+//TODO: Hacer algo mas prolijo y seguro que esto...
+app.use(bodyParser.urlencoded());
+app.use(bodyParser.json());
+app.post('/reset', function(req, res) {
+    console.log(req.body);
+    if (req.body.secret == "secreto") {
+        config.ADNGitRepo = req.body.gitRepo || config.ADNGitRepo;
+        config.ADNGitUser = req.body.gitUser || config.ADNGitUser;
+        config.ADNGitAuthToken = req.body.gitToken || config.ADNGitAuthToken;
+        reset()
+            .then(a => res.send("app restarted!"))
+            .catch(err => res.status(500).send(err));
+    } else {
+        res.send("Incorrect secret!");
+    }
+});
+
 
 const reset = () => {
     if (server)
@@ -92,21 +110,7 @@ const reset = () => {
             console.log(err);
             reject(err);
         }));
-}
-
-//TODO: Hacer algo mas prolijo y seguro que esto...
-app.post('/reset', function(req, res) {
-    if (req.body.secret == "secreto") {
-        config.ADNGitAuthToken = req.body.gitToken || config.ADNGitAuthToken;
-        reset()
-            .then(a => res.send("app restarted!"))
-            .catch(err => res.status(500).send(err));
-    } else {
-        res.send("Incorrect secret!");
-    }
-
-});
-
+};
 
 reset();
 

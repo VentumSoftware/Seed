@@ -61,62 +61,69 @@ const cloneRepo = (owner, repository, path, authToken, folder) => {
                 if (json.message == "Bad credentials") {
                     console.log("Bad Credentials!!");
                 } else {
-                    logDir(json);
-                    //A: descargo de a uno los archivos/carpetas del directorio
-                    // https://stackoverflow.com/questions/40328932/javascript-es6-promise-for-loop/40329190
-                    const download = (i, length) => {
-                        return new Promise((resol, reject) => {
-                            try {
-                                if (json[i]['type'] != 'dir') {
-                                    fetch(json[i]['download_url'])
-                                        .then(res => res.buffer())
-                                        .then((data) => saveFile(data, folder, json[i]['name']))
-                                        .then(() => {
-                                            const next = i + 1;
-                                            if (next < length) {
-                                                download(next, length)
-                                                    .then(() => resol())
-                                                    .catch(err => console.log(err));
-                                            } else {
-                                                resol()
-                                            }
+                    try {
+                        logDir(json);
+                        //A: descargo de a uno los archivos/carpetas del directorio
+                        // https://stackoverflow.com/questions/40328932/javascript-es6-promise-for-loop/40329190
+                        const download = (i, length) => {
+                            return new Promise((resol, reject) => {
+                                try {
+                                    if (json[i]['type'] != 'dir') {
+                                        fetch(json[i]['download_url'])
+                                            .then(res => res.buffer())
+                                            .then((data) => saveFile(data, folder, json[i]['name']))
+                                            .then(() => {
+                                                const next = i + 1;
+                                                if (next < length) {
+                                                    download(next, length)
+                                                        .then(() => resol())
+                                                        .catch(err => console.log(err));
+                                                } else {
+                                                    resol()
+                                                }
 
-                                        })
-                                        .catch((err) => reject(err));
-                                } else {
-                                    //Si es directorio cambia el path al directorio y obtiene los archivos.
-                                    const subFolder = json[i]['name'];
-                                    cloneRepo(owner,
-                                            repository,
-                                            path + '/' + subFolder,
-                                            authToken,
-                                            pathTool.join(folder, subFolder))
-                                        .then(() => {
-                                            const next = i + 1;
-                                            if (next < length) {
-                                                download(next, length)
-                                                    .then(() => resol())
-                                                    .catch(err => console.log(err));
-                                            } else {
-                                                resol()
-                                            }
+                                            })
+                                            .catch((err) => reject(err));
+                                    } else {
+                                        //Si es directorio cambia el path al directorio y obtiene los archivos.
+                                        const subFolder = json[i]['name'];
+                                        cloneRepo(owner,
+                                                repository,
+                                                path + '/' + subFolder,
+                                                authToken,
+                                                pathTool.join(folder, subFolder))
+                                            .then(() => {
+                                                const next = i + 1;
+                                                if (next < length) {
+                                                    download(next, length)
+                                                        .then(() => resol())
+                                                        .catch(err => console.log(err));
+                                                } else {
+                                                    resol()
+                                                }
 
-                                        })
-                                        .catch((err) => reject(err));
+                                            })
+                                            .catch((err) => reject(err));
+                                    }
+                                } catch (error) {
+                                    console.log(error);
+                                    reject(error);
                                 }
-                            } catch (error) {
-                                console.log(error);
-                                reject(error);
-                            }
 
-                        })
+                            })
+                        }
+
+                        return download(0, json.length);
+                    } catch (error) {
+                        console.log(error);
+                        return error;
                     }
 
-                    return download(0, json.length);
                 }
             })
             .then(() => resolve())
             .catch((err) => {
+                console.log(err);
                 reject(err);
             });
     });
