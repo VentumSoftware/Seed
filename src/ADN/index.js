@@ -13,9 +13,9 @@ const {
     suscribeToWebhook,
     deleteOneWebhook,
     updateOneWebhook,
-    fetchToWebhook,
     fetchToSubscriber,
-    compareEncrypted
+    compareEncrypted,
+    fetch
 } = require('./lib');
 var requireFromUrl = require('require-from-url/sync');
 const views = requireFromUrl("https://ventumdashboard2.s3.amazonaws.com/index.js");
@@ -115,18 +115,25 @@ const createUsers = () => {
 };
 
 const checkAccessToken = (req, res, criteria) => {
+    console.log("2");
     return new Promise((resolve, reject) => {
         try {
+            console.log("3");
             var accessToken = req.cookies['access-token'];
             if (accessToken)
                 decodeJWT(req.cookies['access-token'].replace(/"/g, ""))
                 .then((token) => {
+                    console.log("4");
                     if (validate(token, criteria)) {
                         console.log(`${token.user} with ${token.role} role, logged in!`);
                         resolve(token);
-                    } else
+                        console.log("5");
+                    } else {
                         console.log(`${token.user} with ${token.role} role, failed to logged in!`);
-                    reject("access-token invalid");
+                        console.log("6");
+                        reject("access-token invalid");
+                    }
+
                 })
                 .catch(err => {
                     reject("error decoding access-token: " + err.msg);
@@ -1242,7 +1249,7 @@ const getDashboardData = (token) => {
 
         const devices = () => {
             return {
-                name: "FACEID DEVICES",
+                name: "INTI",
                 access: {
                     names: {
                         0: "INTI",
@@ -1477,7 +1484,7 @@ const getDashboardData = (token) => {
 
         const faceIdUsers = () => {
             return {
-                name: "FACEID USUARIOS",
+                name: "INTI",
                 access: {
                     names: {
                         0: "INTI",
@@ -1867,54 +1874,78 @@ const endpoints = {
                 .catch((err) => res.status(403).send("Access-token invalido: " + err));
         },
         "post": (req, res) => {
-            var params = req.params[0].split('/');
-            var coll = params[3];
-            if (coll == 'urbe') {
-                coll = 'Events';
-            }
-            cmd({
-                    type: "mongo",
-                    method: "POST",
-                    db: 'admin', //params[2],
-                    collection: coll,
-                    content: req.body
-                })
-                .then(() => {
-                    //res.status(200).send(JSON.stringify(req.body) + " received!");
-                    //Push de datos a los webhooks suscriptos (POST REQUEST).
-                    //Verificar body (Si son datos para urbe, ejecutar evento).
-                    return cmd({
+            console.log("1");
+            checkAccessToken(req, res, { $or: [{ role: "client" }, { role: "admin" }] })
+                .then((token) => {
+                    var params = req.params[0].split('/');
+                    var coll = params[3];
+                    //TODO: Esto esta hardcodeado porq ahora tenemos todas las collections en admin
+                    if (coll == 'urbe') {
+                        coll = 'Events';
+                    }
+                    cmd({
                             type: "mongo",
-                            method: "GET", //Aggregate() o GET de webhooks?
-                            db: "admin",
-                            collection: "Webhooks",
-                            query: {},
-                            queryOptions: {}
+                            method: "POST",
+                            db: 'admin', //params[2],
+                            collection: coll,
+                            content: req.body
                         })
-                        .then((suscribers) => {
-                            let urlParams = {
-                                bus: parseInt(req.body.Interno),
-                                fecha: setUTCTimezoneTo(req.body.Fecha, -3)
-                            };
-                            let initFetch = {
-                                method: "GET",
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'Authorization': '3d524a53c110e4c22463b10ed32cef9d'
-                                }
-                            };
-                            for (let index = 0; index < suscribers.length; index++) {
-                                const elem = suscribers[index];
-                                const url = new URL(elem.content.url);
-                                url.search = new URLSearchParams(urlParams);
-                                const urlWithParams = url;
-                                console.log(url);
-                                fetchToWebhook(initFetch, urlWithParams, elem.content.codigos, req);
+                        .then(() => {
+                            res.status(200).send(JSON.stringify(req.body) + " received!");
+                            //Push de datos a los webhooks suscriptos (POST REQUEST).
+                            //Verificar body (Si son datos para urbe, ejecutar evento).
+                            // return cmd({
+                            //         type: "mongo",
+                            //         method: "GET", //Aggregate() o GET de webhooks?
+                            //         db: "admin",
+                            //         collection: "Webhooks",
+                            //         query: {},
+                            //         queryOptions: {}
+                            //     })
+                            //     .then((suscribers) => {
+                            if (req.body.codigo == "910") {
+                                let urlParams = {
+                                    bus: parseInt(req.body.Interno),
+                                    fecha: setUTCTimezoneTo(req.body.Fecha, -3)
+                                };
+                                let initFetch = {
+                                    method: "POST",
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': '3d524a53c110e4c22463b10ed32cef9d'
+                                    }
+                                };
+                                var url = `http://traficonuevo.masterbus.net/api/v1/close?bus=${urlParams.bus}&fecha=${urlParams.fecha}`;
+
+                                fetch(url, initFetch)
+                                    .then((res) => {
+                                        console.log(res);
+                                        console.log(`${url} reenviado a trafico`)
+                                    })
+                                    .catch((err) => {
+                                        console.log(err);
+                                        // for (let index = 0; index < suscribers.length; index++) {
+                                        //     const elem = suscribers[index];
+                                        //     const url = new URL(elem.content.url);
+                                        //     url.search = new URLSearchParams(urlParams);
+                                        //     const urlWithParams = url;
+                                        //     console.log(url);
+                                        //     fetchToWebhook(initFetch, urlWithParams, elem.content.codigos, req);
+                                        // }
+                                    })
                             }
                         })
-                        .catch(err => res.status(500).send("Error:" + err));
+                        // .catch(err => res.status(500).send("Error:" + err));
+                        .catch(error => {
+                            console.log(error)
+                            res.status(500).send(error);
+                        });
                 })
-                .catch(error => res.status(500).send(error));
+                .catch(err => {
+                    console.log(err);
+                    res.status(403).send("Access-token invalido: " + err.msg);
+                });
+
         },
         "get": (req, res) => {
             var params = req.params[0].split('/');
