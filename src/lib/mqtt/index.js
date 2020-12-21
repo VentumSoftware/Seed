@@ -25,15 +25,11 @@ function connectToBroker(url, credentials, topics){
 
 const sendMessageToDB = (topic, message) => {
     let mensaje = JSON.parse(message.toString());
-    let arrayTopic = topic.split("/");
-    let lastTopic;
-    Array.isArray(arrayTopic) ? lastTopic =arrayTopic[arrayTopic.length - 1] : lastTopic = arrayTopic; 
-    console.log(lastTopic);
     cmd({
         type: "mongo",
         method: "POST",
         db: 'admin', 
-        collection: lastTopic,
+        collection: "INTI-MQTT",
         content: {
                 topic: topic,
                 mensaje: mensaje
