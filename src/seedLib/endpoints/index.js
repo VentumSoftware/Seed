@@ -99,9 +99,9 @@ const setEndpoints = (app, adn) => {
 const setMQTTClientConnection = (app, adn) => {
     const url = adn.config.mqtt.url;
     const credentials = adn.config.mqtt.credentials;
-    const inti = adn.config.mqtt.inti;
+    const topicBase = adn.config.mqtt.inti;
 
-    let mqttTopics = `${inti}/#`;
+    let mqttTopics = `${topicBase}/#`;
     connectToBroker(url, credentials, mqttTopics);
     }
 
