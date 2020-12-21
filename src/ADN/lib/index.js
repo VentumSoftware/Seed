@@ -3,6 +3,7 @@ const queue = require('../../seedLib/queues');
 const crypto = require('../../lib/encryptation');
 const seedUtils = require('../../lib/utils');
 const mingo = require('mingo');
+const fetch = require("node-fetch");
 
 const cmd = repo.cmd;
 const cmds = repo.cmds;
@@ -112,4 +113,4 @@ const setUTCTimezoneTo = (dateToTransform, timezone) => {
 
 };
 
-module.exports = { login, createUser, deleteUsers, cmd, cmds, enqueue, encrypt, compareEncrypted, createJWT, decodeJWT, copyFile, copyFolder, validate, setUTCTimezoneTo };
+module.exports = { fetch, login, createUser, deleteUsers, cmd, cmds, enqueue, encrypt, compareEncrypted, createJWT, decodeJWT, copyFile, copyFolder, validate, setUTCTimezoneTo };

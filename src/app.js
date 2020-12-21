@@ -70,6 +70,7 @@ const app = express();
 //TODO: Hacer algo mas prolijo y seguro que esto...
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
+
 app.post('/reset', function(req, res) {
     console.log(req.body);
     if (req.body.secret == "secreto") {
