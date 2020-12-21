@@ -119,9 +119,25 @@ const checkAccessToken = (req, res, criteria) => {
     return new Promise((resolve, reject) => {
         try {
             console.log("3");
-            var accessToken = req.cookies['access-token'];
-            if (accessToken)
-                decodeJWT(req.cookies['access-token'].replace(/"/g, ""))
+            console.log(req.headers);
+            var accessToken = req.cookies['access-token'] || req.headers['access-token'];
+            if (accessToken == null || accessToken == undefined) {
+                accessToken = req.headers['access-token'];
+                if (accessToken != null && accessToken != undefined) {
+                    accessToken = decodeJWT(accessToken);
+                    if (validate(accessToken, criteria)) {
+                        console.log(`${accessToken.user} with ${accessToken.role} role, logged in!`);
+                        resolve(accessToken);
+                        console.log("5");
+                    } else {
+                        console.log(`${accessToken.user} with ${accessToken.role} role, failed to logged in!`);
+                        console.log("6");
+                        reject("access-token invalid");
+                    }
+                } else
+                    reject("no access-token");
+            } else
+                accessToken = decodeJWT(req.cookies['access-token'].replace(/"/g, ""))
                 .then((token) => {
                     console.log("4");
                     if (validate(token, criteria)) {
@@ -134,12 +150,15 @@ const checkAccessToken = (req, res, criteria) => {
                         reject("access-token invalid");
                     }
 
+
+
                 })
                 .catch(err => {
                     reject("error decoding access-token: " + err.msg);
                 });
-            else
-                reject("no access-token");
+
+
+
         } catch (error) {
             reject(error);
         }
