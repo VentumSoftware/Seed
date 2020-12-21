@@ -99,4 +99,11 @@ const validate = (obj, query) => {
     return mingoQuery.test(obj);
 };
 
-module.exports = { login, createUser, deleteUsers, cmd, cmds, enqueue, encrypt, compareEncrypted, createJWT, decodeJWT, copyFile, copyFolder, validate };
+const setUTCTimezoneTo = (dateToTransform, timezone) => {
+    formattedDate = new Date(dateToTransform + "Z");
+    let globalTime = formattedDate.getTime();
+    let localeTime = new Date(formattedDate.setTime(globalTime + (timezone * 60 * 60 * 1000)));
+    return (localeTime.toISOString().split('.')[0]);
+};
+
+module.exports = { login, createUser, deleteUsers, cmd, cmds, enqueue, encrypt, compareEncrypted, createJWT, decodeJWT, copyFile, copyFolder, validate, setUTCTimezoneTo };
