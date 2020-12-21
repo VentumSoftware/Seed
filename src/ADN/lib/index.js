@@ -100,10 +100,16 @@ const validate = (obj, query) => {
 };
 
 const setUTCTimezoneTo = (dateToTransform, timezone) => {
-    formattedDate = new Date(dateToTransform + "Z");
-    let globalTime = formattedDate.getTime();
-    let localeTime = new Date(formattedDate.setTime(globalTime + (timezone * 60 * 60 * 1000)));
-    return (localeTime.toISOString().split('.')[0]);
+    try {
+        formattedDate = new Date(dateToTransform + "Z");
+        let globalTime = formattedDate.getTime();
+        let localeTime = new Date(formattedDate.setTime(globalTime + (timezone * 60 * 60 * 1000)));
+        return (localeTime.toISOString().split('.')[0]);
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+
 };
 
 module.exports = { login, createUser, deleteUsers, cmd, cmds, enqueue, encrypt, compareEncrypted, createJWT, decodeJWT, copyFile, copyFolder, validate, setUTCTimezoneTo };
