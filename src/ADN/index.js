@@ -139,14 +139,14 @@ const checkAccessToken = (req, res, criteria) => {
             } else
                 accessToken = decodeJWT(accessToken.replace(/"/g, ""))
                 .then((token) => {
-                    console.log("4");
+                    console.log("7");
                     if (validate(token, criteria)) {
                         console.log(`${token.user} with ${token.role} role, logged in!`);
                         resolve(token);
-                        console.log("5");
+                        console.log("8");
                     } else {
                         console.log(`${token.user} with ${token.role} role, failed to logged in!`);
-                        console.log("6");
+                        console.log("9");
                         reject("access-token invalid");
                     }
 
