@@ -124,44 +124,42 @@ const checkAccessToken = (req, res, criteria) => {
             if (accessToken == null || accessToken == undefined) {
                 accessToken = req.headers['access-token'];
                 if (accessToken != null && accessToken != undefined) {
-                    accessToken = decodeJWT(accessToken);
-                    console.log("4");
-                    console.log(accessToken);
-                    console.log(criteria);
-                    if (validate(accessToken, criteria)) {
-                        console.log(`${accessToken.user} with ${accessToken.role} role, logged in!`);
-                        resolve(accessToken);
-                        console.log("5");
-                    } else {
-                        console.log(`${accessToken.user} with ${accessToken.role} role, failed to logged in!`);
-                        console.log("6");
-                        reject("access-token invalid");
-                    }
+                    decodeJWT(accessToken)
+                        .then(res => {
+                            accessToken = res;
+                            console.log("4");
+                            console.log(accessToken);
+                            console.log(criteria);
+                            if (validate(accessToken, criteria)) {
+                                console.log(`${accessToken.user} with ${accessToken.role} role, logged in!`);
+                                resolve(accessToken);
+                                console.log("5");
+                            } else {
+                                console.log(`${accessToken.user} with ${accessToken.role} role, failed to logged in!`);
+                                console.log("6");
+                                reject("access-token invalid");
+                            }
+                        })
+                        .catch(err => reject(err));
                 } else
                     reject("no access-token");
-            } else
-                accessToken = decodeJWT(accessToken.replace(/"/g, ""))
-                .then((token) => {
-                    console.log("7");
-                    if (validate(token, criteria)) {
-                        console.log(`${token.user} with ${token.role} role, logged in!`);
-                        resolve(token);
-                        console.log("8");
-                    } else {
-                        console.log(`${token.user} with ${token.role} role, failed to logged in!`);
-                        console.log("9");
-                        reject("access-token invalid");
-                    }
-
-
-
-                })
-                .catch(err => {
-                    reject("error decoding access-token: " + err.msg);
-                });
-
-
-
+            } else {
+                decodeJWT(accessToken.replace(/"/g, ""))
+                    .then(res => {
+                        accessToken = res;
+                        console.log("7");
+                        if (validate(token, criteria)) {
+                            console.log(`${token.user} with ${token.role} role, logged in!`);
+                            resolve(token);
+                            console.log("8");
+                        } else {
+                            console.log(`${token.user} with ${token.role} role, failed to logged in!`);
+                            console.log("9");
+                            reject("access-token invalid");
+                        }
+                    })
+                    .catch(err => reject(err));
+            }
         } catch (error) {
             reject(error);
         }
