@@ -148,12 +148,12 @@ const checkAccessToken = (req, res, criteria) => {
                     .then(res => {
                         accessToken = res;
                         console.log("7");
-                        if (validate(token, criteria)) {
-                            console.log(`${token.user} with ${token.role} role, logged in!`);
-                            resolve(token);
+                        if (validate(accessToken, criteria)) {
+                            console.log(`${accessToken.user} with ${accessToken.role} role, logged in!`);
+                            resolve(accessToken);
                             console.log("8");
                         } else {
-                            console.log(`${token.user} with ${token.role} role, failed to logged in!`);
+                            console.log(`${accessToken.user} with ${accessToken.role} role, failed to logged in!`);
                             console.log("9");
                             reject("access-token invalid");
                         }
