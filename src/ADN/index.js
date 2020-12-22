@@ -125,6 +125,9 @@ const checkAccessToken = (req, res, criteria) => {
                 accessToken = req.headers['access-token'];
                 if (accessToken != null && accessToken != undefined) {
                     accessToken = decodeJWT(accessToken);
+                    console.log("4");
+                    console.log(accessToken);
+                    console.log(criteria);
                     if (validate(accessToken, criteria)) {
                         console.log(`${accessToken.user} with ${accessToken.role} role, logged in!`);
                         resolve(accessToken);
