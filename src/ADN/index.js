@@ -120,7 +120,7 @@ const checkAccessToken = (req, res, criteria) => {
         try {
             console.log("3");
             console.log(req.headers);
-            var accessToken = req.cookies['access-token'] || req.headers['access-token'];
+            var accessToken = req.cookies['access-token'];
             if (accessToken == null || accessToken == undefined) {
                 accessToken = req.headers['access-token'];
                 if (accessToken != null && accessToken != undefined) {
@@ -137,7 +137,7 @@ const checkAccessToken = (req, res, criteria) => {
                 } else
                     reject("no access-token");
             } else
-                accessToken = decodeJWT(req.cookies['access-token'].replace(/"/g, ""))
+                accessToken = decodeJWT(accessToken.replace(/"/g, ""))
                 .then((token) => {
                     console.log("4");
                     if (validate(token, criteria)) {
