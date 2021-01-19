@@ -177,7 +177,7 @@ const getDashboardData = (token) => {
                                         0: {
                                             cols: {
                                                 0: {
-                                                    0: "tableIngresos"
+                                                   // 0: "tableIngresos"
                                                 }
                                             }
                                         }
@@ -185,7 +185,7 @@ const getDashboardData = (token) => {
                                 }
                             },
                             childs: {
-                                tableIngresos: tableIngresos()
+                               // tableIngresos: tableIngresos()
                             }
                         }
                     };
@@ -443,7 +443,7 @@ const getDashboardData = (token) => {
                                     0: "wizard"
                                 }
                             }
-                        },
+                        }
                     }
                 },
                 childs: {
@@ -496,8 +496,8 @@ const getDashboardData = (token) => {
             name: "Masterbus"
         },
         user: {
-            name: token.user,
-            role: token.role,
+            name: "token.user",
+            role: "token.role",
         },
         childs: getCategories()
     };
@@ -564,25 +564,31 @@ const endpoints = {
         "login": (req, res) => {
             checkAccessToken(req, res, { $or: [{ role: "client" }, { role: "admin" }] })
                 .then((token) => {
+                    console.log("redireccionando al dashboard!");
                     res.redirect('/pages/dashboard');
                 })
                 .catch((err) => {
+                    console.log("error en el login: " + err);
                     views.login(req, res, {});
                 });
         },
         "dashboard": (req, res) => {
+            console.log("Get Dashboard!");
             checkAccessToken(req, res, { $or: [{ role: "client" }, { role: "admin" }] })
                 .then((token) => {
                     try {
+                        var dashboardData = getDashboardData({});
+                        console.log("diccionario: " + JSON.stringify(dashboardData));
                         views.dashboard(req, res, getDashboardData(token));
                     } catch (error) {
+                        console.log("Dashboard Error!" + error);
                         res.send(error);
                     }
-            })
-            .catch((err) => {
-                console.log(err);
-                res.redirect('/pages/login');
-            });
+                })
+                .catch((err) => {
+                    console.log("checkAccessToken: " + err);
+                    res.redirect('/pages/login');
+                });
         }
     },
     "api": {
