@@ -115,7 +115,6 @@ const createUsers = () => {
 };
 
 const checkAccessToken = (req, res, criteria) => {
-    console.log("2");
     return new Promise((resolve, reject) => {
         try {
             console.log(req.headers);
@@ -161,436 +160,271 @@ const checkAccessToken = (req, res, criteria) => {
 
 const getDashboardData = (token) => {
 
-    var getCategories = () => {
+    const getCategories = () => {
 
-        const ingreso = () => {
+        const ingresos = () => {
 
-            const modalForm = {
-                type: "form",
-                payload: {
-                    title: "CONFIRMACIÓN",
-                    cols: {
-                        0: {
-                            0: {
-                                type: "text",
-                                label: "DNI",
-                                placeholder: "DNI"
-                            },
-                            1: {
-                                type: "text",
-                                label: "Nombre",
-                                placeholder: "Nombre"
-                            },
-                            2: {
-                                type: "text",
-                                label: "Apellido",
-                                placeholder: "Apellido"
-                            },
-                            3: {
-                                type: "date",
-                                label: "Fecha N.",
-                                placeholder: ""
-                            },
-                            4: {
-                                type: "text",
-                                label: "Empresa",
-                                placeholder: "Empresa"
-                            }
-                        },
-                        1: {
-                            0: {
-                                type: "text",
-                                label: "Sector",
-                                placeholder: "Sector"
-                            },
-                            1: {
-                                type: "text",
-                                label: "Posición",
-                                placeholder: "Posición"
-                            },
-                            2: {
-                                type: "text",
-                                label: "Mail",
-                                placeholder: "Mail"
-                            },
-                            3: {
-                                type: "text",
-                                label: "Teléfono",
-                                placeholder: ""
-                            },
-                            4: {
-                                type: "text",
-                                label: "Dirección",
-                                placeholder: "Dirección"
-                            },
-                        }
-                    },
-                    footerBtns: {
-                        0: {
-                            enabled: "true",
-                            type: "filter",
-                            label: "Cancelar ",
-                            onClick: {
-                                cmds: {
-                                    0: {
-                                        type: "parent-cmd",
-                                        payload: {
-                                            cmds: {
-                                                0: {
-                                                    type: "return-correct",
-                                                    payload: {}
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        1: {
-                            enabled: "true",
-                            type: "add",
-                            label: "Agregar ",
-                            onClick: {
-                                cmds: {
-                                    0: {
-                                        type: "parent-cmd",
-                                        payload: {
-                                            cmds: {
-                                                0: {
-                                                    type: "return-correct",
-                                                    payload: {}
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                    }
-                }
-            }
+            const wizard = () => {
 
-            const formCliente = {
-                type: "form",
-                payload: {
-                    title: "DESPACHANTE",
-                    cols: {
-                        0: {
-                            0: {
-                                type: "text",
-                                label: "DNI",
-                                placeholder: "DNI"
-                            },
-                            1: {
-                                type: "text",
-                                label: "Nombre",
-                                placeholder: "Nombre"
-                            },
-                            2: {
-                                type: "text",
-                                label: "Apellido",
-                                placeholder: "Apellido"
-                            },
-                            3: {
-                                type: "date",
-                                label: "Fecha N.",
-                                placeholder: ""
-                            },
-                            4: {
-                                type: "text",
-                                label: "Empresa",
-                                placeholder: "Empresa"
-                            },
-                        },
-                        1: {
-                            0: {
-                                type: "text",
-                                label: "Sector",
-                                placeholder: "Sector"
-                            },
-                            1: {
-                                type: "text",
-                                label: "Posición",
-                                placeholder: "Posición"
-                            },
-                            2: {
-                                type: "text",
-                                label: "Mail",
-                                placeholder: "Mail"
-                            },
-                            3: {
-                                type: "text",
-                                label: "Teléfono",
-                                placeholder: ""
-                            },
-                            4: {
-                                type: "text",
-                                label: "Dirección",
-                                placeholder: "Dirección"
-                            },
-                        }
-                    }
-                }
-            };
+                const tableIngresos = () => {
 
-            const formReceptor = {
-                type: "form",
-                payload: {
-                    title: "RECEPTOR",
-                    cols: {
-                        0: {
-                            0: {
-                                type: "fixed",
-                                label: "Nombre",
-                                value: "Nicolas Gonzalez"
-                            },
-                            1: {
-                                type: "fixed-date",
-                                label: "Fecha",
-                            },
-                            2: {
-                                type: "fixed-hour",
-                                label: "Hora",
-                            },
-                            3: {
-                                type: "fixed",
-                                label: "Ubicación",
-                                value: "Oficina Rada Tilly"
-                            },
-                            4: {
-                                type: "text",
-                                label: "Comentarios",
-                                placeholder: "Comentarios"
-                            }
-                        }
-                    }
-                }
-            };
-
-            const tableEquipos = {
-                type: "table",
-                payload: {
-                    title: "INGRESO",
-                    fetchPath: "/api/aggregate/Masterbus-IOT/INTI",
-                    //GRUPO	MARCA	MODELO	NO.SERIE	DURACIÓN CALIBRACIÓN	COMENTARIOS	EDITAR
-                    headers: {
-                        0: {
-                            name: "Grupo",
-                            label: "Grupo",
-                        },
-                        1: {
-                            name: "Marca",
-                            label: "Marca",
-                        },
-                        2: {
-                            name: "Modelo",
-                            label: "Modelo",
-                        },
-                        3: {
-                            name: "No.Serie",
-                            label: "No.Serie",
-                        },
-                        4: {
-                            name: "Duración Calibración",
-                            label: "Duración Calibración",
-                        },
-                        5: {
-                            name: "Comentarios",
-                            label: "Comentarios",
-                        }
-                    },
-                    filters: {
-                        0: {
-                            label: "Buscar",
-                            inputs: {
-                                nombre: {
-                                    name: "Buscar",
-                                    type: "text",
-                                    placeholder: "Buscar...",
-                                    value: "",
-                                    required: "",
-                                    stage: {
-                                        type: "match",
-                                        var: "nombre",
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    finalStages: {
-                        0: '{"$sort":{"paquete.Fecha":-1,"paquete.Hora":-1}}'
-                    },
-                    headerBtns: {
-                        0: {
-                            enabled: "true",
-                            type: "filter",
-                            label: "filtrar",
-                            onClick: {
-                                cmds: {
-                                    0: {
-                                        type: "filter",
-                                        payload: {}
-                                    }
-                                }
-                            }
-                        },
-                        1: {
-                            enabled: "true",
-                            type: "erase",
-                            label: "filtrar",
-                            targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
-                            onClick: {
-                                cmds: {
-                                    0: {
-                                        type: "erase",
-                                        payload: {}
-                                    }
-                                }
-                            }
-                        },
-                        2: {
-                            enabled: "true",
-                            type: "edit",
-                            label: "editar",
-                            targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
-                            onClick: {
-                                cmds: {
-                                    1: {
-                                        type: "modal",
-                                        form: {
-                                            title: "INTI",
+                    const nuevoIngresoModal = () => {
+                        return {
+                            type: "wizard",
+                            pages: {
+                                0: {
+                                    rows: {
+                                        0: {
                                             cols: {
                                                 0: {
+                                                    0: "tableIngresos"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            childs: {
+                                tableIngresos: tableIngresos()
+                            }
+                        }
+                    };
+
+                    return {
+                        type: "table",
+                        title: "INGRESOS",
+                        fetchPath: "/api/aggregate/IngesurERP/Ingesos",
+                        headers: {
+                            0: {
+                                name: "Grupo",
+                                label: "Grupo",
+                            },
+                            1: {
+                                name: "Marca",
+                                label: "Marca",
+                            },
+                            2: {
+                                name: "Modelo",
+                                label: "Modelo",
+                            },
+                            3: {
+                                name: "No.Serie",
+                                label: "No.Serie",
+                            },
+                            4: {
+                                name: "Duración Calibración",
+                                label: "Duración Calibración",
+                            },
+                            5: {
+                                name: "Comentarios",
+                                label: "Comentarios",
+                            }
+                        },
+                        filters: {
+                            0: {
+                                label: "Buscar",
+                                inputs: {
+                                    nombre: {
+                                        name: "Buscar",
+                                        type: "text",
+                                        placeholder: "Buscar...",
+                                        value: "",
+                                        required: "",
+                                        stage: {
+                                            type: "match",
+                                            var: "nombre",
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        finalStages: {
+                            0: '{"$sort":{"paquete.Fecha":-1,"paquete.Hora":-1}}'
+                        },
+                        headerBtns: {
+                            0: {
+                                enabled: "true",
+                                type: "filter",
+                                label: "filtrar",
+                                onClick: {
+                                    cmds: {
+                                        0: {
+                                            type: "filter",
+                                            payload: {}
+                                        }
+                                    }
+                                }
+                            },
+                            1: {
+                                enabled: "true",
+                                type: "erase",
+                                label: "filtrar",
+                                targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
+                                onClick: {
+                                    cmds: {
+                                        0: {
+                                            type: "erase",
+                                            payload: {}
+                                        }
+                                    }
+                                }
+                            },
+                            2: {
+                                enabled: "true",
+                                type: "edit",
+                                label: "editar",
+                                targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
+                                onClick: {
+                                    cmds: {
+                                        1: {
+                                            type: "modal",
+                                            form: {
+                                                title: "INTI",
+                                                cols: {
                                                     0: {
-                                                        type: "text",
-                                                        label: "DNI",
-                                                        placeholder: "DNI"
+                                                        0: {
+                                                            type: "text",
+                                                            label: "DNI",
+                                                            placeholder: "DNI"
+                                                        },
+                                                        1: {
+                                                            type: "text",
+                                                            label: "Nombre",
+                                                            placeholder: "Nombre"
+                                                        },
+                                                        2: {
+                                                            type: "text",
+                                                            label: "Apellido",
+                                                            placeholder: "Apellido"
+                                                        },
+                                                        3: {
+                                                            type: "date",
+                                                            label: "Fecha N.",
+                                                            placeholder: ""
+                                                        },
+                                                        4: {
+                                                            type: "text",
+                                                            label: "Empresa",
+                                                            placeholder: "Empresa"
+                                                        },
                                                     },
                                                     1: {
-                                                        type: "text",
-                                                        label: "Nombre",
-                                                        placeholder: "Nombre"
-                                                    },
-                                                    2: {
-                                                        type: "text",
-                                                        label: "Apellido",
-                                                        placeholder: "Apellido"
-                                                    },
-                                                    3: {
-                                                        type: "date",
-                                                        label: "Fecha N.",
-                                                        placeholder: ""
-                                                    },
-                                                    4: {
-                                                        type: "text",
-                                                        label: "Empresa",
-                                                        placeholder: "Empresa"
-                                                    },
+                                                        0: {
+                                                            type: "text",
+                                                            label: "Sector",
+                                                            placeholder: "Sector"
+                                                        },
+                                                        1: {
+                                                            type: "text",
+                                                            label: "Posición",
+                                                            placeholder: "Posición"
+                                                        },
+                                                        2: {
+                                                            type: "text",
+                                                            label: "Mail",
+                                                            placeholder: "Mail"
+                                                        },
+                                                        3: {
+                                                            type: "text",
+                                                            label: "Teléfono",
+                                                            placeholder: ""
+                                                        },
+                                                        4: {
+                                                            type: "text",
+                                                            label: "Dirección",
+                                                            placeholder: "Dirección"
+                                                        },
+                                                    }
                                                 },
-                                                1: {
-                                                    0: {
-                                                        type: "text",
-                                                        label: "Sector",
-                                                        placeholder: "Sector"
+                                                footerBtns: {
+                                                    cancel: {
+                                                        enabled: "true",
+                                                        type: "edit",
+                                                        label: "editar",
+                                                        onClick: {}
                                                     },
-                                                    1: {
-                                                        type: "text",
-                                                        label: "Posición",
-                                                        placeholder: "Posición"
-                                                    },
-                                                    2: {
-                                                        type: "text",
-                                                        label: "Mail",
-                                                        placeholder: "Mail"
-                                                    },
-                                                    3: {
-                                                        type: "text",
-                                                        label: "Teléfono",
-                                                        placeholder: ""
-                                                    },
-                                                    4: {
-                                                        type: "text",
-                                                        label: "Dirección",
-                                                        placeholder: "Dirección"
-                                                    },
+                                                    acept: {
+                                                        enabled: "true",
+                                                        type: "edit",
+                                                        label: "editar",
+                                                        onClick: {}
+                                                    }
                                                 }
                                             },
-                                            footerBtns: {
-                                                cancel: {
-                                                    enabled: "true",
-                                                    type: "edit",
-                                                    label: "editar",
-                                                    onClick: {}
-                                                },
-                                                acept: {
-                                                    enabled: "true",
-                                                    type: "edit",
-                                                    label: "editar",
-                                                    onClick: {}
+                                        }
+                                    }
+                                }
+                            },
+                            3: {
+                                enabled: "true",
+                                type: "add",
+                                label: "agregar",
+                                onClick: {
+                                    cmds: {
+                                        0: {
+                                            type: "modal",
+                                            payload: {
+                                                content: {
+                                                    rows: {
+                                                        //Rows
+                                                        0: {
+                                                            cols: {
+                                                                0: {
+                                                                    0: "nuevoIngresoModal"
+                                                                }
+                                                            }
+                                                        }
+                                                    },
                                                 }
                                             }
                                         },
+                                        1: {
+                                            type: "post",
+                                            payload: {
+                                                url: "api/post/test/test",
+                                                method: "POST",
+                                            }
+                                        },
+                                        2: {
+                                            type: "update",
+                                            payload: {}
+                                        }
                                     }
                                 }
                             }
                         },
-                        3: {
-                            enabled: "true",
-                            type: "add",
-                            label: "agregar",
-                            onClick: {
-                                cmds: {
-                                    0: {
-                                        type: "modal",
-                                        payload: {
-                                            content: {
-                                                rows: {
-                                                    //Rows
-                                                    0: {
-                                                        cols: {
-                                                            0: {
-                                                                0: modalForm
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                            }
+                        footerBtns: {
+                        },
+                        childs: {
+                            nuevoIngresoModal: nuevoIngresoModal()
+                        }
+                    }
+                };
+                
+                return {
+                    type: "wizard",
+                    pages: {
+                        0: {
+                            rows: {
+                                0: {
+                                    cols: {
+                                        0: {
+                                            0: "tableIngresos"
                                         }
-                                    },
-                                    1: {
-                                        type: "post",
-                                        payload: {
-                                            url: "api/post/test/test",
-                                            method: "POST",
-                                        }
-                                    },
-                                    2: {
-                                        type: "update",
-                                        payload: {}
                                     }
                                 }
                             }
                         }
                     },
-                    footerBtns: {
-                        0: {
-                            enabled: true,
-                            type: "add",
-                            label: "Finalizar ",
-                            onClick: {
-                                cmds: {
-                                    0: {
-                                        type: "filter",
-                                        payload: {}
-                                    }
-                                }
-                            }
-                        }
+                    childs: {
+                        tableIngresos: tableIngresos()
                     }
-                }
+                };
+
             };
 
             return {
+                type: "category",
                 name: "INGRESO",
                 access: {
                     names: {
@@ -606,2622 +440,57 @@ const getDashboardData = (token) => {
                         0: {
                             cols: {
                                 0: {
-                                    0: formCliente
-                                },
-                                1: {
-                                    0: formReceptor
+                                    0: "wizard"
                                 }
                             }
                         },
-                        1: {
-                            cols: {
-                                0: {
-                                    0: tableEquipos
-                                }
-                            }
-                        }
-                    },
-                }
-            }
-        }
-
-        const laboratorio = () => {
-
-            const modalForm = {
-                type: "form",
-                payload: {
-                    title: "LABORATORIO",
-                    cols: {
-                        0: {
-                            0: {
-                                type: "text",
-                                label: "DNI",
-                                placeholder: "DNI"
-                            },
-                            1: {
-                                type: "text",
-                                label: "Nombre",
-                                placeholder: "Nombre"
-                            },
-                            2: {
-                                type: "text",
-                                label: "Apellido",
-                                placeholder: "Apellido"
-                            },
-                            3: {
-                                type: "date",
-                                label: "Fecha N.",
-                                placeholder: ""
-                            },
-                            4: {
-                                type: "text",
-                                label: "Empresa",
-                                placeholder: "Empresa"
-                            },
-                        },
-                        1: {
-                            0: {
-                                type: "text",
-                                label: "Sector",
-                                placeholder: "Sector"
-                            },
-                            1: {
-                                type: "text",
-                                label: "Posición",
-                                placeholder: "Posición"
-                            },
-                            2: {
-                                type: "text",
-                                label: "Mail",
-                                placeholder: "Mail"
-                            },
-                            3: {
-                                type: "text",
-                                label: "Teléfono",
-                                placeholder: ""
-                            },
-                            4: {
-                                type: "text",
-                                label: "Dirección",
-                                placeholder: "Dirección"
-                            },
-                        }
-                    },
-                    footerBtns: {
-                        0: {
-                            enabled: "true",
-                            type: "filter",
-                            label: "Cancelar ",
-                            onClick: {
-                                cmds: {
-                                    0: {
-                                        type: "parent-cmd",
-                                        payload: {
-                                            cmds: {
-                                                0: {
-                                                    type: "return-correct",
-                                                    payload: {}
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        1: {
-                            enabled: "true",
-                            type: "add",
-                            label: "Agregar ",
-                            onClick: {
-                                cmds: {
-                                    0: {
-                                        type: "parent-cmd",
-                                        payload: {
-                                            cmds: {
-                                                0: {
-                                                    type: "return-correct",
-                                                    payload: {}
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                    }
-                }
-            }
-
-            const formCliente = {
-                type: "form",
-                payload: {
-                    title: "DESPACHANTE",
-                    cols: {
-                        0: {
-                            0: {
-                                type: "text",
-                                label: "DNI",
-                                placeholder: "DNI"
-                            },
-                            1: {
-                                type: "text",
-                                label: "Nombre",
-                                placeholder: "Nombre"
-                            },
-                            2: {
-                                type: "text",
-                                label: "Apellido",
-                                placeholder: "Apellido"
-                            },
-                            3: {
-                                type: "date",
-                                label: "Fecha N.",
-                                placeholder: ""
-                            },
-                            4: {
-                                type: "text",
-                                label: "Empresa",
-                                placeholder: "Empresa"
-                            },
-                        },
-                        1: {
-                            0: {
-                                type: "text",
-                                label: "Sector",
-                                placeholder: "Sector"
-                            },
-                            1: {
-                                type: "text",
-                                label: "Posición",
-                                placeholder: "Posición"
-                            },
-                            2: {
-                                type: "text",
-                                label: "Mail",
-                                placeholder: "Mail"
-                            },
-                            3: {
-                                type: "text",
-                                label: "Teléfono",
-                                placeholder: ""
-                            },
-                            4: {
-                                type: "text",
-                                label: "Dirección",
-                                placeholder: "Dirección"
-                            },
-                        }
-                    }
-                }
-            };
-
-            const formReceptor = {
-                type: "form",
-                payload: {
-                    title: "RECEPTOR",
-                    cols: {
-                        0: {
-                            0: {
-                                type: "fixed",
-                                label: "Nombre",
-                                value: "Nicolas G."
-                            },
-                            1: {
-                                type: "fixed-date",
-                                label: "Fecha",
-                            },
-                            2: {
-                                type: "fixed-hour",
-                                label: "Hora",
-                            },
-                            3: {
-                                type: "fixed",
-                                label: "Ubicación",
-                                value: "Oficina Rada Tilly"
-                            },
-                            4: {
-                                type: "text",
-                                label: "Comentarios",
-                                placeholder: "Comentarios"
-                            }
-                        }
-                    }
-                }
-            };
-
-            const tableEquipos = {
-                type: "table",
-                payload: {
-                    title: "INGRESO",
-                    fetchPath: "/api/aggregate/Masterbus-IOT/INTI",
-                    headers: {
-                        0: {
-                            name: "paquete.Direccion",
-                            label: "Dirección",
-                        },
-                        1: {
-                            name: "paquete.ID",
-                            label: "ID",
-                        },
-                        2: {
-                            name: "paquete.Fecha",
-                            label: "Fecha",
-                        },
-                        3: {
-                            name: "paquete.Hora",
-                            label: "Hora",
-                        },
-                        4: {
-                            name: "paquete.Latitud",
-                            label: "Latitud",
-                        },
-                        5: {
-                            name: "paquete.Longitud",
-                            label: "Longitud",
-                        },
-                        6: {
-                            name: "paquete.Sensor1",
-                            label: "Comb.(S1)",
-                        },
-                        7: {
-                            name: "paquete.Sensor2",
-                            label: "RPMs (S2)",
-                        },
-                        8: {
-                            name: "paquete.Accel",
-                            label: "Aceleración",
-                        },
-                        9: {
-                            name: "paquete.Velocidad",
-                            label: "Velocidad",
-                        }
-                    },
-                    filters: {
-                        0: {
-                            label: "Desde",
-                            inputs: {
-                                desde: {
-                                    name: "fecha-desde",
-                                    type: "date",
-                                    placeholder: "Desde",
-                                    value: "",
-                                    required: "",
-                                    stage: {
-                                        type: "match",
-                                        var: "paquete.Fecha",
-                                        op: "$gte",
-                                        transform: "date"
-                                    }
-                                }
-                            }
-                        },
-                        1: {
-                            label: "Hasta",
-                            inputs: {
-                                desde: {
-                                    name: "fecha-hasta",
-                                    type: "date",
-                                    placeholder: "Hasta",
-                                    value: "",
-                                    required: "",
-                                    stage: {
-                                        type: "match",
-                                        var: "paquete.Fecha",
-                                        op: "$lte",
-                                        transform: "date"
-                                    }
-                                }
-                            }
-                        },
-                        2: {
-                            label: "ID",
-                            inputs: {
-                                desde: {
-                                    name: "ID",
-                                    type: "text",
-                                    placeholder: "ID",
-                                    value: "",
-                                    required: "",
-                                    stage: {
-                                        type: "match",
-                                        var: "paquete.ID",
-                                    }
-                                }
-                            }
-                        },
-                        3: {
-                            label: "Aceleración",
-                            inputs: {
-                                desde: {
-                                    name: "aceleracion-desde",
-                                    type: "text",
-                                    placeholder: "Desde",
-                                    value: "",
-                                    required: "",
-                                    stage: {
-                                        type: "match",
-                                        var: "paquete.Accel",
-                                        op: "$gte",
-                                    }
-                                },
-                                hasta: {
-                                    name: "aceleracion-hasta",
-                                    type: "text",
-                                    placeholder: "Hasta",
-                                    value: "",
-                                    required: "",
-                                    stage: {
-                                        type: "match",
-                                        var: "paquete.Accel",
-                                        op: "$lte",
-                                    }
-                                }
-                            }
-                        },
-                        4: {
-                            label: "Velocidad",
-                            inputs: {
-                                desde: {
-                                    name: "velocidad-desde",
-                                    type: "number",
-                                    placeholder: "Desde",
-                                    value: "",
-                                    required: "",
-                                    stage: {
-                                        type: "match",
-                                        var: "paquete.Velocidad",
-                                        op: "$gte",
-                                    }
-                                },
-                                hasta: {
-                                    name: "velocidad-hasta",
-                                    type: "number",
-                                    placeholder: "Hasta",
-                                    value: "",
-                                    required: "",
-                                    stage: {
-                                        type: "match",
-                                        var: "paquete.Velocidad",
-                                        op: "$lte",
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    finalStages: {
-                        0: '{"$sort":{"paquete.Fecha":-1,"paquete.Hora":-1}}'
-                    },
-                    headerBtns: {
-                        0: {
-                            enabled: "true",
-                            type: "filter",
-                            label: "filtrar",
-                            onClick: {
-                                cmds: {
-                                    0: {
-                                        type: "filter",
-                                        payload: {}
-                                    }
-                                }
-                            }
-                        },
-                        1: {
-                            enabled: "true",
-                            type: "erase",
-                            label: "filtrar",
-                            targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
-                            onClick: {
-                                cmds: {
-                                    0: {
-                                        type: "erase",
-                                        payload: {}
-                                    }
-                                }
-                            }
-                        },
-                        2: {
-                            enabled: "true",
-                            type: "edit",
-                            label: "editar",
-                            targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
-                            onClick: {
-                                cmds: {
-                                    1: {
-                                        type: "modal",
-                                        form: {
-                                            title: "INTI",
-                                            cols: {
-                                                0: {
-                                                    0: {
-                                                        type: "text",
-                                                        label: "DNI",
-                                                        placeholder: "DNI"
-                                                    },
-                                                    1: {
-                                                        type: "text",
-                                                        label: "Nombre",
-                                                        placeholder: "Nombre"
-                                                    },
-                                                    2: {
-                                                        type: "text",
-                                                        label: "Apellido",
-                                                        placeholder: "Apellido"
-                                                    },
-                                                    3: {
-                                                        type: "date",
-                                                        label: "Fecha N.",
-                                                        placeholder: ""
-                                                    },
-                                                    4: {
-                                                        type: "text",
-                                                        label: "Empresa",
-                                                        placeholder: "Empresa"
-                                                    },
-                                                },
-                                                1: {
-                                                    0: {
-                                                        type: "text",
-                                                        label: "Sector",
-                                                        placeholder: "Sector"
-                                                    },
-                                                    1: {
-                                                        type: "text",
-                                                        label: "Posición",
-                                                        placeholder: "Posición"
-                                                    },
-                                                    2: {
-                                                        type: "text",
-                                                        label: "Mail",
-                                                        placeholder: "Mail"
-                                                    },
-                                                    3: {
-                                                        type: "text",
-                                                        label: "Teléfono",
-                                                        placeholder: ""
-                                                    },
-                                                    4: {
-                                                        type: "text",
-                                                        label: "Dirección",
-                                                        placeholder: "Dirección"
-                                                    },
-                                                }
-                                            },
-                                            footerBtns: {
-                                                cancel: {
-                                                    enabled: "true",
-                                                    type: "edit",
-                                                    label: "editar",
-                                                    onClick: {}
-                                                },
-                                                acept: {
-                                                    enabled: "true",
-                                                    type: "edit",
-                                                    label: "editar",
-                                                    onClick: {}
-                                                }
-                                            }
-                                        },
-                                    }
-                                }
-                            }
-                        },
-                        3: {
-                            enabled: "true",
-                            type: "add",
-                            label: "agregar",
-                            onClick: {
-                                cmds: {
-                                    0: {
-                                        type: "modal",
-                                        payload: {
-                                            content: {
-                                                rows: {
-                                                    //Rows
-                                                    0: {
-                                                        cols: {
-                                                            0: {
-                                                                0: modalForm
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                            }
-                                        }
-                                    },
-                                    1: {
-                                        type: "post",
-                                        payload: {
-                                            url: "api/post/test/test",
-                                            method: "POST",
-                                        }
-                                    },
-                                    2: {
-                                        type: "update",
-                                        payload: {}
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    footerBtns: {
-                        0: {
-                            enabled: true,
-                            type: "add",
-                            label: "Finalizar ",
-                            onClick: {
-                                cmds: {
-                                    0: {
-                                        type: "filter",
-                                        payload: {}
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-
-            const labWizard = {
-                type: "wizard",
-                payload: {
-                    pages: {
-                        //Muestro lista de equipos que tenemos para reparar y elijo uno 
-                        0: {
-                            content: {
-                                rows: {
-                                    0: {
-                                        cols: {
-                                            0: {
-                                                0: formCliente
-                                            },
-                                            1: {
-                                                0: formReceptor
-                                            }
-                                        }
-                                    },
-                                    1: {
-                                        cols: {
-                                            0: {
-                                                0: tableEquipos
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        //Tabla donde cargo los gases que vamos a usar para calibrar, tambien cargo en cuantos dias es la proxima cal.
-                        1: {
-                            content: {
-                                rows: {
-                                    0: {
-                                        cols: {
-                                            0: {
-                                                0: formCliente
-                                            },
-                                            1: {
-                                                0: formReceptor
-                                            }
-                                        }
-                                    },
-                                    1: {
-                                        cols: {
-                                            0: {
-                                                0: tableEquipos
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        2: {
-                            content: {
-                                rows: {
-                                    0: {
-                                        cols: {
-                                            0: {
-                                                0: formCliente
-                                            },
-                                            1: {
-                                                0: formReceptor
-                                            }
-                                        }
-                                    },
-                                    1: {
-                                        cols: {
-                                            0: {
-                                                0: tableEquipos
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-
-            return {
-                name: "LABORATORIO",
-                access: {
-                    names: {
-                        1: "Admin"
-                    },
-                    roles: {
-                        0: "Admin"
                     }
                 },
-                content: {
-                    rows: {
-                        0: {
-                            cols: {
-                                0: {
-                                    0: labWizard
-                                }
-                            }
-                        }
-                    },
-                }
-            }
-        }
-
-        const entregados = () => {
-
-            const modalForm = {
-                type: "form",
-                payload: {
-                    title: "CONFIRMACIÓN",
-                    cols: {
-                        0: {
-                            0: {
-                                type: "text",
-                                label: "DNI",
-                                placeholder: "DNI"
-                            },
-                            1: {
-                                type: "text",
-                                label: "Nombre",
-                                placeholder: "Nombre"
-                            },
-                            2: {
-                                type: "text",
-                                label: "Apellido",
-                                placeholder: "Apellido"
-                            },
-                            3: {
-                                type: "date",
-                                label: "Fecha N.",
-                                placeholder: ""
-                            },
-                            4: {
-                                type: "text",
-                                label: "Empresa",
-                                placeholder: "Empresa"
-                            },
-                        },
-                        1: {
-                            0: {
-                                type: "text",
-                                label: "Sector",
-                                placeholder: "Sector"
-                            },
-                            1: {
-                                type: "text",
-                                label: "Posición",
-                                placeholder: "Posición"
-                            },
-                            2: {
-                                type: "text",
-                                label: "Mail",
-                                placeholder: "Mail"
-                            },
-                            3: {
-                                type: "text",
-                                label: "Teléfono",
-                                placeholder: ""
-                            },
-                            4: {
-                                type: "text",
-                                label: "Dirección",
-                                placeholder: "Dirección"
-                            },
-                        }
-                    },
-                    footerBtns: {
-                        0: {
-                            enabled: "true",
-                            type: "filter",
-                            label: "Cancelar ",
-                            onClick: {
-                                cmds: {
-                                    0: {
-                                        type: "parent-cmd",
-                                        payload: {
-                                            cmds: {
-                                                0: {
-                                                    type: "return-correct",
-                                                    payload: {}
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        1: {
-                            enabled: "true",
-                            type: "add",
-                            label: "Agregar ",
-                            onClick: {
-                                cmds: {
-                                    0: {
-                                        type: "parent-cmd",
-                                        payload: {
-                                            cmds: {
-                                                0: {
-                                                    type: "return-correct",
-                                                    payload: {}
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return {
-                name: "ENTREGADOS",
-                access: {
-                    names: {
-                        0: "URBE",
-                        1: "Admin"
-                    },
-                    roles: {
-                        0: "Admin"
-                    }
-                },
-                content: {
-                    rows: {
-                        //Rows
-                        0: {
-                            cols: {
-                                //Columns
-                                0: {
-                                    //Columns elements
-                                    0: {
-                                        type: "table",
-                                        payload: {
-                                            title: "ENTREGADOS",
-                                            fetchPath: "/api/aggregate/ingesur/usuarios",
-                                            headers: {
-                                                0: {
-                                                    name: "Nombre",
-                                                    label: "Nombre",
-                                                },
-                                                1: {
-                                                    name: "Apellido",
-                                                    label: "Apellido",
-                                                },
-                                                2: {
-                                                    name: "Empresa",
-                                                    label: "Empresa",
-                                                },
-                                                3: {
-                                                    name: "Posición",
-                                                    label: "Posición",
-                                                },
-                                                4: {
-                                                    name: "Sector",
-                                                    label: "Sector",
-                                                },
-                                                5: {
-                                                    name: "DNI",
-                                                    label: "DNI",
-                                                },
-                                                6: {
-                                                    name: "Teléfono",
-                                                    label: "Teléfono",
-                                                },
-                                                7: {
-                                                    name: "Mail",
-                                                    label: "Mail",
-                                                },
-                                            },
-                                            filters: {
-                                                0: {
-                                                    label: "Nombre",
-                                                    inputs: {
-                                                        nombre: {
-                                                            name: "Nombre",
-                                                            type: "text",
-                                                            placeholder: "nombre",
-                                                            value: "",
-                                                            required: "",
-                                                            stage: {
-                                                                type: "match",
-                                                                var: "nombre",
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                1: {
-                                                    label: "Apellido",
-                                                    inputs: {
-                                                        apellido: {
-                                                            name: "Apellido",
-                                                            type: "text",
-                                                            placeholder: "Apellido",
-                                                            value: "",
-                                                            required: "",
-                                                            stage: {
-                                                                type: "match",
-                                                                var: "apellido",
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                2: {
-                                                    label: "DNI",
-                                                    inputs: {
-                                                        dni: {
-                                                            name: "DNI",
-                                                            type: "text",
-                                                            placeholder: "DNI",
-                                                            value: "",
-                                                            required: "",
-                                                            stage: {
-                                                                type: "match",
-                                                                var: "dni",
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                3: {
-                                                    label: "Empresa",
-                                                    inputs: {
-                                                        desde: {
-                                                            name: "Empresa",
-                                                            type: "text",
-                                                            placeholder: "Empresa",
-                                                            value: "",
-                                                            required: "",
-                                                            stage: {
-                                                                type: "match",
-                                                                var: "empresa",
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            headerBtns: {
-                                                0: {
-                                                    enabled: "true",
-                                                    type: "filter",
-                                                    label: "filtrar",
-                                                    onClick: {
-                                                        cmds: {
-                                                            0: {
-                                                                type: "filter",
-                                                                payload: {}
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                1: {
-                                                    enabled: "true",
-                                                    type: "erase",
-                                                    label: "filtrar",
-                                                    targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
-                                                    onClick: {
-                                                        cmds: {
-                                                            0: {
-                                                                type: "erase",
-                                                                payload: {}
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                2: {
-                                                    enabled: "true",
-                                                    type: "edit",
-                                                    label: "editar",
-                                                    targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
-                                                    onClick: {
-                                                        cmds: {
-                                                            1: {
-                                                                type: "modal",
-                                                                form: {
-                                                                    title: "INTI",
-                                                                    cols: {
-                                                                        0: {
-                                                                            0: {
-                                                                                type: "text",
-                                                                                label: "DNI",
-                                                                                placeholder: "DNI"
-                                                                            },
-                                                                            1: {
-                                                                                type: "text",
-                                                                                label: "Nombre",
-                                                                                placeholder: "Nombre"
-                                                                            },
-                                                                            2: {
-                                                                                type: "text",
-                                                                                label: "Apellido",
-                                                                                placeholder: "Apellido"
-                                                                            },
-                                                                            3: {
-                                                                                type: "date",
-                                                                                label: "Fecha N.",
-                                                                                placeholder: ""
-                                                                            },
-                                                                            4: {
-                                                                                type: "text",
-                                                                                label: "Empresa",
-                                                                                placeholder: "Empresa"
-                                                                            },
-                                                                        },
-                                                                        1: {
-                                                                            0: {
-                                                                                type: "text",
-                                                                                label: "Sector",
-                                                                                placeholder: "Sector"
-                                                                            },
-                                                                            1: {
-                                                                                type: "text",
-                                                                                label: "Posición",
-                                                                                placeholder: "Posición"
-                                                                            },
-                                                                            2: {
-                                                                                type: "text",
-                                                                                label: "Mail",
-                                                                                placeholder: "Mail"
-                                                                            },
-                                                                            3: {
-                                                                                type: "text",
-                                                                                label: "Teléfono",
-                                                                                placeholder: ""
-                                                                            },
-                                                                            4: {
-                                                                                type: "text",
-                                                                                label: "Dirección",
-                                                                                placeholder: "Dirección"
-                                                                            },
-                                                                        }
-                                                                    },
-                                                                    footerBtns: {
-                                                                        cancel: {
-                                                                            enabled: "true",
-                                                                            type: "edit",
-                                                                            label: "editar",
-                                                                            onClick: {}
-                                                                        },
-                                                                        acept: {
-                                                                            enabled: "true",
-                                                                            type: "edit",
-                                                                            label: "editar",
-                                                                            onClick: {}
-                                                                        }
-                                                                    }
-                                                                },
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                3: {
-                                                    enabled: "true",
-                                                    type: "add",
-                                                    label: "agregar",
-                                                    onClick: {
-                                                        cmds: {
-                                                            0: {
-                                                                type: "modal",
-                                                                payload: {
-                                                                    content: {
-                                                                        rows: {
-                                                                            //Rows
-                                                                            0: {
-                                                                                cols: {
-                                                                                    0: {
-                                                                                        0: modalForm
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        },
-                                                                    }
-                                                                }
-                                                            },
-                                                            1: {
-                                                                type: "post",
-                                                                payload: {
-                                                                    url: "api/post/test/test",
-                                                                    method: "POST",
-                                                                }
-                                                            },
-                                                            2: {
-                                                                type: "update",
-                                                                payload: {}
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            finalStages: {
-                                                0: '{"$sort":{"Fecha":-1}}'
-                                            },
-                                            footerButtons: {
-                                                add: {
-                                                    label: "Agregar",
-                                                    type: "add",
-                                                    modal: {
-                                                        type: "form",
-                                                        msg: "",
-                                                        title: "Modal Form",
-                                                        cols: {
-                                                            0: {
-                                                                0: {
-                                                                    type: "text",
-                                                                    label: "DNI",
-                                                                    placeholder: "DNI"
-                                                                },
-                                                                1: {
-                                                                    type: "text",
-                                                                    label: "Nombre",
-                                                                    placeholder: "Nombre"
-                                                                },
-                                                                2: {
-                                                                    type: "text",
-                                                                    label: "Apellido",
-                                                                    placeholder: "Apellido"
-                                                                },
-                                                                3: {
-                                                                    type: "date",
-                                                                    label: "Fecha N.",
-                                                                    placeholder: ""
-                                                                },
-                                                                4: {
-                                                                    type: "text",
-                                                                    label: "Empresa",
-                                                                    placeholder: "Empresa"
-                                                                },
-                                                            },
-                                                            1: {
-                                                                0: {
-                                                                    type: "text",
-                                                                    label: "Sector",
-                                                                    placeholder: "Sector"
-                                                                },
-                                                                1: {
-                                                                    type: "text",
-                                                                    label: "Posición",
-                                                                    placeholder: "Posición"
-                                                                },
-                                                                2: {
-                                                                    type: "text",
-                                                                    label: "Mail",
-                                                                    placeholder: "Mail"
-                                                                },
-                                                                3: {
-                                                                    type: "text",
-                                                                    label: "Teléfono",
-                                                                    placeholder: ""
-                                                                },
-                                                                4: {
-                                                                    type: "text",
-                                                                    label: "Dirección",
-                                                                    placeholder: "Dirección"
-                                                                },
-                                                            }
-                                                        },
-                                                        onConfirm: {
-
-                                                        }
-                                                    }
-                                                },
-                                                finish: {
-                                                    label: "Finalizar",
-                                                    type: "submit",
-                                                    modal: {
-                                                        type: "confirm",
-                                                        msg: "Esta seguro que desea cargar estos datos?",
-                                                        onConfirm: {
-
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                }
-            }
-        }
-
-        const gases = () => {
-
-            const modalForm = {
-                type: "form",
-                payload: {
-                    title: "CONFIRMACIÓN",
-                    cols: {
-                        0: {
-                            0: {
-                                type: "text",
-                                label: "DNI",
-                                placeholder: "DNI"
-                            },
-                            1: {
-                                type: "text",
-                                label: "Nombre",
-                                placeholder: "Nombre"
-                            },
-                            2: {
-                                type: "text",
-                                label: "Apellido",
-                                placeholder: "Apellido"
-                            },
-                            3: {
-                                type: "date",
-                                label: "Fecha N.",
-                                placeholder: ""
-                            },
-                            4: {
-                                type: "text",
-                                label: "Empresa",
-                                placeholder: "Empresa"
-                            },
-                        },
-                        1: {
-                            0: {
-                                type: "text",
-                                label: "Sector",
-                                placeholder: "Sector"
-                            },
-                            1: {
-                                type: "text",
-                                label: "Posición",
-                                placeholder: "Posición"
-                            },
-                            2: {
-                                type: "text",
-                                label: "Mail",
-                                placeholder: "Mail"
-                            },
-                            3: {
-                                type: "text",
-                                label: "Teléfono",
-                                placeholder: ""
-                            },
-                            4: {
-                                type: "text",
-                                label: "Dirección",
-                                placeholder: "Dirección"
-                            },
-                        }
-                    },
-                    footerBtns: {
-                        0: {
-                            enabled: "true",
-                            type: "filter",
-                            label: "Cancelar ",
-                            onClick: {
-                                cmds: {
-                                    0: {
-                                        type: "parent-cmd",
-                                        payload: {
-                                            cmds: {
-                                                0: {
-                                                    type: "return-correct",
-                                                    payload: {}
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        1: {
-                            enabled: "true",
-                            type: "add",
-                            label: "Agregar ",
-                            onClick: {
-                                cmds: {
-                                    0: {
-                                        type: "parent-cmd",
-                                        payload: {
-                                            cmds: {
-                                                0: {
-                                                    type: "return-correct",
-                                                    payload: {}
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                    }
-                }
-            }
-
-            return {
-                name: "GASES",
-                access: {
-                    names: {
-                        0: "URBE",
-                        1: "Admin"
-                    },
-                    roles: {
-                        0: "Admin"
-                    }
-                },
-                content: {
-                    rows: {
-                        //Rows
-                        0: {
-                            cols: {
-                                //Columns
-                                0: {
-                                    //Columns elements
-                                    0: {
-                                        type: "table",
-                                        payload: {
-                                            title: "GASES",
-                                            fetchPath: "/api/aggregate/ingesur/usuarios",
-                                            headers: {
-                                                0: {
-                                                    name: "Nombre",
-                                                    label: "Nombre",
-                                                },
-                                                1: {
-                                                    name: "Apellido",
-                                                    label: "Apellido",
-                                                },
-                                                2: {
-                                                    name: "Empresa",
-                                                    label: "Empresa",
-                                                },
-                                                3: {
-                                                    name: "Posición",
-                                                    label: "Posición",
-                                                },
-                                                4: {
-                                                    name: "Sector",
-                                                    label: "Sector",
-                                                },
-                                                5: {
-                                                    name: "DNI",
-                                                    label: "DNI",
-                                                },
-                                                6: {
-                                                    name: "Teléfono",
-                                                    label: "Teléfono",
-                                                },
-                                                7: {
-                                                    name: "Mail",
-                                                    label: "Mail",
-                                                },
-                                            },
-                                            filters: {
-                                                0: {
-                                                    label: "Nombre",
-                                                    inputs: {
-                                                        nombre: {
-                                                            name: "Nombre",
-                                                            type: "text",
-                                                            placeholder: "nombre",
-                                                            value: "",
-                                                            required: "",
-                                                            stage: {
-                                                                type: "match",
-                                                                var: "nombre",
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                1: {
-                                                    label: "Apellido",
-                                                    inputs: {
-                                                        apellido: {
-                                                            name: "Apellido",
-                                                            type: "text",
-                                                            placeholder: "Apellido",
-                                                            value: "",
-                                                            required: "",
-                                                            stage: {
-                                                                type: "match",
-                                                                var: "apellido",
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                2: {
-                                                    label: "DNI",
-                                                    inputs: {
-                                                        dni: {
-                                                            name: "DNI",
-                                                            type: "text",
-                                                            placeholder: "DNI",
-                                                            value: "",
-                                                            required: "",
-                                                            stage: {
-                                                                type: "match",
-                                                                var: "dni",
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                3: {
-                                                    label: "Empresa",
-                                                    inputs: {
-                                                        desde: {
-                                                            name: "Empresa",
-                                                            type: "text",
-                                                            placeholder: "Empresa",
-                                                            value: "",
-                                                            required: "",
-                                                            stage: {
-                                                                type: "match",
-                                                                var: "empresa",
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            headerBtns: {
-                                                0: {
-                                                    enabled: "true",
-                                                    type: "filter",
-                                                    label: "filtrar",
-                                                    onClick: {
-                                                        cmds: {
-                                                            0: {
-                                                                type: "filter",
-                                                                payload: {}
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                1: {
-                                                    enabled: "true",
-                                                    type: "erase",
-                                                    label: "filtrar",
-                                                    targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
-                                                    onClick: {
-                                                        cmds: {
-                                                            0: {
-                                                                type: "erase",
-                                                                payload: {}
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                2: {
-                                                    enabled: "true",
-                                                    type: "edit",
-                                                    label: "editar",
-                                                    targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
-                                                    onClick: {
-                                                        cmds: {
-                                                            1: {
-                                                                type: "modal",
-                                                                form: {
-                                                                    title: "INTI",
-                                                                    cols: {
-                                                                        0: {
-                                                                            0: {
-                                                                                type: "text",
-                                                                                label: "DNI",
-                                                                                placeholder: "DNI"
-                                                                            },
-                                                                            1: {
-                                                                                type: "text",
-                                                                                label: "Nombre",
-                                                                                placeholder: "Nombre"
-                                                                            },
-                                                                            2: {
-                                                                                type: "text",
-                                                                                label: "Apellido",
-                                                                                placeholder: "Apellido"
-                                                                            },
-                                                                            3: {
-                                                                                type: "date",
-                                                                                label: "Fecha N.",
-                                                                                placeholder: ""
-                                                                            },
-                                                                            4: {
-                                                                                type: "text",
-                                                                                label: "Empresa",
-                                                                                placeholder: "Empresa"
-                                                                            },
-                                                                        },
-                                                                        1: {
-                                                                            0: {
-                                                                                type: "text",
-                                                                                label: "Sector",
-                                                                                placeholder: "Sector"
-                                                                            },
-                                                                            1: {
-                                                                                type: "text",
-                                                                                label: "Posición",
-                                                                                placeholder: "Posición"
-                                                                            },
-                                                                            2: {
-                                                                                type: "text",
-                                                                                label: "Mail",
-                                                                                placeholder: "Mail"
-                                                                            },
-                                                                            3: {
-                                                                                type: "text",
-                                                                                label: "Teléfono",
-                                                                                placeholder: ""
-                                                                            },
-                                                                            4: {
-                                                                                type: "text",
-                                                                                label: "Dirección",
-                                                                                placeholder: "Dirección"
-                                                                            },
-                                                                        }
-                                                                    },
-                                                                    footerBtns: {
-                                                                        cancel: {
-                                                                            enabled: "true",
-                                                                            type: "edit",
-                                                                            label: "editar",
-                                                                            onClick: {}
-                                                                        },
-                                                                        acept: {
-                                                                            enabled: "true",
-                                                                            type: "edit",
-                                                                            label: "editar",
-                                                                            onClick: {}
-                                                                        }
-                                                                    }
-                                                                },
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                3: {
-                                                    enabled: "true",
-                                                    type: "add",
-                                                    label: "agregar",
-                                                    onClick: {
-                                                        cmds: {
-                                                            0: {
-                                                                type: "modal",
-                                                                payload: {
-                                                                    content: {
-                                                                        rows: {
-                                                                            //Rows
-                                                                            0: {
-                                                                                cols: {
-                                                                                    0: {
-                                                                                        0: modalForm
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        },
-                                                                    }
-                                                                }
-                                                            },
-                                                            1: {
-                                                                type: "post",
-                                                                payload: {
-                                                                    url: "api/post/test/test",
-                                                                    method: "POST",
-                                                                }
-                                                            },
-                                                            2: {
-                                                                type: "update",
-                                                                payload: {}
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            finalStages: {
-                                                0: '{"$sort":{"Fecha":-1}}'
-                                            },
-                                            footerButtons: {
-                                                add: {
-                                                    label: "Agregar",
-                                                    type: "add",
-                                                    modal: {
-                                                        type: "form",
-                                                        msg: "",
-                                                        title: "Modal Form",
-                                                        cols: {
-                                                            0: {
-                                                                0: {
-                                                                    type: "text",
-                                                                    label: "DNI",
-                                                                    placeholder: "DNI"
-                                                                },
-                                                                1: {
-                                                                    type: "text",
-                                                                    label: "Nombre",
-                                                                    placeholder: "Nombre"
-                                                                },
-                                                                2: {
-                                                                    type: "text",
-                                                                    label: "Apellido",
-                                                                    placeholder: "Apellido"
-                                                                },
-                                                                3: {
-                                                                    type: "date",
-                                                                    label: "Fecha N.",
-                                                                    placeholder: ""
-                                                                },
-                                                                4: {
-                                                                    type: "text",
-                                                                    label: "Empresa",
-                                                                    placeholder: "Empresa"
-                                                                },
-                                                            },
-                                                            1: {
-                                                                0: {
-                                                                    type: "text",
-                                                                    label: "Sector",
-                                                                    placeholder: "Sector"
-                                                                },
-                                                                1: {
-                                                                    type: "text",
-                                                                    label: "Posición",
-                                                                    placeholder: "Posición"
-                                                                },
-                                                                2: {
-                                                                    type: "text",
-                                                                    label: "Mail",
-                                                                    placeholder: "Mail"
-                                                                },
-                                                                3: {
-                                                                    type: "text",
-                                                                    label: "Teléfono",
-                                                                    placeholder: ""
-                                                                },
-                                                                4: {
-                                                                    type: "text",
-                                                                    label: "Dirección",
-                                                                    placeholder: "Dirección"
-                                                                },
-                                                            }
-                                                        },
-                                                        onConfirm: {
-
-                                                        }
-                                                    }
-                                                },
-                                                finish: {
-                                                    label: "Finalizar",
-                                                    type: "submit",
-                                                    modal: {
-                                                        type: "confirm",
-                                                        msg: "Esta seguro que desea cargar estos datos?",
-                                                        onConfirm: {
-
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                }
-            }
-        }
-
-        const equipos = () => {
-
-            const modalForm = {
-                type: "form",
-                payload: {
-                    title: "CONFIRMACIÓN",
-                    cols: {
-                        0: {
-                            0: {
-                                type: "text",
-                                label: "DNI",
-                                placeholder: "DNI"
-                            },
-                            1: {
-                                type: "text",
-                                label: "Nombre",
-                                placeholder: "Nombre"
-                            },
-                            2: {
-                                type: "text",
-                                label: "Apellido",
-                                placeholder: "Apellido"
-                            },
-                            3: {
-                                type: "date",
-                                label: "Fecha N.",
-                                placeholder: ""
-                            },
-                            4: {
-                                type: "text",
-                                label: "Empresa",
-                                placeholder: "Empresa"
-                            },
-                        },
-                        1: {
-                            0: {
-                                type: "text",
-                                label: "Sector",
-                                placeholder: "Sector"
-                            },
-                            1: {
-                                type: "text",
-                                label: "Posición",
-                                placeholder: "Posición"
-                            },
-                            2: {
-                                type: "text",
-                                label: "Mail",
-                                placeholder: "Mail"
-                            },
-                            3: {
-                                type: "text",
-                                label: "Teléfono",
-                                placeholder: ""
-                            },
-                            4: {
-                                type: "text",
-                                label: "Dirección",
-                                placeholder: "Dirección"
-                            },
-                        }
-                    },
-                    footerBtns: {
-                        0: {
-                            enabled: "true",
-                            type: "filter",
-                            label: "Cancelar ",
-                            onClick: {
-                                cmds: {
-                                    0: {
-                                        type: "parent-cmd",
-                                        payload: {
-                                            cmds: {
-                                                0: {
-                                                    type: "return-correct",
-                                                    payload: {}
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        1: {
-                            enabled: "true",
-                            type: "add",
-                            label: "Agregar ",
-                            onClick: {
-                                cmds: {
-                                    0: {
-                                        type: "parent-cmd",
-                                        payload: {
-                                            cmds: {
-                                                0: {
-                                                    type: "return-correct",
-                                                    payload: {}
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                    }
-                }
-            }
-
-            return {
-                name: "EQUIPOS",
-                access: {
-                    names: {
-                        0: "URBE",
-                        1: "Admin"
-                    },
-                    roles: {
-                        0: "Admin"
-                    }
-                },
-                content: {
-                    rows: {
-                        //Rows
-                        0: {
-                            cols: {
-                                //Columns
-                                0: {
-                                    //Columns elements
-                                    0: {
-                                        type: "table",
-                                        payload: {
-                                            title: "EQUIPOS",
-                                            fetchPath: "/api/aggregate/ingesur/usuarios",
-                                            headers: {
-                                                0: {
-                                                    name: "Grupo",
-                                                    label: "Grupo",
-                                                },
-                                                1: {
-                                                    name: "Marca",
-                                                    label: "Marca",
-                                                },
-                                                2: {
-                                                    name: "Modelo",
-                                                    label: "Modelo",
-                                                },
-                                                3: {
-                                                    name: "Empresa",
-                                                    label: "Empresa",
-                                                },
-                                                4: {
-                                                    name: "No. Serie",
-                                                    label: "No. Serie",
-                                                },
-                                                5: {
-                                                    name: "Duración Cal.",
-                                                    label: "Duración Cal.",
-                                                },
-                                                6: {
-                                                    name: "Comentarios",
-                                                    label: "Comentarios",
-                                                },
-                                                7: {
-                                                    name: "Status",
-                                                    label: "Status",
-                                                },
-                                            },
-                                            filters: {
-                                                0: {
-                                                    label: "Grupo",
-                                                    inputs: {
-                                                        nombre: {
-                                                            name: "Grupo",
-                                                            type: "text",
-                                                            placeholder: "Grupo",
-                                                            value: "",
-                                                            required: "",
-                                                            stage: {
-                                                                type: "match",
-                                                                var: "nombre",
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                1: {
-                                                    label: "Marca",
-                                                    inputs: {
-                                                        apellido: {
-                                                            name: "Marca",
-                                                            type: "text",
-                                                            placeholder: "Marca",
-                                                            value: "",
-                                                            required: "",
-                                                            stage: {
-                                                                type: "match",
-                                                                var: "apellido",
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                2: {
-                                                    label: "Modelo",
-                                                    inputs: {
-                                                        dni: {
-                                                            name: "Modelo",
-                                                            type: "text",
-                                                            placeholder: "Modelo",
-                                                            value: "",
-                                                            required: "",
-                                                            stage: {
-                                                                type: "match",
-                                                                var: "dni",
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                3: {
-                                                    label: "Empresa",
-                                                    inputs: {
-                                                        desde: {
-                                                            name: "Empresa",
-                                                            type: "text",
-                                                            placeholder: "Empresa",
-                                                            value: "",
-                                                            required: "",
-                                                            stage: {
-                                                                type: "match",
-                                                                var: "empresa",
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                4: {
-                                                    label: "No. Serie",
-                                                    inputs: {
-                                                        desde: {
-                                                            name: "No. Serie",
-                                                            type: "text",
-                                                            placeholder: "No. Serie",
-                                                            value: "",
-                                                            required: "",
-                                                            stage: {
-                                                                type: "match",
-                                                                var: "empresa",
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            headerBtns: {
-                                                0: {
-                                                    enabled: "true",
-                                                    type: "filter",
-                                                    label: "filtrar",
-                                                    onClick: {
-                                                        cmds: {
-                                                            0: {
-                                                                type: "filter",
-                                                                payload: {}
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                1: {
-                                                    enabled: "true",
-                                                    type: "erase",
-                                                    label: "filtrar",
-                                                    targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
-                                                    onClick: {
-                                                        cmds: {
-                                                            0: {
-                                                                type: "erase",
-                                                                payload: {}
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                2: {
-                                                    enabled: "true",
-                                                    type: "edit",
-                                                    label: "editar",
-                                                    targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
-                                                    onClick: {
-                                                        cmds: {
-                                                            1: {
-                                                                type: "modal",
-                                                                form: {
-                                                                    title: "INTI",
-                                                                    cols: {
-                                                                        0: {
-                                                                            0: {
-                                                                                type: "text",
-                                                                                label: "DNI",
-                                                                                placeholder: "DNI"
-                                                                            },
-                                                                            1: {
-                                                                                type: "text",
-                                                                                label: "Nombre",
-                                                                                placeholder: "Nombre"
-                                                                            },
-                                                                            2: {
-                                                                                type: "text",
-                                                                                label: "Apellido",
-                                                                                placeholder: "Apellido"
-                                                                            },
-                                                                            3: {
-                                                                                type: "date",
-                                                                                label: "Fecha N.",
-                                                                                placeholder: ""
-                                                                            },
-                                                                            4: {
-                                                                                type: "text",
-                                                                                label: "Empresa",
-                                                                                placeholder: "Empresa"
-                                                                            },
-                                                                        },
-                                                                        1: {
-                                                                            0: {
-                                                                                type: "text",
-                                                                                label: "Sector",
-                                                                                placeholder: "Sector"
-                                                                            },
-                                                                            1: {
-                                                                                type: "text",
-                                                                                label: "Posición",
-                                                                                placeholder: "Posición"
-                                                                            },
-                                                                            2: {
-                                                                                type: "text",
-                                                                                label: "Mail",
-                                                                                placeholder: "Mail"
-                                                                            },
-                                                                            3: {
-                                                                                type: "text",
-                                                                                label: "Teléfono",
-                                                                                placeholder: ""
-                                                                            },
-                                                                            4: {
-                                                                                type: "text",
-                                                                                label: "Dirección",
-                                                                                placeholder: "Dirección"
-                                                                            },
-                                                                        }
-                                                                    },
-                                                                    footerBtns: {
-                                                                        cancel: {
-                                                                            enabled: "true",
-                                                                            type: "edit",
-                                                                            label: "editar",
-                                                                            onClick: {}
-                                                                        },
-                                                                        acept: {
-                                                                            enabled: "true",
-                                                                            type: "edit",
-                                                                            label: "editar",
-                                                                            onClick: {}
-                                                                        }
-                                                                    }
-                                                                },
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                3: {
-                                                    enabled: "true",
-                                                    type: "add",
-                                                    label: "agregar",
-                                                    onClick: {
-                                                        cmds: {
-                                                            0: {
-                                                                type: "modal",
-                                                                payload: {
-                                                                    content: {
-                                                                        rows: {
-                                                                            //Rows
-                                                                            0: {
-                                                                                cols: {
-                                                                                    0: {
-                                                                                        0: modalForm
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        },
-                                                                    }
-                                                                }
-                                                            },
-                                                            1: {
-                                                                type: "post",
-                                                                payload: {
-                                                                    url: "api/post/test/test",
-                                                                    method: "POST",
-                                                                }
-                                                            },
-                                                            2: {
-                                                                type: "update",
-                                                                payload: {}
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            finalStages: {
-                                                0: '{"$sort":{"Fecha":-1}}'
-                                            },
-                                            footerButtons: {
-                                                add: {
-                                                    label: "Agregar",
-                                                    type: "add",
-                                                    modal: {
-                                                        type: "form",
-                                                        msg: "",
-                                                        title: "Modal Form",
-                                                        cols: {
-                                                            0: {
-                                                                0: {
-                                                                    type: "text",
-                                                                    label: "DNI",
-                                                                    placeholder: "DNI"
-                                                                },
-                                                                1: {
-                                                                    type: "text",
-                                                                    label: "Nombre",
-                                                                    placeholder: "Nombre"
-                                                                },
-                                                                2: {
-                                                                    type: "text",
-                                                                    label: "Apellido",
-                                                                    placeholder: "Apellido"
-                                                                },
-                                                                3: {
-                                                                    type: "date",
-                                                                    label: "Fecha N.",
-                                                                    placeholder: ""
-                                                                },
-                                                                4: {
-                                                                    type: "text",
-                                                                    label: "Empresa",
-                                                                    placeholder: "Empresa"
-                                                                },
-                                                            },
-                                                            1: {
-                                                                0: {
-                                                                    type: "text",
-                                                                    label: "Sector",
-                                                                    placeholder: "Sector"
-                                                                },
-                                                                1: {
-                                                                    type: "text",
-                                                                    label: "Posición",
-                                                                    placeholder: "Posición"
-                                                                },
-                                                                2: {
-                                                                    type: "text",
-                                                                    label: "Mail",
-                                                                    placeholder: "Mail"
-                                                                },
-                                                                3: {
-                                                                    type: "text",
-                                                                    label: "Teléfono",
-                                                                    placeholder: ""
-                                                                },
-                                                                4: {
-                                                                    type: "text",
-                                                                    label: "Dirección",
-                                                                    placeholder: "Dirección"
-                                                                },
-                                                            }
-                                                        },
-                                                        onConfirm: {
-
-                                                        }
-                                                    }
-                                                },
-                                                finish: {
-                                                    label: "Finalizar",
-                                                    type: "submit",
-                                                    modal: {
-                                                        type: "confirm",
-                                                        msg: "Esta seguro que desea cargar estos datos?",
-                                                        onConfirm: {
-
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                }
-            }
-        }
-
-        const usuarios = () => {
-
-            const modalForm = {
-                type: "form",
-                payload: {
-                    title: "CONFIRMACIÓN",
-                    cols: {
-                        0: {
-                            0: {
-                                type: "text",
-                                label: "DNI",
-                                placeholder: "DNI"
-                            },
-                            1: {
-                                type: "text",
-                                label: "Nombre",
-                                placeholder: "Nombre"
-                            },
-                            2: {
-                                type: "text",
-                                label: "Apellido",
-                                placeholder: "Apellido"
-                            },
-                            3: {
-                                type: "date",
-                                label: "Fecha N.",
-                                placeholder: ""
-                            },
-                            4: {
-                                type: "text",
-                                label: "Empresa",
-                                placeholder: "Empresa"
-                            },
-                        },
-                        1: {
-                            0: {
-                                type: "text",
-                                label: "Sector",
-                                placeholder: "Sector"
-                            },
-                            1: {
-                                type: "text",
-                                label: "Posición",
-                                placeholder: "Posición"
-                            },
-                            2: {
-                                type: "text",
-                                label: "Mail",
-                                placeholder: "Mail"
-                            },
-                            3: {
-                                type: "text",
-                                label: "Teléfono",
-                                placeholder: ""
-                            },
-                            4: {
-                                type: "text",
-                                label: "Dirección",
-                                placeholder: "Dirección"
-                            },
-                        }
-                    },
-                    footerBtns: {
-                        0: {
-                            enabled: "true",
-                            type: "filter",
-                            label: "Cancelar ",
-                            onClick: {
-                                cmds: {
-                                    0: {
-                                        type: "parent-cmd",
-                                        payload: {
-                                            cmds: {
-                                                0: {
-                                                    type: "return-correct",
-                                                    payload: {}
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        1: {
-                            enabled: "true",
-                            type: "add",
-                            label: "Agregar ",
-                            onClick: {
-                                cmds: {
-                                    0: {
-                                        type: "parent-cmd",
-                                        payload: {
-                                            cmds: {
-                                                0: {
-                                                    type: "return-correct",
-                                                    payload: {}
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                    }
-                }
-            }
-
-            return {
-                name: "USUARIOS",
-                access: {
-                    names: {
-                        0: "URBE",
-                        1: "Admin"
-                    },
-                    roles: {
-                        0: "Admin"
-                    }
-                },
-                content: {
-                    rows: {
-                        //Rows
-                        0: {
-                            cols: {
-                                //Columns
-                                0: {
-                                    //Columns elements
-                                    0: {
-                                        type: "table",
-                                        payload: {
-                                            title: "USUARIOS",
-                                            fetchPath: "/api/aggregate/ingesur/usuarios",
-                                            headers: {
-                                                0: {
-                                                    name: "Nombre",
-                                                    label: "Nombre",
-                                                },
-                                                1: {
-                                                    name: "Apellido",
-                                                    label: "Apellido",
-                                                },
-                                                2: {
-                                                    name: "Empresa",
-                                                    label: "Empresa",
-                                                },
-                                                3: {
-                                                    name: "Posición",
-                                                    label: "Posición",
-                                                },
-                                                4: {
-                                                    name: "Sector",
-                                                    label: "Sector",
-                                                },
-                                                5: {
-                                                    name: "DNI",
-                                                    label: "DNI",
-                                                },
-                                                6: {
-                                                    name: "Teléfono",
-                                                    label: "Teléfono",
-                                                },
-                                                7: {
-                                                    name: "Mail",
-                                                    label: "Mail",
-                                                },
-                                            },
-                                            filters: {
-                                                0: {
-                                                    label: "Nombre",
-                                                    inputs: {
-                                                        nombre: {
-                                                            name: "Nombre",
-                                                            type: "text",
-                                                            placeholder: "nombre",
-                                                            value: "",
-                                                            required: "",
-                                                            stage: {
-                                                                type: "match",
-                                                                var: "nombre",
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                1: {
-                                                    label: "Apellido",
-                                                    inputs: {
-                                                        apellido: {
-                                                            name: "Apellido",
-                                                            type: "text",
-                                                            placeholder: "Apellido",
-                                                            value: "",
-                                                            required: "",
-                                                            stage: {
-                                                                type: "match",
-                                                                var: "apellido",
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                2: {
-                                                    label: "DNI",
-                                                    inputs: {
-                                                        dni: {
-                                                            name: "DNI",
-                                                            type: "text",
-                                                            placeholder: "DNI",
-                                                            value: "",
-                                                            required: "",
-                                                            stage: {
-                                                                type: "match",
-                                                                var: "dni",
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                3: {
-                                                    label: "Empresa",
-                                                    inputs: {
-                                                        desde: {
-                                                            name: "Empresa",
-                                                            type: "text",
-                                                            placeholder: "Empresa",
-                                                            value: "",
-                                                            required: "",
-                                                            stage: {
-                                                                type: "match",
-                                                                var: "empresa",
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            headerBtns: {
-                                                0: {
-                                                    enabled: "true",
-                                                    type: "filter",
-                                                    label: "filtrar",
-                                                    onClick: {
-                                                        cmds: {
-                                                            0: {
-                                                                type: "filter",
-                                                                payload: {}
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                1: {
-                                                    enabled: "true",
-                                                    type: "erase",
-                                                    label: "filtrar",
-                                                    targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
-                                                    onClick: {
-                                                        cmds: {
-                                                            0: {
-                                                                type: "erase",
-                                                                payload: {}
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                2: {
-                                                    enabled: "true",
-                                                    type: "edit",
-                                                    label: "editar",
-                                                    targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
-                                                    onClick: {
-                                                        cmds: {
-                                                            1: {
-                                                                type: "modal",
-                                                                form: {
-                                                                    title: "INTI",
-                                                                    cols: {
-                                                                        0: {
-                                                                            0: {
-                                                                                type: "text",
-                                                                                label: "DNI",
-                                                                                placeholder: "DNI"
-                                                                            },
-                                                                            1: {
-                                                                                type: "text",
-                                                                                label: "Nombre",
-                                                                                placeholder: "Nombre"
-                                                                            },
-                                                                            2: {
-                                                                                type: "text",
-                                                                                label: "Apellido",
-                                                                                placeholder: "Apellido"
-                                                                            },
-                                                                            3: {
-                                                                                type: "date",
-                                                                                label: "Fecha N.",
-                                                                                placeholder: ""
-                                                                            },
-                                                                            4: {
-                                                                                type: "text",
-                                                                                label: "Empresa",
-                                                                                placeholder: "Empresa"
-                                                                            },
-                                                                        },
-                                                                        1: {
-                                                                            0: {
-                                                                                type: "text",
-                                                                                label: "Sector",
-                                                                                placeholder: "Sector"
-                                                                            },
-                                                                            1: {
-                                                                                type: "text",
-                                                                                label: "Posición",
-                                                                                placeholder: "Posición"
-                                                                            },
-                                                                            2: {
-                                                                                type: "text",
-                                                                                label: "Mail",
-                                                                                placeholder: "Mail"
-                                                                            },
-                                                                            3: {
-                                                                                type: "text",
-                                                                                label: "Teléfono",
-                                                                                placeholder: ""
-                                                                            },
-                                                                            4: {
-                                                                                type: "text",
-                                                                                label: "Dirección",
-                                                                                placeholder: "Dirección"
-                                                                            },
-                                                                        }
-                                                                    },
-                                                                    footerBtns: {
-                                                                        cancel: {
-                                                                            enabled: "true",
-                                                                            type: "edit",
-                                                                            label: "editar",
-                                                                            onClick: {}
-                                                                        },
-                                                                        acept: {
-                                                                            enabled: "true",
-                                                                            type: "edit",
-                                                                            label: "editar",
-                                                                            onClick: {}
-                                                                        }
-                                                                    }
-                                                                },
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                3: {
-                                                    enabled: "true",
-                                                    type: "add",
-                                                    label: "agregar",
-                                                    onClick: {
-                                                        cmds: {
-                                                            0: {
-                                                                type: "modal",
-                                                                payload: {
-                                                                    content: {
-                                                                        rows: {
-                                                                            //Rows
-                                                                            0: {
-                                                                                cols: {
-                                                                                    0: {
-                                                                                        0: modalForm
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        },
-                                                                    }
-                                                                }
-                                                            },
-                                                            1: {
-                                                                type: "post",
-                                                                payload: {
-                                                                    url: "api/post/test/test",
-                                                                    method: "POST",
-                                                                }
-                                                            },
-                                                            2: {
-                                                                type: "update",
-                                                                payload: {}
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            finalStages: {
-                                                0: '{"$sort":{"Fecha":-1}}'
-                                            },
-                                            footerButtons: {
-                                                add: {
-                                                    label: "Agregar",
-                                                    type: "add",
-                                                    modal: {
-                                                        type: "form",
-                                                        msg: "",
-                                                        title: "Modal Form",
-                                                        cols: {
-                                                            0: {
-                                                                0: {
-                                                                    type: "text",
-                                                                    label: "DNI",
-                                                                    placeholder: "DNI"
-                                                                },
-                                                                1: {
-                                                                    type: "text",
-                                                                    label: "Nombre",
-                                                                    placeholder: "Nombre"
-                                                                },
-                                                                2: {
-                                                                    type: "text",
-                                                                    label: "Apellido",
-                                                                    placeholder: "Apellido"
-                                                                },
-                                                                3: {
-                                                                    type: "date",
-                                                                    label: "Fecha N.",
-                                                                    placeholder: ""
-                                                                },
-                                                                4: {
-                                                                    type: "text",
-                                                                    label: "Empresa",
-                                                                    placeholder: "Empresa"
-                                                                },
-                                                            },
-                                                            1: {
-                                                                0: {
-                                                                    type: "text",
-                                                                    label: "Sector",
-                                                                    placeholder: "Sector"
-                                                                },
-                                                                1: {
-                                                                    type: "text",
-                                                                    label: "Posición",
-                                                                    placeholder: "Posición"
-                                                                },
-                                                                2: {
-                                                                    type: "text",
-                                                                    label: "Mail",
-                                                                    placeholder: "Mail"
-                                                                },
-                                                                3: {
-                                                                    type: "text",
-                                                                    label: "Teléfono",
-                                                                    placeholder: ""
-                                                                },
-                                                                4: {
-                                                                    type: "text",
-                                                                    label: "Dirección",
-                                                                    placeholder: "Dirección"
-                                                                },
-                                                            }
-                                                        },
-                                                        onConfirm: {
-
-                                                        }
-                                                    }
-                                                },
-                                                finish: {
-                                                    label: "Finalizar",
-                                                    type: "submit",
-                                                    modal: {
-                                                        type: "confirm",
-                                                        msg: "Esta seguro que desea cargar estos datos?",
-                                                        onConfirm: {
-
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
+                childs: {
+                    wizard: wizard()
                 }
             }
         }
 
         const subCats = () => {
-            
             return {
-                name: "SUB CATS",
+                type: "category-parent",
+                name: "INGRESO",
                 access: {
                     names: {
-                        0: "URBE",
                         1: "Admin"
                     },
                     roles: {
                         0: "Admin"
                     }
                 },
-                subCategories: {
-                    0: ingreso(),
-                    1: laboratorio(),
-                    2: entregados(),
-                    3: gases()
+                childs: {
+                    0: ingresos(),
+                    1: ingresos(),
+                    2: ingresos(),
+                    3: ingresos()
                 }
             }
         }
 
         return {
-            0: ingreso(),
-            1: laboratorio(),
-            2: entregados(),
-            3: gases(),
-            4: equipos(),
-            5: subCats(),
-            6: usuarios()
+            0: ingresos(),
+            1: subCats(),
+            2: ingresos(),
+            3: subCats(),
+            4: ingresos(),
+            5: subCats()
+            // 1: laboratorio(),
+            // 2: entregados(),
+            // 3: gases(),
+            // 4: equipos(),
+            // 5: subCats(),
+            // 6: usuarios()
         }
     }
 
     return {
+        type:"dashboard",
         id: "id",
         company: {
             name: "Masterbus"
@@ -3230,7 +499,7 @@ const getDashboardData = (token) => {
             name: token.user,
             role: token.role,
         },
-        categories: getCategories()
+        childs: getCategories()
     };
 };
 
@@ -3294,13 +563,26 @@ const endpoints = {
     "pages": {
         "login": (req, res) => {
             checkAccessToken(req, res, { $or: [{ role: "client" }, { role: "admin" }] })
-                .then((token) => res.redirect('/pages/dashboard'))
-                .catch((err) => views.login(req, res, {}));
+                .then((token) => {
+                    res.redirect('/pages/dashboard');
+                })
+                .catch((err) => {
+                    views.login(req, res, {});
+                });
         },
         "dashboard": (req, res) => {
             checkAccessToken(req, res, { $or: [{ role: "client" }, { role: "admin" }] })
-                .then((token) => views.dashboard(req, res, getDashboardData(token)))
-                .catch((err) => res.redirect('/pages/login'));
+                .then((token) => {
+                    try {
+                        views.dashboard(req, res, getDashboardData(token));
+                    } catch (error) {
+                        res.send(error);
+                    }
+            })
+            .catch((err) => {
+                console.log(err);
+                res.redirect('/pages/login');
+            });
         }
     },
     "api": {
