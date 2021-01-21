@@ -170,6 +170,228 @@ const getDashboardData = (token) => {
 
                     const nuevoIngresoModal = () => {
                         return {
+                            type: "modal",
+                            childs: {
+                               // tableIngresos: tableIngresos()
+                            }
+                        }
+                    };
+
+                    return {
+                        type: "table",
+                        title: "INGRESOS",
+                        fetchPath: "/api/aggregate/IngesurERP/Ingesos",
+                        headers: {
+                            0: {
+                                name: "Grupo",
+                                label: "Grupo",
+                            },
+                            1: {
+                                name: "Marca",
+                                label: "Marca",
+                            },
+                            2: {
+                                name: "Modelo",
+                                label: "Modelo",
+                            },
+                            3: {
+                                name: "No.Serie",
+                                label: "No.Serie",
+                            },
+                            4: {
+                                name: "Duración Calibración",
+                                label: "Duración Calibración",
+                            },
+                            5: {
+                                name: "Comentarios",
+                                label: "Comentarios",
+                            }
+                        },
+                        filters: {
+                            0: {
+                                label: "Buscar",
+                                inputs: {
+                                    nombre: {
+                                        name: "Buscar",
+                                        type: "text",
+                                        placeholder: "Buscar...",
+                                        value: "",
+                                        required: "",
+                                        stage: {
+                                            type: "match",
+                                            var: "nombre",
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        finalStages: {
+                            0: '{"$sort":{"paquete.Fecha":-1,"paquete.Hora":-1}}'
+                        },
+                        headerBtns: {
+                            0: {
+                                enabled: "true",
+                                type: "filter",
+                                label: "filtrar",
+                                onClick: {
+                                    cmds: {
+                                        0: {
+                                            type: "filter",
+                                            payload: {}
+                                        }
+                                    }
+                                }
+                            },
+                            1: {
+                                enabled: "true",
+                                type: "erase",
+                                label: "filtrar",
+                                targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
+                                onClick: {
+                                    cmds: {
+                                        0: {
+                                            type: "erase",
+                                            payload: {}
+                                        }
+                                    }
+                                }
+                            },
+                            2: {
+                                enabled: "true",
+                                type: "edit",
+                                label: "editar",
+                                targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
+                                onClick: {
+                                    cmds: {
+                                        1: {
+                                            type: "modal",
+                                            form: {
+                                                title: "INTI",
+                                                cols: {
+                                                    0: {
+                                                        0: {
+                                                            type: "text",
+                                                            label: "DNI",
+                                                            placeholder: "DNI"
+                                                        },
+                                                        1: {
+                                                            type: "text",
+                                                            label: "Nombre",
+                                                            placeholder: "Nombre"
+                                                        },
+                                                        2: {
+                                                            type: "text",
+                                                            label: "Apellido",
+                                                            placeholder: "Apellido"
+                                                        },
+                                                        3: {
+                                                            type: "date",
+                                                            label: "Fecha N.",
+                                                            placeholder: ""
+                                                        },
+                                                        4: {
+                                                            type: "text",
+                                                            label: "Empresa",
+                                                            placeholder: "Empresa"
+                                                        },
+                                                    },
+                                                    1: {
+                                                        0: {
+                                                            type: "text",
+                                                            label: "Sector",
+                                                            placeholder: "Sector"
+                                                        },
+                                                        1: {
+                                                            type: "text",
+                                                            label: "Posición",
+                                                            placeholder: "Posición"
+                                                        },
+                                                        2: {
+                                                            type: "text",
+                                                            label: "Mail",
+                                                            placeholder: "Mail"
+                                                        },
+                                                        3: {
+                                                            type: "text",
+                                                            label: "Teléfono",
+                                                            placeholder: ""
+                                                        },
+                                                        4: {
+                                                            type: "text",
+                                                            label: "Dirección",
+                                                            placeholder: "Dirección"
+                                                        },
+                                                    }
+                                                },
+                                                footerBtns: {
+                                                    cancel: {
+                                                        enabled: "true",
+                                                        type: "edit",
+                                                        label: "editar",
+                                                        onClick: {}
+                                                    },
+                                                    acept: {
+                                                        enabled: "true",
+                                                        type: "edit",
+                                                        label: "editar",
+                                                        onClick: {}
+                                                    }
+                                                }
+                                            },
+                                        }
+                                    }
+                                }
+                            },
+                            3: {
+                                enabled: "true",
+                                type: "add",
+                                label: "agregar",
+                                onClick: {
+                                    cmds: {
+                                        0: {
+                                            type: "modal",
+                                            payload: {
+                                                content: {
+                                                    rows: {
+                                                        //Rows
+                                                        0: {
+                                                            cols: {
+                                                                0: {
+                                                                    0: "nuevoIngresoModal"
+                                                                }
+                                                            }
+                                                        }
+                                                    },
+                                                }
+                                            }
+                                        },
+                                        1: {
+                                            type: "post",
+                                            payload: {
+                                                url: "api/post/test/test",
+                                                method: "POST",
+                                            }
+                                        },
+                                        2: {
+                                            type: "update",
+                                            payload: {}
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        footerBtns: {
+                        },
+                        childs: {
+                            nuevoIngresoModal: nuevoIngresoModal()
+                        }
+                    }
+                };
+                
+                const formDespachante = () => {
+
+                    const nuevoIngresoModal = () => {
+                        return {
                             type: "wizard",
                             pages: {
                                 0: {
@@ -400,7 +622,477 @@ const getDashboardData = (token) => {
                         }
                     }
                 };
-                
+
+                const formReceptor = () => {
+
+                    const nuevoIngresoModal = () => {
+                        return {
+                            type: "wizard",
+                            pages: {
+                                0: {
+                                    rows: {
+                                        0: {
+                                            cols: {
+                                                0: {
+                                                   // 0: "tableIngresos"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            childs: {
+                               // tableIngresos: tableIngresos()
+                            }
+                        }
+                    };
+
+                    return {
+                        type: "table",
+                        title: "INGRESOS",
+                        fetchPath: "/api/aggregate/IngesurERP/Ingesos",
+                        headers: {
+                            0: {
+                                name: "Grupo",
+                                label: "Grupo",
+                            },
+                            1: {
+                                name: "Marca",
+                                label: "Marca",
+                            },
+                            2: {
+                                name: "Modelo",
+                                label: "Modelo",
+                            },
+                            3: {
+                                name: "No.Serie",
+                                label: "No.Serie",
+                            },
+                            4: {
+                                name: "Duración Calibración",
+                                label: "Duración Calibración",
+                            },
+                            5: {
+                                name: "Comentarios",
+                                label: "Comentarios",
+                            }
+                        },
+                        filters: {
+                            0: {
+                                label: "Buscar",
+                                inputs: {
+                                    nombre: {
+                                        name: "Buscar",
+                                        type: "text",
+                                        placeholder: "Buscar...",
+                                        value: "",
+                                        required: "",
+                                        stage: {
+                                            type: "match",
+                                            var: "nombre",
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        finalStages: {
+                            0: '{"$sort":{"paquete.Fecha":-1,"paquete.Hora":-1}}'
+                        },
+                        headerBtns: {
+                            0: {
+                                enabled: "true",
+                                type: "filter",
+                                label: "filtrar",
+                                onClick: {
+                                    cmds: {
+                                        0: {
+                                            type: "filter",
+                                            payload: {}
+                                        }
+                                    }
+                                }
+                            },
+                            1: {
+                                enabled: "true",
+                                type: "erase",
+                                label: "filtrar",
+                                targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
+                                onClick: {
+                                    cmds: {
+                                        0: {
+                                            type: "erase",
+                                            payload: {}
+                                        }
+                                    }
+                                }
+                            },
+                            2: {
+                                enabled: "true",
+                                type: "edit",
+                                label: "editar",
+                                targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
+                                onClick: {
+                                    cmds: {
+                                        1: {
+                                            type: "modal",
+                                            form: {
+                                                title: "INTI",
+                                                cols: {
+                                                    0: {
+                                                        0: {
+                                                            type: "text",
+                                                            label: "DNI",
+                                                            placeholder: "DNI"
+                                                        },
+                                                        1: {
+                                                            type: "text",
+                                                            label: "Nombre",
+                                                            placeholder: "Nombre"
+                                                        },
+                                                        2: {
+                                                            type: "text",
+                                                            label: "Apellido",
+                                                            placeholder: "Apellido"
+                                                        },
+                                                        3: {
+                                                            type: "date",
+                                                            label: "Fecha N.",
+                                                            placeholder: ""
+                                                        },
+                                                        4: {
+                                                            type: "text",
+                                                            label: "Empresa",
+                                                            placeholder: "Empresa"
+                                                        },
+                                                    },
+                                                    1: {
+                                                        0: {
+                                                            type: "text",
+                                                            label: "Sector",
+                                                            placeholder: "Sector"
+                                                        },
+                                                        1: {
+                                                            type: "text",
+                                                            label: "Posición",
+                                                            placeholder: "Posición"
+                                                        },
+                                                        2: {
+                                                            type: "text",
+                                                            label: "Mail",
+                                                            placeholder: "Mail"
+                                                        },
+                                                        3: {
+                                                            type: "text",
+                                                            label: "Teléfono",
+                                                            placeholder: ""
+                                                        },
+                                                        4: {
+                                                            type: "text",
+                                                            label: "Dirección",
+                                                            placeholder: "Dirección"
+                                                        },
+                                                    }
+                                                },
+                                                footerBtns: {
+                                                    cancel: {
+                                                        enabled: "true",
+                                                        type: "edit",
+                                                        label: "editar",
+                                                        onClick: {}
+                                                    },
+                                                    acept: {
+                                                        enabled: "true",
+                                                        type: "edit",
+                                                        label: "editar",
+                                                        onClick: {}
+                                                    }
+                                                }
+                                            },
+                                        }
+                                    }
+                                }
+                            },
+                            3: {
+                                enabled: "true",
+                                type: "add",
+                                label: "agregar",
+                                onClick: {
+                                    cmds: {
+                                        0: {
+                                            type: "modal",
+                                            payload: {
+                                                content: {
+                                                    rows: {
+                                                        //Rows
+                                                        0: {
+                                                            cols: {
+                                                                0: {
+                                                                    0: "nuevoIngresoModal"
+                                                                }
+                                                            }
+                                                        }
+                                                    },
+                                                }
+                                            }
+                                        },
+                                        1: {
+                                            type: "post",
+                                            payload: {
+                                                url: "api/post/test/test",
+                                                method: "POST",
+                                            }
+                                        },
+                                        2: {
+                                            type: "update",
+                                            payload: {}
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        footerBtns: {
+                        },
+                        childs: {
+                            nuevoIngresoModal: nuevoIngresoModal()
+                        }
+                    }
+                };
+
+                const tableNuevoIngreso = () => {
+
+                    const nuevoIngresoModal = () => {
+                        return {
+                            type: "wizard",
+                            pages: {
+                                0: {
+                                    rows: {
+                                        0: {
+                                            cols: {
+                                                0: {
+                                                   // 0: "tableIngresos"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            childs: {
+                               // tableIngresos: tableIngresos()
+                            }
+                        }
+                    };
+
+                    return {
+                        type: "table",
+                        title: "INGRESOS",
+                        fetchPath: "/api/aggregate/IngesurERP/Ingesos",
+                        headers: {
+                            0: {
+                                name: "Grupo",
+                                label: "Grupo",
+                            },
+                            1: {
+                                name: "Marca",
+                                label: "Marca",
+                            },
+                            2: {
+                                name: "Modelo",
+                                label: "Modelo",
+                            },
+                            3: {
+                                name: "No.Serie",
+                                label: "No.Serie",
+                            },
+                            4: {
+                                name: "Duración Calibración",
+                                label: "Duración Calibración",
+                            },
+                            5: {
+                                name: "Comentarios",
+                                label: "Comentarios",
+                            }
+                        },
+                        filters: {
+                            0: {
+                                label: "Buscar",
+                                inputs: {
+                                    nombre: {
+                                        name: "Buscar",
+                                        type: "text",
+                                        placeholder: "Buscar...",
+                                        value: "",
+                                        required: "",
+                                        stage: {
+                                            type: "match",
+                                            var: "nombre",
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        finalStages: {
+                            0: '{"$sort":{"paquete.Fecha":-1,"paquete.Hora":-1}}'
+                        },
+                        headerBtns: {
+                            0: {
+                                enabled: "true",
+                                type: "filter",
+                                label: "filtrar",
+                                onClick: {
+                                    cmds: {
+                                        0: {
+                                            type: "filter",
+                                            payload: {}
+                                        }
+                                    }
+                                }
+                            },
+                            1: {
+                                enabled: "true",
+                                type: "erase",
+                                label: "filtrar",
+                                targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
+                                onClick: {
+                                    cmds: {
+                                        0: {
+                                            type: "erase",
+                                            payload: {}
+                                        }
+                                    }
+                                }
+                            },
+                            2: {
+                                enabled: "true",
+                                type: "edit",
+                                label: "editar",
+                                targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
+                                onClick: {
+                                    cmds: {
+                                        1: {
+                                            type: "modal",
+                                            form: {
+                                                title: "INTI",
+                                                cols: {
+                                                    0: {
+                                                        0: {
+                                                            type: "text",
+                                                            label: "DNI",
+                                                            placeholder: "DNI"
+                                                        },
+                                                        1: {
+                                                            type: "text",
+                                                            label: "Nombre",
+                                                            placeholder: "Nombre"
+                                                        },
+                                                        2: {
+                                                            type: "text",
+                                                            label: "Apellido",
+                                                            placeholder: "Apellido"
+                                                        },
+                                                        3: {
+                                                            type: "date",
+                                                            label: "Fecha N.",
+                                                            placeholder: ""
+                                                        },
+                                                        4: {
+                                                            type: "text",
+                                                            label: "Empresa",
+                                                            placeholder: "Empresa"
+                                                        },
+                                                    },
+                                                    1: {
+                                                        0: {
+                                                            type: "text",
+                                                            label: "Sector",
+                                                            placeholder: "Sector"
+                                                        },
+                                                        1: {
+                                                            type: "text",
+                                                            label: "Posición",
+                                                            placeholder: "Posición"
+                                                        },
+                                                        2: {
+                                                            type: "text",
+                                                            label: "Mail",
+                                                            placeholder: "Mail"
+                                                        },
+                                                        3: {
+                                                            type: "text",
+                                                            label: "Teléfono",
+                                                            placeholder: ""
+                                                        },
+                                                        4: {
+                                                            type: "text",
+                                                            label: "Dirección",
+                                                            placeholder: "Dirección"
+                                                        },
+                                                    }
+                                                },
+                                                footerBtns: {
+                                                    cancel: {
+                                                        enabled: "true",
+                                                        type: "edit",
+                                                        label: "editar",
+                                                        onClick: {}
+                                                    },
+                                                    acept: {
+                                                        enabled: "true",
+                                                        type: "edit",
+                                                        label: "editar",
+                                                        onClick: {}
+                                                    }
+                                                }
+                                            },
+                                        }
+                                    }
+                                }
+                            },
+                            3: {
+                                enabled: "true",
+                                type: "add",
+                                label: "agregar",
+                                onClick: {
+                                    cmds: {
+                                        0: {
+                                            type: "modal",
+                                            payload: {
+                                                content: {
+                                                    rows: {
+                                                        //Rows
+                                                        0: {
+                                                            cols: {
+                                                                0: {
+                                                                    0: "nuevoIngresoModal"
+                                                                }
+                                                            }
+                                                        }
+                                                    },
+                                                }
+                                            }
+                                        },
+                                        1: {
+                                            type: "post",
+                                            payload: {
+                                                url: "api/post/test/test",
+                                                method: "POST",
+                                            }
+                                        },
+                                        2: {
+                                            type: "update",
+                                            payload: {}
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        footerBtns: {
+                        },
+                        childs: {
+                            nuevoIngresoModal: nuevoIngresoModal()
+                        }
+                    }
+                };
+
                 return {
                     type: "wizard",
                     pages: {
@@ -414,10 +1106,34 @@ const getDashboardData = (token) => {
                                     }
                                 }
                             }
-                        }
+                        },
+                        1:{
+                            rows: {
+                                0: {
+                                    cols: {
+                                        0: {
+                                            0: "formDespachante"
+                                        },
+                                        1: {
+                                            0: "formReceptor"
+                                        }
+                                    }
+                                },
+                                1: {
+                                    cols: {
+                                        0: {
+                                            0: "tableNuevoIngreso"
+                                        }
+                                    }
+                                }
+                            }
+                        },
                     },
                     childs: {
-                        tableIngresos: tableIngresos()
+                        tableIngresos: tableIngresos(),
+                        formDespachante: formDespachante(),
+                        formReceptor: formReceptor(),
+                        tableNuevoIngreso: tableNuevoIngreso()
                     }
                 };
 
@@ -474,12 +1190,13 @@ const getDashboardData = (token) => {
         }
 
         return {
-            0: ingresos(),
-            1: subCats(),
-            2: ingresos(),
-            3: subCats(),
-            4: ingresos(),
-            5: subCats()
+            0: ingresos()
+            // 1: subCats(),
+            // 2: ingresos(),
+            // 3: subCats(),
+            // 4: ingresos(),
+            // 5: subCats()
+
             // 1: laboratorio(),
             // 2: entregados(),
             // 3: gases(),
