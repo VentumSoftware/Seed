@@ -1189,9 +1189,62 @@ const getDashboardData = (token) => {
             }
         }
 
+        const mapa=()=>{
+            const mapaBuenosAires=()=>{
+                return{
+                    type:"map",
+                    origin:"[-34.6083,-58.3712]",
+                    zoom:"12",
+                    layer:"https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                    markers:{
+                        0:{
+                            coords:"[-34.6083,-58.3712]",
+                            icon:"tree"
+                        },
+                        1:{
+                            coords:"[-34.726959164195364, -58.33363868185681]",
+                            icon:"tree"
+                        },
+                        2:{
+                            coords:"[-34.66182308737559, -58.36573935936066]",
+                            icon:"tree"
+                        }
+                    }
+                }
+            }
+            return {
+                type: "category",
+                name: "MAPA",
+                access: {
+                    names: {
+                        1: "Admin"
+                    },
+                    roles: {
+                        0: "Admin"
+                    }
+                },
+                content: {
+                    rows: {
+                        //Rows
+                        0: {
+                            cols: {
+                                0: {
+                                    0: "mapa"
+                                }
+                            }
+                        }
+                    }
+                },
+                childs: {
+                    mapa: mapaBuenosAires()
+                }
+            
+            }
+        }
+
         return {
-            0: ingresos()
-            // 1: subCats(),
+            //0: ingresos(),
+            1: mapa()
             // 2: ingresos(),
             // 3: subCats(),
             // 4: ingresos(),
