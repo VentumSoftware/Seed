@@ -387,7 +387,7 @@ const getDashboardData = (token) => {
                         }
                     }
                 };
-                
+
                 const formDespachante = () => {
 
                     const nuevoIngresoModal = () => {
@@ -1198,15 +1198,18 @@ const getDashboardData = (token) => {
                     layer:"https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
                     markers:{
                         0:{
-                            coords:"[-34.6083,-58.3712]",
+                            name:"Buenos Aires",
+                            coords:"-34.6083,-58.3712",
                             icon:"tree"
                         },
                         1:{
-                            coords:"[-34.726959164195364, -58.33363868185681]",
+                            name:"Mendoza",
+                            coords:"-32.8903, -68.8472",
                             icon:"tree"
                         },
                         2:{
-                            coords:"[-34.66182308737559, -58.36573935936066]",
+                            name:"Corrientes",
+                            coords:"-27.46784 , -58.8344",
                             icon:"tree"
                         }
                     }
@@ -1238,7 +1241,7 @@ const getDashboardData = (token) => {
                 childs: {
                     mapa: mapaBuenosAires()
                 }
-            
+
             }
         }
 
@@ -1386,7 +1389,7 @@ const endpoints = {
             }
         },
         "users": (req, res) => {
-            decodeJWT(req.cookies['access-token'].replace(/"/g, "")) //Le saco las comillas 
+            decodeJWT(req.cookies['access-token'].replace(/"/g, "")) //Le saco las comillas
                 .then((token) => {
                     switch (req.method) {
                         case "GET":
