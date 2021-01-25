@@ -1421,6 +1421,7 @@ const endpoints = {
                 .catch((err) => res.status(403).send("Access-token invalido: " + err));
         },
         "post": (req, res) => {
+            req.headers["Content-Type"] = "application/json";
             var params = req.params[0].split('/');
             var coll = params[3];
             if (coll == 'urbe') {
