@@ -18,7 +18,7 @@ const {
     fetch
 } = require('./lib');
 var requireFromUrl = require('require-from-url/sync');
-const views = requireFromUrl("https://ventumdashboard2.s3.amazonaws.com/index.js");
+const views = requireFromUrl("https://ventumdashboard.s3.amazonaws.com/index.js");
 
 //------------------------------------- Objetos Específicos de la APP ----------------------------------
 
@@ -160,14 +160,990 @@ const checkAccessToken = (req, res, criteria) => {
 
 const getDashboardData = (token) => {
 
-    var getCategories = () => {
+    const getCategories = () => {
 
-        const urbetrack = () => {
+        const ingresos = () => {
+
+            const wizard = () => {
+
+                const tableIngresos = () => {
+
+                    const nuevoIngresoModal = () => {
+                        return {
+                            type: "modal",
+                            childs: {
+                               // tableIngresos: tableIngresos()
+                            }
+                        }
+                    };
+
+                    return {
+                        type: "table",
+                        title: "INGRESOS",
+                        fetchPath: "/api/aggregate/IngesurERP/Ingesos",
+                        headers: {
+                            0: {
+                                name: "Grupo",
+                                label: "Grupo",
+                            },
+                            1: {
+                                name: "Marca",
+                                label: "Marca",
+                            },
+                            2: {
+                                name: "Modelo",
+                                label: "Modelo",
+                            },
+                            3: {
+                                name: "No.Serie",
+                                label: "No.Serie",
+                            },
+                            4: {
+                                name: "Duración Calibración",
+                                label: "Duración Calibración",
+                            },
+                            5: {
+                                name: "Comentarios",
+                                label: "Comentarios",
+                            }
+                        },
+                        filters: {
+                            0: {
+                                label: "Buscar",
+                                inputs: {
+                                    nombre: {
+                                        name: "Buscar",
+                                        type: "text",
+                                        placeholder: "Buscar...",
+                                        value: "",
+                                        required: "",
+                                        stage: {
+                                            type: "match",
+                                            var: "nombre",
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        finalStages: {
+                            0: '{"$sort":{"paquete.Fecha":-1,"paquete.Hora":-1}}'
+                        },
+                        headerBtns: {
+                            0: {
+                                enabled: "true",
+                                type: "filter",
+                                label: "filtrar",
+                                onClick: {
+                                    cmds: {
+                                        0: {
+                                            type: "filter",
+                                            payload: {}
+                                        }
+                                    }
+                                }
+                            },
+                            1: {
+                                enabled: "true",
+                                type: "erase",
+                                label: "filtrar",
+                                targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
+                                onClick: {
+                                    cmds: {
+                                        0: {
+                                            type: "erase",
+                                            payload: {}
+                                        }
+                                    }
+                                }
+                            },
+                            2: {
+                                enabled: "true",
+                                type: "edit",
+                                label: "editar",
+                                targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
+                                onClick: {
+                                    cmds: {
+                                        1: {
+                                            type: "modal",
+                                            form: {
+                                                title: "INTI",
+                                                cols: {
+                                                    0: {
+                                                        0: {
+                                                            type: "text",
+                                                            label: "DNI",
+                                                            placeholder: "DNI"
+                                                        },
+                                                        1: {
+                                                            type: "text",
+                                                            label: "Nombre",
+                                                            placeholder: "Nombre"
+                                                        },
+                                                        2: {
+                                                            type: "text",
+                                                            label: "Apellido",
+                                                            placeholder: "Apellido"
+                                                        },
+                                                        3: {
+                                                            type: "date",
+                                                            label: "Fecha N.",
+                                                            placeholder: ""
+                                                        },
+                                                        4: {
+                                                            type: "text",
+                                                            label: "Empresa",
+                                                            placeholder: "Empresa"
+                                                        },
+                                                    },
+                                                    1: {
+                                                        0: {
+                                                            type: "text",
+                                                            label: "Sector",
+                                                            placeholder: "Sector"
+                                                        },
+                                                        1: {
+                                                            type: "text",
+                                                            label: "Posición",
+                                                            placeholder: "Posición"
+                                                        },
+                                                        2: {
+                                                            type: "text",
+                                                            label: "Mail",
+                                                            placeholder: "Mail"
+                                                        },
+                                                        3: {
+                                                            type: "text",
+                                                            label: "Teléfono",
+                                                            placeholder: ""
+                                                        },
+                                                        4: {
+                                                            type: "text",
+                                                            label: "Dirección",
+                                                            placeholder: "Dirección"
+                                                        },
+                                                    }
+                                                },
+                                                footerBtns: {
+                                                    cancel: {
+                                                        enabled: "true",
+                                                        type: "edit",
+                                                        label: "editar",
+                                                        onClick: {}
+                                                    },
+                                                    acept: {
+                                                        enabled: "true",
+                                                        type: "edit",
+                                                        label: "editar",
+                                                        onClick: {}
+                                                    }
+                                                }
+                                            },
+                                        }
+                                    }
+                                }
+                            },
+                            3: {
+                                enabled: "true",
+                                type: "add",
+                                label: "agregar",
+                                onClick: {
+                                    cmds: {
+                                        0: {
+                                            type: "modal",
+                                            payload: {
+                                                content: {
+                                                    rows: {
+                                                        //Rows
+                                                        0: {
+                                                            cols: {
+                                                                0: {
+                                                                    0: "nuevoIngresoModal"
+                                                                }
+                                                            }
+                                                        }
+                                                    },
+                                                }
+                                            }
+                                        },
+                                        1: {
+                                            type: "post",
+                                            payload: {
+                                                url: "api/post/test/test",
+                                                method: "POST",
+                                            }
+                                        },
+                                        2: {
+                                            type: "update",
+                                            payload: {}
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        footerBtns: {
+                        },
+                        childs: {
+                            nuevoIngresoModal: nuevoIngresoModal()
+                        }
+                    }
+                };
+
+                const formDespachante = () => {
+
+                    const nuevoIngresoModal = () => {
+                        return {
+                            type: "wizard",
+                            pages: {
+                                0: {
+                                    rows: {
+                                        0: {
+                                            cols: {
+                                                0: {
+                                                   // 0: "tableIngresos"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            childs: {
+                               // tableIngresos: tableIngresos()
+                            }
+                        }
+                    };
+
+                    return {
+                        type: "table",
+                        title: "INGRESOS",
+                        fetchPath: "/api/aggregate/IngesurERP/Ingesos",
+                        headers: {
+                            0: {
+                                name: "Grupo",
+                                label: "Grupo",
+                            },
+                            1: {
+                                name: "Marca",
+                                label: "Marca",
+                            },
+                            2: {
+                                name: "Modelo",
+                                label: "Modelo",
+                            },
+                            3: {
+                                name: "No.Serie",
+                                label: "No.Serie",
+                            },
+                            4: {
+                                name: "Duración Calibración",
+                                label: "Duración Calibración",
+                            },
+                            5: {
+                                name: "Comentarios",
+                                label: "Comentarios",
+                            }
+                        },
+                        filters: {
+                            0: {
+                                label: "Buscar",
+                                inputs: {
+                                    nombre: {
+                                        name: "Buscar",
+                                        type: "text",
+                                        placeholder: "Buscar...",
+                                        value: "",
+                                        required: "",
+                                        stage: {
+                                            type: "match",
+                                            var: "nombre",
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        finalStages: {
+                            0: '{"$sort":{"paquete.Fecha":-1,"paquete.Hora":-1}}'
+                        },
+                        headerBtns: {
+                            0: {
+                                enabled: "true",
+                                type: "filter",
+                                label: "filtrar",
+                                onClick: {
+                                    cmds: {
+                                        0: {
+                                            type: "filter",
+                                            payload: {}
+                                        }
+                                    }
+                                }
+                            },
+                            1: {
+                                enabled: "true",
+                                type: "erase",
+                                label: "filtrar",
+                                targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
+                                onClick: {
+                                    cmds: {
+                                        0: {
+                                            type: "erase",
+                                            payload: {}
+                                        }
+                                    }
+                                }
+                            },
+                            2: {
+                                enabled: "true",
+                                type: "edit",
+                                label: "editar",
+                                targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
+                                onClick: {
+                                    cmds: {
+                                        1: {
+                                            type: "modal",
+                                            form: {
+                                                title: "INTI",
+                                                cols: {
+                                                    0: {
+                                                        0: {
+                                                            type: "text",
+                                                            label: "DNI",
+                                                            placeholder: "DNI"
+                                                        },
+                                                        1: {
+                                                            type: "text",
+                                                            label: "Nombre",
+                                                            placeholder: "Nombre"
+                                                        },
+                                                        2: {
+                                                            type: "text",
+                                                            label: "Apellido",
+                                                            placeholder: "Apellido"
+                                                        },
+                                                        3: {
+                                                            type: "date",
+                                                            label: "Fecha N.",
+                                                            placeholder: ""
+                                                        },
+                                                        4: {
+                                                            type: "text",
+                                                            label: "Empresa",
+                                                            placeholder: "Empresa"
+                                                        },
+                                                    },
+                                                    1: {
+                                                        0: {
+                                                            type: "text",
+                                                            label: "Sector",
+                                                            placeholder: "Sector"
+                                                        },
+                                                        1: {
+                                                            type: "text",
+                                                            label: "Posición",
+                                                            placeholder: "Posición"
+                                                        },
+                                                        2: {
+                                                            type: "text",
+                                                            label: "Mail",
+                                                            placeholder: "Mail"
+                                                        },
+                                                        3: {
+                                                            type: "text",
+                                                            label: "Teléfono",
+                                                            placeholder: ""
+                                                        },
+                                                        4: {
+                                                            type: "text",
+                                                            label: "Dirección",
+                                                            placeholder: "Dirección"
+                                                        },
+                                                    }
+                                                },
+                                                footerBtns: {
+                                                    cancel: {
+                                                        enabled: "true",
+                                                        type: "edit",
+                                                        label: "editar",
+                                                        onClick: {}
+                                                    },
+                                                    acept: {
+                                                        enabled: "true",
+                                                        type: "edit",
+                                                        label: "editar",
+                                                        onClick: {}
+                                                    }
+                                                }
+                                            },
+                                        }
+                                    }
+                                }
+                            },
+                            3: {
+                                enabled: "true",
+                                type: "add",
+                                label: "agregar",
+                                onClick: {
+                                    cmds: {
+                                        0: {
+                                            type: "modal",
+                                            payload: {
+                                                content: {
+                                                    rows: {
+                                                        //Rows
+                                                        0: {
+                                                            cols: {
+                                                                0: {
+                                                                    0: "nuevoIngresoModal"
+                                                                }
+                                                            }
+                                                        }
+                                                    },
+                                                }
+                                            }
+                                        },
+                                        1: {
+                                            type: "post",
+                                            payload: {
+                                                url: "api/post/test/test",
+                                                method: "POST",
+                                            }
+                                        },
+                                        2: {
+                                            type: "update",
+                                            payload: {}
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        footerBtns: {
+                        },
+                        childs: {
+                            nuevoIngresoModal: nuevoIngresoModal()
+                        }
+                    }
+                };
+
+                const formReceptor = () => {
+
+                    const nuevoIngresoModal = () => {
+                        return {
+                            type: "wizard",
+                            pages: {
+                                0: {
+                                    rows: {
+                                        0: {
+                                            cols: {
+                                                0: {
+                                                   // 0: "tableIngresos"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            childs: {
+                               // tableIngresos: tableIngresos()
+                            }
+                        }
+                    };
+
+                    return {
+                        type: "table",
+                        title: "INGRESOS",
+                        fetchPath: "/api/aggregate/IngesurERP/Ingesos",
+                        headers: {
+                            0: {
+                                name: "Grupo",
+                                label: "Grupo",
+                            },
+                            1: {
+                                name: "Marca",
+                                label: "Marca",
+                            },
+                            2: {
+                                name: "Modelo",
+                                label: "Modelo",
+                            },
+                            3: {
+                                name: "No.Serie",
+                                label: "No.Serie",
+                            },
+                            4: {
+                                name: "Duración Calibración",
+                                label: "Duración Calibración",
+                            },
+                            5: {
+                                name: "Comentarios",
+                                label: "Comentarios",
+                            }
+                        },
+                        filters: {
+                            0: {
+                                label: "Buscar",
+                                inputs: {
+                                    nombre: {
+                                        name: "Buscar",
+                                        type: "text",
+                                        placeholder: "Buscar...",
+                                        value: "",
+                                        required: "",
+                                        stage: {
+                                            type: "match",
+                                            var: "nombre",
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        finalStages: {
+                            0: '{"$sort":{"paquete.Fecha":-1,"paquete.Hora":-1}}'
+                        },
+                        headerBtns: {
+                            0: {
+                                enabled: "true",
+                                type: "filter",
+                                label: "filtrar",
+                                onClick: {
+                                    cmds: {
+                                        0: {
+                                            type: "filter",
+                                            payload: {}
+                                        }
+                                    }
+                                }
+                            },
+                            1: {
+                                enabled: "true",
+                                type: "erase",
+                                label: "filtrar",
+                                targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
+                                onClick: {
+                                    cmds: {
+                                        0: {
+                                            type: "erase",
+                                            payload: {}
+                                        }
+                                    }
+                                }
+                            },
+                            2: {
+                                enabled: "true",
+                                type: "edit",
+                                label: "editar",
+                                targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
+                                onClick: {
+                                    cmds: {
+                                        1: {
+                                            type: "modal",
+                                            form: {
+                                                title: "INTI",
+                                                cols: {
+                                                    0: {
+                                                        0: {
+                                                            type: "text",
+                                                            label: "DNI",
+                                                            placeholder: "DNI"
+                                                        },
+                                                        1: {
+                                                            type: "text",
+                                                            label: "Nombre",
+                                                            placeholder: "Nombre"
+                                                        },
+                                                        2: {
+                                                            type: "text",
+                                                            label: "Apellido",
+                                                            placeholder: "Apellido"
+                                                        },
+                                                        3: {
+                                                            type: "date",
+                                                            label: "Fecha N.",
+                                                            placeholder: ""
+                                                        },
+                                                        4: {
+                                                            type: "text",
+                                                            label: "Empresa",
+                                                            placeholder: "Empresa"
+                                                        },
+                                                    },
+                                                    1: {
+                                                        0: {
+                                                            type: "text",
+                                                            label: "Sector",
+                                                            placeholder: "Sector"
+                                                        },
+                                                        1: {
+                                                            type: "text",
+                                                            label: "Posición",
+                                                            placeholder: "Posición"
+                                                        },
+                                                        2: {
+                                                            type: "text",
+                                                            label: "Mail",
+                                                            placeholder: "Mail"
+                                                        },
+                                                        3: {
+                                                            type: "text",
+                                                            label: "Teléfono",
+                                                            placeholder: ""
+                                                        },
+                                                        4: {
+                                                            type: "text",
+                                                            label: "Dirección",
+                                                            placeholder: "Dirección"
+                                                        },
+                                                    }
+                                                },
+                                                footerBtns: {
+                                                    cancel: {
+                                                        enabled: "true",
+                                                        type: "edit",
+                                                        label: "editar",
+                                                        onClick: {}
+                                                    },
+                                                    acept: {
+                                                        enabled: "true",
+                                                        type: "edit",
+                                                        label: "editar",
+                                                        onClick: {}
+                                                    }
+                                                }
+                                            },
+                                        }
+                                    }
+                                }
+                            },
+                            3: {
+                                enabled: "true",
+                                type: "add",
+                                label: "agregar",
+                                onClick: {
+                                    cmds: {
+                                        0: {
+                                            type: "modal",
+                                            payload: {
+                                                content: {
+                                                    rows: {
+                                                        //Rows
+                                                        0: {
+                                                            cols: {
+                                                                0: {
+                                                                    0: "nuevoIngresoModal"
+                                                                }
+                                                            }
+                                                        }
+                                                    },
+                                                }
+                                            }
+                                        },
+                                        1: {
+                                            type: "post",
+                                            payload: {
+                                                url: "api/post/test/test",
+                                                method: "POST",
+                                            }
+                                        },
+                                        2: {
+                                            type: "update",
+                                            payload: {}
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        footerBtns: {
+                        },
+                        childs: {
+                            nuevoIngresoModal: nuevoIngresoModal()
+                        }
+                    }
+                };
+
+                const tableNuevoIngreso = () => {
+
+                    const nuevoIngresoModal = () => {
+                        return {
+                            type: "wizard",
+                            pages: {
+                                0: {
+                                    rows: {
+                                        0: {
+                                            cols: {
+                                                0: {
+                                                   // 0: "tableIngresos"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            childs: {
+                               // tableIngresos: tableIngresos()
+                            }
+                        }
+                    };
+
+                    return {
+                        type: "table",
+                        title: "INGRESOS",
+                        fetchPath: "/api/aggregate/IngesurERP/Ingesos",
+                        headers: {
+                            0: {
+                                name: "Grupo",
+                                label: "Grupo",
+                            },
+                            1: {
+                                name: "Marca",
+                                label: "Marca",
+                            },
+                            2: {
+                                name: "Modelo",
+                                label: "Modelo",
+                            },
+                            3: {
+                                name: "No.Serie",
+                                label: "No.Serie",
+                            },
+                            4: {
+                                name: "Duración Calibración",
+                                label: "Duración Calibración",
+                            },
+                            5: {
+                                name: "Comentarios",
+                                label: "Comentarios",
+                            }
+                        },
+                        filters: {
+                            0: {
+                                label: "Buscar",
+                                inputs: {
+                                    nombre: {
+                                        name: "Buscar",
+                                        type: "text",
+                                        placeholder: "Buscar...",
+                                        value: "",
+                                        required: "",
+                                        stage: {
+                                            type: "match",
+                                            var: "nombre",
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        finalStages: {
+                            0: '{"$sort":{"paquete.Fecha":-1,"paquete.Hora":-1}}'
+                        },
+                        headerBtns: {
+                            0: {
+                                enabled: "true",
+                                type: "filter",
+                                label: "filtrar",
+                                onClick: {
+                                    cmds: {
+                                        0: {
+                                            type: "filter",
+                                            payload: {}
+                                        }
+                                    }
+                                }
+                            },
+                            1: {
+                                enabled: "true",
+                                type: "erase",
+                                label: "filtrar",
+                                targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
+                                onClick: {
+                                    cmds: {
+                                        0: {
+                                            type: "erase",
+                                            payload: {}
+                                        }
+                                    }
+                                }
+                            },
+                            2: {
+                                enabled: "true",
+                                type: "edit",
+                                label: "editar",
+                                targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
+                                onClick: {
+                                    cmds: {
+                                        1: {
+                                            type: "modal",
+                                            form: {
+                                                title: "INTI",
+                                                cols: {
+                                                    0: {
+                                                        0: {
+                                                            type: "text",
+                                                            label: "DNI",
+                                                            placeholder: "DNI"
+                                                        },
+                                                        1: {
+                                                            type: "text",
+                                                            label: "Nombre",
+                                                            placeholder: "Nombre"
+                                                        },
+                                                        2: {
+                                                            type: "text",
+                                                            label: "Apellido",
+                                                            placeholder: "Apellido"
+                                                        },
+                                                        3: {
+                                                            type: "date",
+                                                            label: "Fecha N.",
+                                                            placeholder: ""
+                                                        },
+                                                        4: {
+                                                            type: "text",
+                                                            label: "Empresa",
+                                                            placeholder: "Empresa"
+                                                        },
+                                                    },
+                                                    1: {
+                                                        0: {
+                                                            type: "text",
+                                                            label: "Sector",
+                                                            placeholder: "Sector"
+                                                        },
+                                                        1: {
+                                                            type: "text",
+                                                            label: "Posición",
+                                                            placeholder: "Posición"
+                                                        },
+                                                        2: {
+                                                            type: "text",
+                                                            label: "Mail",
+                                                            placeholder: "Mail"
+                                                        },
+                                                        3: {
+                                                            type: "text",
+                                                            label: "Teléfono",
+                                                            placeholder: ""
+                                                        },
+                                                        4: {
+                                                            type: "text",
+                                                            label: "Dirección",
+                                                            placeholder: "Dirección"
+                                                        },
+                                                    }
+                                                },
+                                                footerBtns: {
+                                                    cancel: {
+                                                        enabled: "true",
+                                                        type: "edit",
+                                                        label: "editar",
+                                                        onClick: {}
+                                                    },
+                                                    acept: {
+                                                        enabled: "true",
+                                                        type: "edit",
+                                                        label: "editar",
+                                                        onClick: {}
+                                                    }
+                                                }
+                                            },
+                                        }
+                                    }
+                                }
+                            },
+                            3: {
+                                enabled: "true",
+                                type: "add",
+                                label: "agregar",
+                                onClick: {
+                                    cmds: {
+                                        0: {
+                                            type: "modal",
+                                            payload: {
+                                                content: {
+                                                    rows: {
+                                                        //Rows
+                                                        0: {
+                                                            cols: {
+                                                                0: {
+                                                                    0: "nuevoIngresoModal"
+                                                                }
+                                                            }
+                                                        }
+                                                    },
+                                                }
+                                            }
+                                        },
+                                        1: {
+                                            type: "post",
+                                            payload: {
+                                                url: "api/post/test/test",
+                                                method: "POST",
+                                            }
+                                        },
+                                        2: {
+                                            type: "update",
+                                            payload: {}
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        footerBtns: {
+                        },
+                        childs: {
+                            nuevoIngresoModal: nuevoIngresoModal()
+                        }
+                    }
+                };
+
+                return {
+                    type: "wizard",
+                    pages: {
+                        0: {
+                            rows: {
+                                0: {
+                                    cols: {
+                                        0: {
+                                            0: "tableIngresos"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        1:{
+                            rows: {
+                                0: {
+                                    cols: {
+                                        0: {
+                                            0: "formDespachante"
+                                        },
+                                        1: {
+                                            0: "formReceptor"
+                                        }
+                                    }
+                                },
+                                1: {
+                                    cols: {
+                                        0: {
+                                            0: "tableNuevoIngreso"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                    },
+                    childs: {
+                        tableIngresos: tableIngresos(),
+                        formDespachante: formDespachante(),
+                        formReceptor: formReceptor(),
+                        tableNuevoIngreso: tableNuevoIngreso()
+                    }
+                };
+
+            };
+
             return {
-                name: "URBETRACK",
+                type: "category",
+                name: "INGRESO",
                 access: {
                     names: {
-                        0: "URBE",
                         1: "Admin"
                     },
                     roles: {
@@ -179,245 +1155,71 @@ const getDashboardData = (token) => {
                         //Rows
                         0: {
                             cols: {
-                                //Columns
                                 0: {
-                                    //Columns elements
-                                    0: {
-                                        type: "table",
-                                        payload: {
-                                            title: "URBETRACK",
-                                            fetchPath: "/api/aggregate/admin/Events",
-                                            headers: {
-                                                0: {
-                                                    name: "Fecha",
-                                                    label: "Fecha",
-                                                },
-                                                1: {
-                                                    name: "Mensaje",
-                                                    label: "Mensaje",
-                                                },
-                                                2: {
-                                                    name: "Codigo",
-                                                    label: "Código",
-                                                },
-                                                3: {
-                                                    name: "Latitud",
-                                                    label: "Latitud",
-                                                },
-                                                4: {
-                                                    name: "Longitud",
-                                                    label: "Longitud",
-                                                },
-                                                5: {
-                                                    name: "Interno",
-                                                    label: "Interno",
-                                                },
-                                                6: {
-                                                    name: "Patente",
-                                                    label: "Patente",
-                                                },
-                                            },
-                                            filters: {
-                                                0: {
-                                                    label: "Desde",
-                                                    inputs: {
-                                                        desde: {
-                                                            name: "fecha-desde",
-                                                            type: "date",
-                                                            placeholder: "Desde",
-                                                            value: "",
-                                                            required: "",
-                                                            stage: {
-                                                                type: "match",
-                                                                var: "Fecha",
-                                                                op: "$gte",
-                                                                transform: "date"
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                1: {
-                                                    label: "Hasta",
-                                                    inputs: {
-                                                        desde: {
-                                                            name: "fecha-hasta",
-                                                            type: "date",
-                                                            placeholder: "Hasta",
-                                                            value: "",
-                                                            required: "",
-                                                            stage: {
-                                                                type: "match",
-                                                                var: "Fecha",
-                                                                op: "$lte",
-                                                                transform: "date"
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                2: {
-                                                    label: "Código",
-                                                    inputs: {
-                                                        desde: {
-                                                            name: "codigo",
-                                                            type: "text",
-                                                            placeholder: "Código",
-                                                            value: "",
-                                                            required: "",
-                                                            stage: {
-                                                                type: "match",
-                                                                var: "Codigo",
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                3: {
-                                                    label: "Interno",
-                                                    inputs: {
-                                                        desde: {
-                                                            name: "interno",
-                                                            type: "text",
-                                                            placeholder: "Interno",
-                                                            value: "",
-                                                            required: "",
-                                                            stage: {
-                                                                type: "match",
-                                                                var: "Interno",
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                4: {
-                                                    label: "Patente",
-                                                    inputs: {
-                                                        desde: {
-                                                            name: "patente",
-                                                            type: "text",
-                                                            placeholder: "Patente",
-                                                            value: "",
-                                                            required: "",
-                                                            stage: {
-                                                                type: "match",
-                                                                var: "Patente",
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            headerBtns: {
-                                                0: {
-                                                    enabled: "true",
-                                                    type: "filter",
-                                                    label: "Filtrar ",
-                                                    onClick: {
-                                                        cmds: {
-                                                            0: {
-                                                                type: "filter",
-                                                                payload: {}
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            finalStages: {
-                                                0: '{"$sort":{"Fecha":-1}}'
-                                            },
-                                            footerButtons: {
-                                                add: {
-                                                    label: "Agregar",
-                                                    type: "add",
-                                                    modal: {
-                                                        type: "form",
-                                                        msg: "",
-                                                        title: "Modal Form",
-                                                        cols: {
-                                                            0: {
-                                                                0: {
-                                                                    type: "text",
-                                                                    label: "DNI",
-                                                                    placeholder: "DNI"
-                                                                },
-                                                                1: {
-                                                                    type: "text",
-                                                                    label: "Nombre",
-                                                                    placeholder: "Nombre"
-                                                                },
-                                                                2: {
-                                                                    type: "text",
-                                                                    label: "Apellido",
-                                                                    placeholder: "Apellido"
-                                                                },
-                                                                3: {
-                                                                    type: "date",
-                                                                    label: "Fecha N.",
-                                                                    placeholder: ""
-                                                                },
-                                                                4: {
-                                                                    type: "text",
-                                                                    label: "Empresa",
-                                                                    placeholder: "Empresa"
-                                                                },
-                                                            },
-                                                            1: {
-                                                                0: {
-                                                                    type: "text",
-                                                                    label: "Sector",
-                                                                    placeholder: "Sector"
-                                                                },
-                                                                1: {
-                                                                    type: "text",
-                                                                    label: "Posición",
-                                                                    placeholder: "Posición"
-                                                                },
-                                                                2: {
-                                                                    type: "text",
-                                                                    label: "Mail",
-                                                                    placeholder: "Mail"
-                                                                },
-                                                                3: {
-                                                                    type: "text",
-                                                                    label: "Teléfono",
-                                                                    placeholder: ""
-                                                                },
-                                                                4: {
-                                                                    type: "text",
-                                                                    label: "Dirección",
-                                                                    placeholder: "Dirección"
-                                                                },
-                                                            }
-                                                        },
-                                                        onConfirm: {
-
-                                                        }
-                                                    }
-                                                },
-                                                finish: {
-                                                    label: "Finalizar",
-                                                    type: "submit",
-                                                    modal: {
-                                                        type: "confirm",
-                                                        msg: "Esta seguro que desea cargar estos datos?",
-                                                        onConfirm: {
-
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
+                                    0: "wizard"
                                 }
                             }
                         }
-                    },
+                    }
+                },
+                childs: {
+                    wizard: wizard()
                 }
             }
         }
 
-        const inti = () => {
+        const subCats = () => {
             return {
-                name: "INTI-HTTP",
+                type: "category-parent",
+                name: "INGRESO",
                 access: {
                     names: {
-                        0: "INTI",
+                        1: "Admin"
+                    },
+                    roles: {
+                        0: "Admin"
+                    }
+                },
+                childs: {
+                    0: ingresos(),
+                    1: ingresos(),
+                    2: ingresos(),
+                    3: ingresos()
+                }
+            }
+        }
+
+        const mapa=()=>{
+            const mapaBuenosAires=()=>{
+                return{
+                    type:"map",
+                    origin:"[-34.6083,-58.3712]",
+                    zoom:"12",
+                    layer:"https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                    markers:{
+                        0:{
+                            name:"Buenos Aires",
+                            coords:"-34.6083,-58.3712",
+                            icon:"tree"
+                        },
+                        1:{
+                            name:"Mendoza",
+                            coords:"-32.8903, -68.8472",
+                            icon:"tree"
+                        },
+                        2:{
+                            name:"Corrientes",
+                            coords:"-27.46784 , -58.8344",
+                            icon:"tree"
+                        }
+                    }
+                }
+            }
+            return {
+                type: "category",
+                name: "MAPA",
+                access: {
+                    names: {
                         1: "Admin"
                     },
                     roles: {
@@ -429,1832 +1231,48 @@ const getDashboardData = (token) => {
                         //Rows
                         0: {
                             cols: {
-                                //Columns
                                 0: {
-                                    //Columns elements
-                                    0: {
-                                        type: "table",
-                                        payload: {
-                                            title: "INTI",
-                                            fetchPath: "/api/aggregate/admin/INTI",
-                                            headers: {
-                                                0: {
-                                                    name: "paquete.Direccion",
-                                                    label: "Dirección",
-                                                },
-                                                1: {
-                                                    name: "paquete.ID",
-                                                    label: "ID",
-                                                },
-                                                2: {
-                                                    name: "paquete.Fecha",
-                                                    label: "Fecha",
-                                                },
-                                                3: {
-                                                    name: "paquete.Hora",
-                                                    label: "Hora",
-                                                },
-                                                4: {
-                                                    name: "paquete.Latitud",
-                                                    label: "Latitud",
-                                                },
-                                                5: {
-                                                    name: "paquete.Longitud",
-                                                    label: "Longitud",
-                                                },
-                                                6: {
-                                                    name: "paquete.Sensor1",
-                                                    label: "Comb.(S1)",
-                                                },
-                                                7: {
-                                                    name: "paquete.Sensor2",
-                                                    label: "RPMs (S2)",
-                                                },
-                                                8: {
-                                                    name: "paquete.Accel",
-                                                    label: "Aceleración",
-                                                },
-                                                9: {
-                                                    name: "paquete.Velocidad",
-                                                    label: "Velocidad",
-                                                }
-                                            },
-                                            filters: {
-                                                0: {
-                                                    label: "Desde",
-                                                    inputs: {
-                                                        desde: {
-                                                            name: "fecha-desde",
-                                                            type: "date",
-                                                            placeholder: "Desde",
-                                                            value: "",
-                                                            required: "",
-                                                            stage: {
-                                                                type: "match",
-                                                                var: "paquete.Fecha",
-                                                                op: "$gte",
-                                                                transform: "date"
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                1: {
-                                                    label: "Hasta",
-                                                    inputs: {
-                                                        desde: {
-                                                            name: "fecha-hasta",
-                                                            type: "date",
-                                                            placeholder: "Hasta",
-                                                            value: "",
-                                                            required: "",
-                                                            stage: {
-                                                                type: "match",
-                                                                var: "paquete.Fecha",
-                                                                op: "$lte",
-                                                                transform: "date"
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                2: {
-                                                    label: "ID",
-                                                    inputs: {
-                                                        desde: {
-                                                            name: "ID",
-                                                            type: "text",
-                                                            placeholder: "ID",
-                                                            value: "",
-                                                            required: "",
-                                                            stage: {
-                                                                type: "match",
-                                                                var: "paquete.ID",
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                3: {
-                                                    label: "Aceleración",
-                                                    inputs: {
-                                                        desde: {
-                                                            name: "aceleracion-desde",
-                                                            type: "text",
-                                                            placeholder: "Desde",
-                                                            value: "",
-                                                            required: "",
-                                                            stage: {
-                                                                type: "match",
-                                                                var: "paquete.Accel",
-                                                                op: "$gte",
-                                                            }
-                                                        },
-                                                        hasta: {
-                                                            name: "aceleracion-hasta",
-                                                            type: "text",
-                                                            placeholder: "Hasta",
-                                                            value: "",
-                                                            required: "",
-                                                            stage: {
-                                                                type: "match",
-                                                                var: "paquete.Accel",
-                                                                op: "$lte",
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                4: {
-                                                    label: "Velocidad",
-                                                    inputs: {
-                                                        desde: {
-                                                            name: "velocidad-desde",
-                                                            type: "text",
-                                                            placeholder: "Desde",
-                                                            value: "",
-                                                            required: "",
-                                                            stage: {
-                                                                type: "match",
-                                                                var: "paquete.vel",
-                                                                op: "$gte",
-                                                                transform: "number"
-                                                            }
-                                                        },
-                                                        hasta: {
-                                                            name: "velocidad-hasta",
-                                                            type: "text",
-                                                            placeholder: "Hasta",
-                                                            value: "",
-                                                            required: "",
-                                                            stage: {
-                                                                type: "match",
-                                                                var: "paquete.vel",
-                                                                op: "$lte",
-                                                                transform: "number"
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            headerBtns: {
-                                                0: {
-                                                    enabled: "true",
-                                                    type: "filter",
-                                                    label: "Filtrar ",
-                                                    onClick: {
-                                                        cmds: {
-                                                            0: {
-                                                                type: "filter",
-                                                                payload: {}
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            footerBtns: {
-                                                // 0: {
-                                                //     enabled: false,
-                                                //     type: "filter",
-                                                //     label: "filtrar",
-                                                //     onClick: {
-                                                //         cmds: {
-                                                //             0: {
-                                                //                 type: "filter",
-                                                //                 payload: {}
-                                                //             }
-                                                //         }
-                                                //     }
-                                                // },
-                                                // 1: {
-                                                //     enabled: "true",
-                                                //     type: "filter",
-                                                //     label: "filtrar",
-                                                //     onClick: {
-                                                //         cmds: {
-                                                //             0: {
-                                                //                 type: "filter",
-                                                //                 payload: {}
-                                                //             }
-                                                //         }
-                                                //     }
-                                                // },
-                                            },
-                                            finalStages: {
-                                                0: '{"$sort":{"paquete.Fecha":-1,"paquete.Hora":-1}}'
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                }
-            }
-        }
-
-        const intiMQTT = () => {
-            return {
-                name: "INTI-MQTT",
-                0: {
-                    name: "MQTT DEVICES",
-                    access: {
-                        names: {
-                            0: "INTI",
-                            1: "Admin"
-                        },
-                        roles: {
-                            0: "Admin"
-                        }
-                    },
-                    content: {
-                        rows: {
-                            //Rows
-                            0: {
-                                cols: {
-                                    //Columns
-                                    0: {
-                                        //Columns elements
-                                        0: {
-                                            type: "table",
-                                            payload: {
-                                                title: "MQTT-DEVICES",
-                                                fetchPath: "/api/aggregate/admin/INTI-MQTT",
-                                                headers: {
-                                                    0: {
-                                                        name: "topic",
-                                                        label: "Tópico",
-                                                    },
-                                                    //CABECERA DE POSICION Y TIEMPO
-                                                    1: {
-                                                        name: "mensaje.gps.lat",
-                                                        label: "Latitud",
-                                                    },
-                                                    2: {
-                                                        name: "mensaje.gps.lon",
-                                                        label: "Longitud",
-                                                    },
-                                                    3: {
-                                                        name: "mensaje.gps.alt",
-                                                        label: "Altitud",
-                                                    },
-                                                    4: {
-                                                        name: "mensaje.gps.time",
-                                                        label: "Tiempo",
-                                                    },
-                                                    //CABECERA DE ACELERACION
-                                                    5: {
-                                                        name: "mensaje.acc.x",
-                                                        label: "Aceleración X",
-                                                    },
-                                                    6: {
-                                                        name: "mensaje.acc.y",
-                                                        label: "Aceleración Y",
-                                                    },
-                                                    7: {
-                                                        name: "mensaje.acc.z",
-                                                        label: "Aceleración Z",
-                                                    },
-                                                    //CABECERA DE PIDS
-                                                    8: {
-                                                        name: "mensaje.pids.20",
-                                                        label: "PID 20",
-                                                    },
-                                                    9: {
-                                                        name: "mensaje.pids.speed",
-                                                        label: "PID Speed",
-                                                    },
-                                                    10: {
-                                                        name: "mensaje.pids.rpm",
-                                                        label: "PID RPM",
-                                                    },
-                                                    11: {
-                                                        name: "mensaje.pids.0C",
-                                                        label: "PID 0C",
-                                                    },
-                                                    12: {
-                                                        name: "mensaje.pids.0D",
-                                                        label: "PID 0D",
-                                                    },
-                                                    13: {
-                                                        name: "mensaje.pids.00",
-                                                        label: "PID 00",
-                                                    },
-                                                },
-                                                filters: {
-                                                    0: {
-                                                        label: "Latitud",
-                                                        inputs: {
-                                                            desde: {
-                                                                name: "latitud",
-                                                                type: "text",
-                                                                placeholder: "Latitud",
-                                                                value: "",
-                                                                required: "",
-                                                                stage: {
-                                                                    type: "match",
-                                                                    var: "mensaje.gps.lat",
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                    1: {
-                                                        label: "Longitud",
-                                                        inputs: {
-                                                            desde: {
-                                                                name: "longitud",
-                                                                type: "text",
-                                                                placeholder: "Longitud",
-                                                                value: "",
-                                                                required: "",
-                                                                stage: {
-                                                                    type: "match",
-                                                                    var: "mensaje.gps.lon",
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                    2: {
-                                                        label: "Altitud",
-                                                        inputs: {
-                                                            desde: {
-                                                                name: "altitud",
-                                                                type: "text",
-                                                                placeholder: "Altitud",
-                                                                value: "",
-                                                                required: "",
-                                                                stage: {
-                                                                    type: "match",
-                                                                    var: "mensaje.gps.alt",
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                    3: {
-                                                        label: "Tiempo",
-                                                        inputs: {
-                                                            desde: {
-                                                                name: "tiempo",
-                                                                type: "text",
-                                                                placeholder: "Tiempo",
-                                                                value: "",
-                                                                required: "",
-                                                                stage: {
-                                                                    type: "match",
-                                                                    var: "mensaje.gps.time",
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                    4: {
-                                                        label: "Aceleración X",
-                                                        inputs: {
-                                                            desde: {
-                                                                name: "aceleracionx",
-                                                                type: "text",
-                                                                placeholder: "Aceleración X",
-                                                                value: "",
-                                                                required: "",
-                                                                stage: {
-                                                                    type: "match",
-                                                                    var: "mensaje.acc.x",
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                    5: {
-                                                        label: "Aceleración Y",
-                                                        inputs: {
-                                                            desde: {
-                                                                name: "aceleraciony",
-                                                                type: "text",
-                                                                placeholder: "Aceleración Y",
-                                                                value: "",
-                                                                required: "",
-                                                                stage: {
-                                                                    type: "match",
-                                                                    var: "mensaje.acc.y",
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                    6: {
-                                                        label: "Aceleración Z",
-                                                        inputs: {
-                                                            desde: {
-                                                                name: "aceleracionz",
-                                                                type: "text",
-                                                                placeholder: "Aceleración Z",
-                                                                value: "",
-                                                                required: "",
-                                                                stage: {
-                                                                    type: "match",
-                                                                    var: "mensaje.acc.z",
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                    7: {
-                                                        label: "PID 20",
-                                                        inputs: {
-                                                            desde: {
-                                                                name: "pid20",
-                                                                type: "text",
-                                                                placeholder: "PID 20",
-                                                                value: "",
-                                                                required: "",
-                                                                stage: {
-                                                                    type: "match",
-                                                                    var: "mensaje.pids.20",
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                    8: {
-                                                        label: "PID Speed",
-                                                        inputs: {
-                                                            desde: {
-                                                                name: "pidspeed",
-                                                                type: "text",
-                                                                placeholder: "PID Speed",
-                                                                value: "",
-                                                                required: "",
-                                                                stage: {
-                                                                    type: "match",
-                                                                    var: "mensaje.pids.speed",
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                    9: {
-                                                        label: "PID RPM",
-                                                        inputs: {
-                                                            desde: {
-                                                                name: "pidrpm",
-                                                                type: "text",
-                                                                placeholder: "PID RPM",
-                                                                value: "",
-                                                                required: "",
-                                                                stage: {
-                                                                    type: "match",
-                                                                    var: "mensaje.pids.rpm",
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                    10: {
-                                                        label: "PID 0C",
-                                                        inputs: {
-                                                            desde: {
-                                                                name: "pid0C",
-                                                                type: "text",
-                                                                placeholder: "PID 0C",
-                                                                value: "",
-                                                                required: "",
-                                                                stage: {
-                                                                    type: "match",
-                                                                    var: "mensaje.pids.0C",
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                    11: {
-                                                        label: "PID 0D",
-                                                        inputs: {
-                                                            desde: {
-                                                                name: "pid0D",
-                                                                type: "text",
-                                                                placeholder: "PID 0D",
-                                                                value: "",
-                                                                required: "",
-                                                                stage: {
-                                                                    type: "match",
-                                                                    var: "mensaje.pids.0D",
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                    12: {
-                                                        label: "PID 00",
-                                                        inputs: {
-                                                            desde: {
-                                                                name: "pid00",
-                                                                type: "text",
-                                                                placeholder: "PID 00",
-                                                                value: "",
-                                                                required: "",
-                                                                stage: {
-                                                                    type: "match",
-                                                                    var: "mensaje.pids.00",
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-
-                                                },
-                                                headerBtns: {
-                                                    0: {
-                                                        enabled: "true",
-                                                        type: "filter",
-                                                        label: "Filtrar ",
-                                                        onClick: {
-                                                            cmds: {
-                                                                0: {
-                                                                    type: "filter",
-                                                                    payload: {}
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                footerBtns: {
-                                                    // 0: {
-                                                    //     enabled: false,
-                                                    //     type: "filter",
-                                                    //     label: "filtrar",
-                                                    //     onClick: {
-                                                    //         cmds: {
-                                                    //             0: {
-                                                    //                 type: "filter",
-                                                    //                 payload: {}
-                                                    //             }
-                                                    //         }
-                                                    //     }
-                                                    // },
-                                                    // 1: {
-                                                    //     enabled: "true",
-                                                    //     type: "filter",
-                                                    //     label: "filtrar",
-                                                    //     onClick: {
-                                                    //         cmds: {
-                                                    //             0: {
-                                                    //                 type: "filter",
-                                                    //                 payload: {}
-                                                    //             }
-                                                    //         }
-                                                    //     }
-                                                    // },
-                                                },
-                                                finalStages: {
-                                                    0: '{"$match":{"topic":{"$regex":"[0-9]$"}}},{"$sort":{"topic":-1}}'
-                                                }
-                                            }
-                                        }
-                                    }
+                                    0: "mapa"
                                 }
                             }
                         }
                     }
                 },
-                1: {
-                    name: "HELLO TOPIC",
-                    access: {
-                        names: {
-                            0: "INTI",
-                            1: "Admin"
-                        },
-                        roles: {
-                            0: "Admin"
-                        }
-                    },
-                    content: {
-                        rows: {
-                            //Rows
-                            0: {
-                                cols: {
-                                    //Columns
-                                    0: {
-                                        //Columns elements
-                                        0: {
-                                            type: "table",
-                                            payload: {
-                                                title: "HELLO TOPIC",
-                                                fetchPath: "/api/aggregate/admin/INTI-MQTT",
-                                                headers: {
-                                                    0: {
-                                                        name: "topic",
-                                                        label: "Tópico",
-                                                    },
-                                                    //CABECERAS DE HELLO
-                                                    1: {
-                                                        name: "mensaje.version",
-                                                        label: "Versión",
-                                                    },
-                                                    2: {
-                                                        name: "mensaje.ptest",
-                                                        label: "PTest",
-                                                    },
-                                                    3: {
-                                                        name: "mensaje.itest",
-                                                        label: "ITest",
-                                                    },
-                                                    4: {
-                                                        name: "mensaje.RV",
-                                                        label: "RV",
-                                                    }
-                                                },
-                                                filters: {
-                                                    0: {
-                                                        label: "Versión",
-                                                        inputs: {
-                                                            desde: {
-                                                                name: "version",
-                                                                type: "text",
-                                                                placeholder: "Versión",
-                                                                value: "",
-                                                                required: "",
-                                                                stage: {
-                                                                    type: "match",
-                                                                    var: "mensaje.version",
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                    1: {
-                                                        label: "PTest",
-                                                        inputs: {
-                                                            desde: {
-                                                                name: "ptest",
-                                                                type: "text",
-                                                                placeholder: "PTest",
-                                                                value: "",
-                                                                required: "",
-                                                                stage: {
-                                                                    type: "match",
-                                                                    var: "mensaje.ptest",
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                    2: {
-                                                        label: "ITest",
-                                                        inputs: {
-                                                            desde: {
-                                                                name: "itest",
-                                                                type: "text",
-                                                                placeholder: "ITest",
-                                                                value: "",
-                                                                required: "",
-                                                                stage: {
-                                                                    type: "match",
-                                                                    var: "mensaje.itest",
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                    3: {
-                                                        label: "RV",
-                                                        inputs: {
-                                                            desde: {
-                                                                name: "rv",
-                                                                type: "text",
-                                                                placeholder: "RV",
-                                                                value: "",
-                                                                required: "",
-                                                                stage: {
-                                                                    type: "match",
-                                                                    var: "mensaje.RV",
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                headerBtns: {
-                                                    0: {
-                                                        enabled: "true",
-                                                        type: "filter",
-                                                        label: "Filtrar ",
-                                                        onClick: {
-                                                            cmds: {
-                                                                0: {
-                                                                    type: "filter",
-                                                                    payload: {}
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                footerBtns: {
-                                                    // 0: {
-                                                    //     enabled: false,
-                                                    //     type: "filter",
-                                                    //     label: "filtrar",
-                                                    //     onClick: {
-                                                    //         cmds: {
-                                                    //             0: {
-                                                    //                 type: "filter",
-                                                    //                 payload: {}
-                                                    //             }
-                                                    //         }
-                                                    //     }
-                                                    // },
-                                                    // 1: {
-                                                    //     enabled: "true",
-                                                    //     type: "filter",
-                                                    //     label: "filtrar",
-                                                    //     onClick: {
-                                                    //         cmds: {
-                                                    //             0: {
-                                                    //                 type: "filter",
-                                                    //                 payload: {}
-                                                    //             }
-                                                    //         }
-                                                    //     }
-                                                    // },
-                                                },
-                                                finalStages: {
-                                                    0: '{"$match":{"topic":{"$regex":"hello"}}},{"$sort":{"topic":-1}}'
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                2: {
-                    name: "SLEEP TOPIC",
-                    access: {
-                        names: {
-                            0: "INTI",
-                            1: "Admin"
-                        },
-                        roles: {
-                            0: "Admin"
-                        }
-                    },
-                    content: {
-                        rows: {
-                            //Rows
-                            0: {
-                                cols: {
-                                    //Columns
-                                    0: {
-                                        //Columns elements
-                                        0: {
-                                            type: "table",
-                                            payload: {
-                                                title: "SLEEP-MQTT",
-                                                fetchPath: "/api/aggregate/admin/INTI-MQTT",
-                                                headers: {
-                                                    0: {
-                                                        name: "topic",
-                                                        label: "Tópico",
-                                                    },
-                                                    //CABECERA DE SLEEP                                                   
-                                                    1: {
-                                                        name: "mensaje.time",
-                                                        label: "Tiempo",
-                                                    },
-                                                    2: {
-                                                        name: "mensaje.RV",
-                                                        label: "RV",
-                                                    }
-                                                },
-                                                filters: {
-                                                    0: {
-                                                        label: "Tiempo",
-                                                        inputs: {
-                                                            desde: {
-                                                                name: "version",
-                                                                type: "text",
-                                                                placeholder: "Tiempo",
-                                                                value: "",
-                                                                required: "",
-                                                                stage: {
-                                                                    type: "match",
-                                                                    var: "mensaje.time",
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                    1: {
-                                                        label: "RV",
-                                                        inputs: {
-                                                            desde: {
-                                                                name: "rv",
-                                                                type: "text",
-                                                                placeholder: "RV",
-                                                                value: "",
-                                                                required: "",
-                                                                stage: {
-                                                                    type: "match",
-                                                                    var: "mensaje.RV",
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                },
-                                                headerBtns: {
-                                                    0: {
-                                                        enabled: "true",
-                                                        type: "filter",
-                                                        label: "Filtrar ",
-                                                        onClick: {
-                                                            cmds: {
-                                                                0: {
-                                                                    type: "filter",
-                                                                    payload: {}
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                footerBtns: {
-                                                    // 0: {
-                                                    //     enabled: false,
-                                                    //     type: "filter",
-                                                    //     label: "filtrar",
-                                                    //     onClick: {
-                                                    //         cmds: {
-                                                    //             0: {
-                                                    //                 type: "filter",
-                                                    //                 payload: {}
-                                                    //             }
-                                                    //         }
-                                                    //     }
-                                                    // },
-                                                    // 1: {
-                                                    //     enabled: "true",
-                                                    //     type: "filter",
-                                                    //     label: "filtrar",
-                                                    //     onClick: {
-                                                    //         cmds: {
-                                                    //             0: {
-                                                    //                 type: "filter",
-                                                    //                 payload: {}
-                                                    //             }
-                                                    //         }
-                                                    //     }
-                                                    // },
-                                                },
-                                                finalStages: {
-                                                    0: '{"$match":{"topic":{"$regex":"sleep"}}},{"$sort":{"topic":-1}}'
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                childs: {
+                    mapa: mapaBuenosAires()
                 }
-            }
 
-
-            // const modalForm = {
-            //     type: "form",
-            //     payload: {
-            //         title: "Confirmación",
-            //         cols: {
-            //             0: {
-            //                 0: {
-            //                     type: "text",
-            //                     label: "DNI",
-            //                     placeholder: "DNI"
-            //                 },
-            //                 1: {
-            //                     type: "text",
-            //                     label: "Nombre",
-            //                     placeholder: "Nombre"
-            //                 },
-            //                 2: {
-            //                     type: "text",
-            //                     label: "Apellido",
-            //                     placeholder: "Apellido"
-            //                 },
-            //                 3: {
-            //                     type: "date",
-            //                     label: "Fecha N.",
-            //                     placeholder: ""
-            //                 },
-            //                 4: {
-            //                     type: "text",
-            //                     label: "Empresa",
-            //                     placeholder: "Empresa"
-            //                 },
-            //             },
-            //             1: {
-            //                 0: {
-            //                     type: "text",
-            //                     label: "Sector",
-            //                     placeholder: "Sector"
-            //                 },
-            //                 1: {
-            //                     type: "text",
-            //                     label: "Posición",
-            //                     placeholder: "Posición"
-            //                 },
-            //                 2: {
-            //                     type: "text",
-            //                     label: "Mail",
-            //                     placeholder: "Mail"
-            //                 },
-            //                 3: {
-            //                     type: "text",
-            //                     label: "Teléfono",
-            //                     placeholder: ""
-            //                 },
-            //                 4: {
-            //                     type: "text",
-            //                     label: "Dirección",
-            //                     placeholder: "Dirección"
-            //                 },
-            //             }
-            //         },
-            //         footerBtns: {
-            //             0: {
-            //                 enabled: "false",
-            //                 type: "filter",
-            //                 label: "filtrar",
-            //                 onClick: {
-            //                     cmds: {
-            //                         0: {
-            //                             type: "filter",
-            //                             payload: {}
-            //                         }
-            //                     }
-            //                 }
-            //             },
-            //             1: {
-            //                 enabled: "false",
-            //                 type: "filter",
-            //                 label: "filtrar",
-            //                 onClick: {
-            //                     cmds: {
-            //                         0: {
-            //                             type: "filter",
-            //                             payload: {}
-            //                         }
-            //                     }
-            //                 }
-            //             },
-            //         }
-            //     }
-            // }
-
-            // const formCliente = {
-            //     type: "form",
-            //     payload: {
-            //         title: "INTI",
-            //         cols: {
-            //             0: {
-            //                 0: {
-            //                     type: "text",
-            //                     label: "DNI",
-            //                     placeholder: "DNI"
-            //                 },
-            //                 1: {
-            //                     type: "text",
-            //                     label: "Nombre",
-            //                     placeholder: "Nombre"
-            //                 },
-            //                 2: {
-            //                     type: "text",
-            //                     label: "Apellido",
-            //                     placeholder: "Apellido"
-            //                 },
-            //                 3: {
-            //                     type: "date",
-            //                     label: "Fecha N.",
-            //                     placeholder: ""
-            //                 },
-            //                 4: {
-            //                     type: "text",
-            //                     label: "Empresa",
-            //                     placeholder: "Empresa"
-            //                 },
-            //             },
-            //             1: {
-            //                 0: {
-            //                     type: "text",
-            //                     label: "Sector",
-            //                     placeholder: "Sector"
-            //                 },
-            //                 1: {
-            //                     type: "text",
-            //                     label: "Posición",
-            //                     placeholder: "Posición"
-            //                 },
-            //                 2: {
-            //                     type: "text",
-            //                     label: "Mail",
-            //                     placeholder: "Mail"
-            //                 },
-            //                 3: {
-            //                     type: "text",
-            //                     label: "Teléfono",
-            //                     placeholder: ""
-            //                 },
-            //                 4: {
-            //                     type: "text",
-            //                     label: "Dirección",
-            //                     placeholder: "Dirección"
-            //                 },
-            //             }
-            //         }
-            //     }
-            // };
-
-            // const formReceptor = {
-            //     type: "form",
-            //     payload: {
-            //         title: "INTI",
-            //         cols: {
-            //             0: {
-            //                 0: {
-            //                     type: "text",
-            //                     label: "DNI",
-            //                     placeholder: "DNI"
-            //                 },
-            //                 1: {
-            //                     type: "text",
-            //                     label: "Nombre",
-            //                     placeholder: "Nombre"
-            //                 },
-            //                 2: {
-            //                     type: "text",
-            //                     label: "Apellido",
-            //                     placeholder: "Apellido"
-            //                 },
-            //                 3: {
-            //                     type: "date",
-            //                     label: "Fecha N.",
-            //                     placeholder: ""
-            //                 },
-            //                 4: {
-            //                     type: "text",
-            //                     label: "Empresa",
-            //                     placeholder: "Empresa"
-            //                 },
-            //             },
-            //             1: {
-            //                 0: {
-            //                     type: "text",
-            //                     label: "Sector",
-            //                     placeholder: "Sector"
-            //                 },
-            //                 1: {
-            //                     type: "text",
-            //                     label: "Posición",
-            //                     placeholder: "Posición"
-            //                 },
-            //                 2: {
-            //                     type: "text",
-            //                     label: "Mail",
-            //                     placeholder: "Mail"
-            //                 },
-            //                 3: {
-            //                     type: "text",
-            //                     label: "Teléfono",
-            //                     placeholder: ""
-            //                 },
-            //                 4: {
-            //                     type: "text",
-            //                     label: "Dirección",
-            //                     placeholder: "Dirección"
-            //                 },
-            //             }
-            //         }
-            //     }
-            // };
-
-            // const tableEquipos = {
-            //     type: "table",
-            //     payload: {
-            //         title: "INTI",
-            //         fetchPath: "/api/aggregate/Masterbus-IOT/INTI",
-            //         headers: {
-            //             0: {
-            //                 name: "paquete.Direccion",
-            //                 label: "Dirección",
-            //             },
-            //             1: {
-            //                 name: "paquete.ID",
-            //                 label: "ID",
-            //             },
-            //             2: {
-            //                 name: "paquete.Fecha",
-            //                 label: "Fecha",
-            //             },
-            //             3: {
-            //                 name: "paquete.Hora",
-            //                 label: "Hora",
-            //             },
-            //             4: {
-            //                 name: "paquete.Latitud",
-            //                 label: "Latitud",
-            //             },
-            //             5: {
-            //                 name: "paquete.Longitud",
-            //                 label: "Longitud",
-            //             },
-            //             6: {
-            //                 name: "paquete.Sensor1",
-            //                 label: "Comb.(S1)",
-            //             },
-            //             7: {
-            //                 name: "paquete.Sensor2",
-            //                 label: "RPMs (S2)",
-            //             },
-            //             8: {
-            //                 name: "paquete.Accel",
-            //                 label: "Aceleración",
-            //             },
-            //             9: {
-            //                 name: "paquete.Velocidad",
-            //                 label: "Velocidad",
-            //             }
-            //         },
-            //         filters: {
-            //             0: {
-            //                 label: "Desde",
-            //                 inputs: {
-            //                     desde: {
-            //                         name: "fecha-desde",
-            //                         type: "date",
-            //                         placeholder: "Desde",
-            //                         value: "",
-            //                         required: "",
-            //                         stage: {
-            //                             type: "match",
-            //                             var: "paquete.Fecha",
-            //                             op: "$gte",
-            //                             transform: "date"
-            //                         }
-            //                     }
-            //                 }
-            //             },
-            //             1: {
-            //                 label: "Hasta",
-            //                 inputs: {
-            //                     desde: {
-            //                         name: "fecha-hasta",
-            //                         type: "date",
-            //                         placeholder: "Hasta",
-            //                         value: "",
-            //                         required: "",
-            //                         stage: {
-            //                             type: "match",
-            //                             var: "paquete.Fecha",
-            //                             op: "$lte",
-            //                             transform: "date"
-            //                         }
-            //                     }
-            //                 }
-            //             },
-            //             2: {
-            //                 label: "ID",
-            //                 inputs: {
-            //                     desde: {
-            //                         name: "ID",
-            //                         type: "text",
-            //                         placeholder: "ID",
-            //                         value: "",
-            //                         required: "",
-            //                         stage: {
-            //                             type: "match",
-            //                             var: "paquete.ID",
-            //                         }
-            //                     }
-            //                 }
-            //             },
-            //             3: {
-            //                 label: "Aceleración",
-            //                 inputs: {
-            //                     desde: {
-            //                         name: "aceleracion-desde",
-            //                         type: "text",
-            //                         placeholder: "Desde",
-            //                         value: "",
-            //                         required: "",
-            //                         stage: {
-            //                             type: "match",
-            //                             var: "paquete.Accel",
-            //                             op: "$gte",
-            //                         }
-            //                     },
-            //                     hasta: {
-            //                         name: "aceleracion-hasta",
-            //                         type: "text",
-            //                         placeholder: "Hasta",
-            //                         value: "",
-            //                         required: "",
-            //                         stage: {
-            //                             type: "match",
-            //                             var: "paquete.Accel",
-            //                             op: "$lte",
-            //                         }
-            //                     }
-            //                 }
-            //             },
-            //             4: {
-            //                 label: "Velocidad",
-            //                 inputs: {
-            //                     desde: {
-            //                         name: "velocidad-desde",
-            //                         type: "number",
-            //                         placeholder: "Desde",
-            //                         value: "",
-            //                         required: "",
-            //                         stage: {
-            //                             type: "match",
-            //                             var: "paquete.Velocidad",
-            //                             op: "$gte",
-            //                         }
-            //                     },
-            //                     hasta: {
-            //                         name: "velocidad-hasta",
-            //                         type: "number",
-            //                         placeholder: "Hasta",
-            //                         value: "",
-            //                         required: "",
-            //                         stage: {
-            //                             type: "match",
-            //                             var: "paquete.Velocidad",
-            //                             op: "$lte",
-            //                         }
-            //                     }
-            //                 }
-            //             }
-            //         },
-            //         finalStages: {
-            //             0: '{"$sort":{"paquete.Fecha":-1,"paquete.Hora":-1}}'
-            //         },
-            //         headerBtns: {
-            //             0: {
-            //                 enabled: "true",
-            //                 type: "filter",
-            //                 label: "filtrar",
-            //                 onClick: {
-            //                     cmds: {
-            //                         0: {
-            //                             type: "filter",
-            //                             payload: {}
-            //                         }
-            //                     }
-            //                 }
-            //             },
-            //             1: {
-            //                 enabled: "true",
-            //                 type: "erase",
-            //                 label: "filtrar",
-            //                 targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
-            //                 onClick: {
-            //                     cmds: {
-            //                         0: {
-            //                             type: "erase",
-            //                             payload: {}
-            //                         }
-            //                     }
-            //                 }
-            //             },
-            //             2: {
-            //                 enabled: "true",
-            //                 type: "edit",
-            //                 label: "editar",
-            //                 targeted: true, // Solo se habilita si tengo seleccionado elementos de la tabla
-            //                 onClick: {
-            //                     cmds: {
-            //                         1: {
-            //                             type: "modal",
-            //                             form: {
-            //                                 title: "INTI",
-            //                                 cols: {
-            //                                     0: {
-            //                                         0: {
-            //                                             type: "text",
-            //                                             label: "DNI",
-            //                                             placeholder: "DNI"
-            //                                         },
-            //                                         1: {
-            //                                             type: "text",
-            //                                             label: "Nombre",
-            //                                             placeholder: "Nombre"
-            //                                         },
-            //                                         2: {
-            //                                             type: "text",
-            //                                             label: "Apellido",
-            //                                             placeholder: "Apellido"
-            //                                         },
-            //                                         3: {
-            //                                             type: "date",
-            //                                             label: "Fecha N.",
-            //                                             placeholder: ""
-            //                                         },
-            //                                         4: {
-            //                                             type: "text",
-            //                                             label: "Empresa",
-            //                                             placeholder: "Empresa"
-            //                                         },
-            //                                     },
-            //                                     1: {
-            //                                         0: {
-            //                                             type: "text",
-            //                                             label: "Sector",
-            //                                             placeholder: "Sector"
-            //                                         },
-            //                                         1: {
-            //                                             type: "text",
-            //                                             label: "Posición",
-            //                                             placeholder: "Posición"
-            //                                         },
-            //                                         2: {
-            //                                             type: "text",
-            //                                             label: "Mail",
-            //                                             placeholder: "Mail"
-            //                                         },
-            //                                         3: {
-            //                                             type: "text",
-            //                                             label: "Teléfono",
-            //                                             placeholder: ""
-            //                                         },
-            //                                         4: {
-            //                                             type: "text",
-            //                                             label: "Dirección",
-            //                                             placeholder: "Dirección"
-            //                                         },
-            //                                     }
-            //                                 },
-            //                                 footerBtns: {
-            //                                     cancel: {
-            //                                         enabled: "true",
-            //                                         type: "edit",
-            //                                         label: "editar",
-            //                                         onClick: {}
-            //                                     },
-            //                                     acept: {
-            //                                         enabled: "true",
-            //                                         type: "edit",
-            //                                         label: "editar",
-            //                                         onClick: {}
-            //                                     }
-            //                                 }
-            //                             },
-            //                         }
-            //                     }
-            //                 }
-            //             },
-            //             3: {
-            //                 enabled: "true",
-            //                 type: "add",
-            //                 label: "agregar",
-            //                 onClick: {
-            //                     cmds: {
-            //                         0: {
-            //                             type: "modal",
-            //                             payload: {
-            //                                 content: {
-            //                                     rows: {
-            //                                         //Rows
-            //                                         0: {
-            //                                             cols: {
-            //                                                 0: {
-            //                                                     0: modalForm
-            //                                                 }
-            //                                             }
-            //                                         }
-            //                                     },
-            //                                 }
-            //                             }
-            //                         },
-            //                         1: {
-            //                             type: "post",
-            //                             payload: {
-            //                                 url: "api/post/test/test",
-            //                                 method: "POST",
-            //                             }
-            //                         },
-            //                         2: {
-            //                             type: "update",
-            //                             payload: {}
-            //                         }
-            //                     }
-            //                 }
-            //             }
-            //         },
-            //         footerBtns: {
-            //             0: {
-            //                 enabled: "false",
-            //                 type: "filter",
-            //                 label: "filtrar",
-            //                 onClick: {
-            //                     cmds: {
-            //                         0: {
-            //                             type: "filter",
-            //                             payload: {}
-            //                         }
-            //                     }
-            //                 }
-            //             },
-            //             1: {
-            //                 enabled: "false",
-            //                 type: "filter",
-            //                 label: "filtrar",
-            //                 onClick: {
-            //                     cmds: {
-            //                         0: {
-            //                             type: "filter",
-            //                             payload: {}
-            //                         }
-            //                     }
-            //                 }
-            //             },
-            //         }
-            //     }
-            // };
-
-            // return {
-            //     name: "FORM",
-            //     access: {
-            //         names: {
-            //             1: "Admin"
-            //         },
-            //         roles: {
-            //             0: "Admin"
-            //         }
-            //     },
-            //     content: {
-            //         rows: {
-            //             //Rows
-            //             0: {
-            //                 cols: {
-            //                     0: {
-            //                         0: formCliente
-            //                     },
-            //                     1: {
-            //                         0: formReceptor
-            //                     }
-            //                 }
-            //             },
-            //             1: {
-            //                 cols: {
-            //                     0: {
-            //                         0: tableEquipos
-            //                     }
-            //                 }
-            //             }
-            //         },
-            //     }
-            // }
-        }
-
-        const faceID = () => {
-            return {
-                name: "FACE-ID",
-                0:{
-                    name:"Devices",
-                    access: {
-                        names: {
-                            0: "INTI",
-                            1: "Admin"
-                        },
-                        roles: {
-                            0: "Admin"
-                        }
-                    },
-                    content: {
-                        rows: {
-                            //Rows
-                            0: {
-                                cols: {
-                                    //Columns
-                                    0: {
-                                        //Columns elements
-                                        0: {
-                                            type: "table",
-                                            payload: {
-                                                title: "DEVICES",
-                                                fetchPath: "/api/aggregate/admin/devices",
-                                                headers: {
-                                                    0: {
-                                                        name: "ID", //IDFCM
-                                                        label: "IDFCM",
-                                                    },
-                                                    1: {
-                                                        name: "package_name",
-                                                        label: "Package",
-                                                    },
-                                                    2: {
-                                                        name: "interno",
-                                                        label: "Interno",
-                                                    },
-                                                },
-                                                filters: {
-                                                    0: {
-                                                        label: "IDFCM",
-                                                        inputs: {
-                                                            desde: {
-                                                                name: "id",
-                                                                type: "text",
-                                                                placeholder: "IDFCM",
-                                                                value: "",
-                                                                required: "",
-                                                                stage: {
-                                                                    type: "match",
-                                                                    var: "ID",
-                                                                    op: "$eq"
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                    1: {
-                                                        label: "Package",
-                                                        inputs: {
-                                                            desde: {
-                                                                name: "package_name",
-                                                                type: "text",
-                                                                placeholder: "Package Name",
-                                                                value: "",
-                                                                required: "",
-                                                                stage: {
-                                                                    type: "match",
-                                                                    var: "package_name",
-                                                                    op: "$eq" //¿¿USAR REGEX??
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                    2: {
-                                                        label: "Interno",
-                                                        inputs: {
-                                                            desde: {
-                                                                name: "interno",
-                                                                type: "text",
-                                                                placeholder: "Interno",
-                                                                value: "",
-                                                                required: "",
-                                                                stage: {
-                                                                    type: "match",
-                                                                    var: "interno",
-                                                                    op:"$eq"
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                },
-                                                headerBtns: {
-                                                    0: {
-                                                        enabled: "true",
-                                                        type: "filter",
-                                                        label: "Filtrar ",
-                                                        onClick: {
-                                                            cmds: {
-                                                                0: {
-                                                                    type: "filter",
-                                                                    payload: {}
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                footerBtns: {
-                                                    // 0: {
-                                                    //     enabled: false,
-                                                    //     type: "filter",
-                                                    //     label: "filtrar",
-                                                    //     onClick: {
-                                                    //         cmds: {
-                                                    //             0: {
-                                                    //                 type: "filter",
-                                                    //                 payload: {}
-                                                    //             }
-                                                    //         }
-                                                    //     }
-                                                    // },
-                                                    // 1: {
-                                                    //     enabled: "true",
-                                                    //     type: "filter",
-                                                    //     label: "filtrar",
-                                                    //     onClick: {
-                                                    //         cmds: {
-                                                    //             0: {
-                                                    //                 type: "filter",
-                                                    //                 payload: {}
-                                                    //             }
-                                                    //         }
-                                                    //     }
-                                                    // },
-                                                },
-                                                finalStages: {
-                                                    0: '{"$sort":{"interno":1}}'
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                    }
-                },
-                1:{
-                    name:"Usuarios",
-                    access: {
-                        names: {
-                            0: "INTI",
-                            1: "Admin"
-                        },
-                        roles: {
-                            0: "Admin"
-                        }
-                    },
-                    content: {
-                        rows: {
-                            //Rows
-                            0: {
-                                cols: {
-                                    //Columns
-                                    0: {
-                                        //Columns elements
-                                        0: {
-                                            type: "table",
-                                            payload: {
-                                                title: "USUARIOS",
-                                                fetchPath: "/api/aggregate/admin/users",
-                                                headers: {
-                                                    0: {
-                                                        name: "nombre",
-                                                        label: "Nombre",
-                                                    },
-                                                    1: {
-                                                        name: "apellido",
-                                                        label: "Apellido",
-                                                    },
-                                                    2: {
-                                                        name: "dni",
-                                                        label: "DNI",
-                                                    },
-                                                    3: {
-                                                        name: "embedding",
-                                                        label: "Embedding",
-                                                    },
-                                                    4: {
-                                                        name: "fotos",
-                                                        label: "Fotos",
-                                                    },
-                                                },
-                                                filters: {
-                                                    0: {
-                                                        label: "Nombre",
-                                                        inputs: {
-                                                            desde: {
-                                                                name: "nombre",
-                                                                type: "text",
-                                                                placeholder: "Nombre",
-                                                                value: "",
-                                                                required: "",
-                                                                stage: {
-                                                                    type: "match",
-                                                                    var: "nombre",
-                                                                    op: "$eq"
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                    1: {
-                                                        label: "Apellido",
-                                                        inputs: {
-                                                            desde: {
-                                                                name: "apellido",
-                                                                type: "text",
-                                                                placeholder: "Apellido",
-                                                                value: "",
-                                                                required: "",
-                                                                stage: {
-                                                                    type: "match",
-                                                                    var: "apellido",
-                                                                    op: "$eq"
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                    2: {
-                                                        label: "DNI",
-                                                        inputs: {
-                                                            desde: {
-                                                                name: "dni",
-                                                                type: "text",
-                                                                placeholder: "DNI",
-                                                                value: "",
-                                                                required: "",
-                                                                stage: {
-                                                                    type: "match",
-                                                                    var: "dni",
-                                                                    op: "$eq"
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                    3: {
-                                                        label: "Embedding",
-                                                        inputs: {
-                                                            desde: {
-                                                                name: "embedding",
-                                                                type: "array",
-                                                                placeholder: "Embedding",
-                                                                value: "",
-                                                                required: "",
-                                                                stage: {
-                                                                    type: "match",
-                                                                    var: "embedding",
-                                                                    op: "$eq", //AVERIGUAR OPERADOR PARA EL ARRAY
-                                                                    transform:"array"
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                    4: {
-                                                        label: "Fotos",
-                                                        inputs: {
-                                                            desde: {
-                                                                name: "fotos",
-                                                                type: "array",
-                                                                placeholder: "Fotos",
-                                                                value: "",
-                                                                required: "",
-                                                                stage: {
-                                                                    type: "match",
-                                                                    var: "fotos",
-                                                                    op: "$eq", //AVERIGUAR OPERADOR PARA EL ARRAY
-                                                                    transform:"array"
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                },
-                                                headerBtns: {
-                                                    0: {
-                                                        enabled: "true",
-                                                        type: "filter",
-                                                        label: "Filtrar ",
-                                                        onClick: {
-                                                            cmds: {
-                                                                0: {
-                                                                    type: "filter",
-                                                                    payload: {}
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                footerBtns: {
-                                                    // 0: {
-                                                    //     enabled: false,
-                                                    //     type: "filter",
-                                                    //     label: "filtrar",
-                                                    //     onClick: {
-                                                    //         cmds: {
-                                                    //             0: {
-                                                    //                 type: "filter",
-                                                    //                 payload: {}
-                                                    //             }
-                                                    //         }
-                                                    //     }
-                                                    // },
-                                                    // 1: {
-                                                    //     enabled: "true",
-                                                    //     type: "filter",
-                                                    //     label: "filtrar",
-                                                    //     onClick: {
-                                                    //         cmds: {
-                                                    //             0: {
-                                                    //                 type: "filter",
-                                                    //                 payload: {}
-                                                    //             }
-                                                    //         }
-                                                    //     }
-                                                    // },
-                                                },
-                                                finalStages: {
-                                                    0: '{"$sort":{"nombre":1,"apellido":1}}'
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                    }
-                }
-                
             }
         }
 
         return {
-            0: urbetrack(),
-            1: inti(),
-            2: intiMQTT(),
-            3: faceID()
+            //0: ingresos(),
+            1: mapa()
+            // 2: ingresos(),
+            // 3: subCats(),
+            // 4: ingresos(),
+            // 5: subCats()
+
+            // 1: laboratorio(),
+            // 2: entregados(),
+            // 3: gases(),
+            // 4: equipos(),
+            // 5: subCats(),
+            // 6: usuarios()
         }
     }
 
     return {
+        type:"dashboard",
         id: "id",
         company: {
             name: "Masterbus"
         },
         user: {
-            name: token.user,
-            role: token.role,
+            name: "token.user",
+            role: "token.role",
         },
-        categories: getCategories()
+        childs: getCategories()
     };
 };
 
@@ -2278,12 +1296,7 @@ var config = {
             username: "admin",
             password: "public"
         },
-        inti: "inti",
-        imei: ["865067021324796",
-            "865067021303386",
-            "865067021297992"
-        ],
-        topics: ['hello', 'sleep', ' ', 'testtopic']
+        topics: ['inti/865067021324796/start', 'inti/865067021324796/quick', 'inti/865067021324796/slow', 'testtopic']
     },
 
     //Encryptacion JWT
@@ -2304,8 +1317,7 @@ var bds = {
     mongo: {
         url: "mongodb://dashboard:dashboardpassword@unm-kvm-masterbus-4.planisys.net/admin",
         //url: "mongodb+srv://masterbus-iot-server:masterbus@cluster0.uggrc.mongodb.net/INTI-Test?retryWrites=true&w=majority",
-        dfltDb: "dflt",
-        dfltColl: "dflt"
+        dfltDb: "dflt"
     },
 
     // maria: {
@@ -2324,13 +1336,32 @@ const endpoints = {
     "pages": {
         "login": (req, res) => {
             checkAccessToken(req, res, { $or: [{ role: "client" }, { role: "admin" }] })
-                .then((token) => res.redirect('/pages/dashboard'))
-                .catch((err) => views.login(req, res, {}));
+                .then((token) => {
+                    console.log("redireccionando al dashboard!");
+                    res.redirect('/pages/dashboard');
+                })
+                .catch((err) => {
+                    console.log("error en el login: " + err);
+                    views.login(req, res, {});
+                });
         },
         "dashboard": (req, res) => {
+            console.log("Get Dashboard!");
             checkAccessToken(req, res, { $or: [{ role: "client" }, { role: "admin" }] })
-                .then((token) => views.dashboard(req, res, getDashboardData(token)))
-                .catch((err) => res.redirect('/pages/login'));
+                .then((token) => {
+                    try {
+                        var dashboardData = getDashboardData({});
+                        console.log("diccionario: " + JSON.stringify(dashboardData));
+                        views.dashboard(req, res, getDashboardData(token));
+                    } catch (error) {
+                        console.log("Dashboard Error!" + error);
+                        res.send(error);
+                    }
+                })
+                .catch((err) => {
+                    console.log("checkAccessToken: " + err);
+                    res.redirect('/pages/login');
+                });
         }
     },
     "api": {
@@ -2347,10 +1378,7 @@ const endpoints = {
                                     .status(200)
                                     .send(`{"token":${JSON.stringify(token)}}`);
                             })
-                            .catch((err) => {
-                                console.log(err);
-                                res.status(403).send(JSON.stringify(err));
-                            });
+                            .catch((err) => res.status(403).send(JSON.stringify(err)));
                         break;
                     default:
                         res.status(401).send("invalid http method!");
@@ -2361,7 +1389,7 @@ const endpoints = {
             }
         },
         "users": (req, res) => {
-            decodeJWT(req.cookies['access-token'].replace(/"/g, "")) //Le saco las comillas 
+            decodeJWT(req.cookies['access-token'].replace(/"/g, "")) //Le saco las comillas
                 .then((token) => {
                     switch (req.method) {
                         case "GET":
@@ -2393,133 +1421,54 @@ const endpoints = {
                 .catch((err) => res.status(403).send("Access-token invalido: " + err));
         },
         "post": (req, res) => {
-
-            req.headers["Content-Type"] = "application/json";
-
-            console.log("Evento recibido: + " + JSON.stringify(req.body));
-            
             var params = req.params[0].split('/');
             var coll = params[3];
             if (coll == 'urbe') {
                 coll = 'Events';
             }
-            var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-            //TODO: Armar una whitelist decente
-            console.log("ip: " + ip);
-            if (ip != "::ffff:201.251.141.243" && ip != "200.51.194.60") {
-                checkAccessToken(req, res, { $or: [{ role: "client" }, { role: "admin" }] })
-                    .then((token) => {
-                        switch (req.method) {
-                            case "POST":
-                                cmd({
-                                        type: "mongo",
-                                        method: "POST",
-                                        db: 'admin', //params[2],
-                                        collection: coll,
-                                        content: req.body
-                                    })
-                                    .then(() => {
-                                        res.status(200).send(JSON.stringify(req.body) + " received!");
-                                        //Push de datos a los webhooks suscriptos (POST REQUEST).
-                                        //Verificar body (Si son datos para urbe, ejecutar evento).
-                                        return cmd({
-                                                type: "mongo",
-                                                method: "GET", //Aggregate() o GET de webhooks?
-                                                db: "admin",
-                                                collection: "Webhooks",
-                                                query: {},
-                                                queryOptions: {}
-                                            })
-                                            .then((suscribers) => {
-                                                let urlParams = {
-                                                    bus: parseInt(req.body.Interno),
-                                                    fecha: setUTCTimezoneTo(req.body.Fecha, -3)
-                                                };
-                                                let initFetch = {
-                                                    method: "GET",
-                                                    headers: {
-                                                        'Content-Type': 'application/json',
-                                                        'Authorization': '3d524a53c110e4c22463b10ed32cef9d'
-                                                    }
-                                                };
-                                                for (let index = 0; index < suscribers.length; index++) {
-                                                    const elem = suscribers[index];
-                                                    const url = new URL(elem.content.url);
-                                                    url.search = new URLSearchParams(urlParams);
-                                                    const urlWithParams = url;
-                                                    console.log(url);
-                                                    fetchToWebhook(initFetch, urlWithParams, elem.content.codigos, req);
-                                                }
-                                            })
-                                            .catch(err => console.log("Error:" + err));
-                                    })
-                                    .catch(error => res.status(500).send(error));
-                                break;
-                            default:
-                                res.status(401).send("Invalid http method!");
-                                break;
-                        }
-                    })
-                    .catch((err) => res.status(403).send("Access-token invalido: " + err.msg));
-            } else {
-                console.log("ip de la whitelist autorizado: " + ip);
-                switch (req.method) {
-                    case "POST":
-                        cmd({
-                                type: "mongo",
-                                method: "POST",
-                                db: 'admin', //params[2],
-                                collection: coll,
-                                content: req.body
-                            })
-                            .then(() => {
-                                res.status(200).send(JSON.stringify(req.body) + " saved!");
-                                //Push de datos a los webhooks suscriptos (POST REQUEST).
-                                //Verificar body (Si son datos para urbe, ejecutar evento).
-
-                                console.log("Evento recibido: + " + req.body);
-                                console.log("Evento recibido: + " + JSON.stringify(req.body));
-                                // return cmd({
-                                //         type: "mongo",
-                                //         method: "GET", //Aggregate() o GET de webhooks?
-                                //         db: "admin",
-                                //         collection: "Webhooks",
-                                //         query: {},
-                                //         queryOptions: {}
-                                //     })
-                                //     .then((suscribers) => {
-                                //         let urlParams = {
-                                //             bus: parseInt(req.body.Interno),
-                                //             fecha: setUTCTimezoneTo(req.body.Fecha, -3)
-                                //         };
-                                //         let initFetch = {
-                                //             method: "GET",
-                                //             headers: {
-                                //                 'Content-Type': 'application/json',
-                                //                 'Authorization': '3d524a53c110e4c22463b10ed32cef9d'
-                                //             }
-                                //         };
-                                //         for (let index = 0; index < suscribers.length; index++) {
-                                //             const elem = suscribers[index];
-                                //             const url = new URL(elem.content.url);
-                                //             url.search = new URLSearchParams(urlParams);
-                                //             const urlWithParams = url;
-                                //             console.log(url);
-                                //             fetchToWebhook(initFetch, urlWithParams, elem.content.codigos, req);
-                                //         }
-                                //     })
-                                //     .catch(err => console.log(err));
-                            })
-                            .catch(error => console.log(error));
-                        break;
-                    default:
-                        res.status(401).send("Invalid http method!");
-                        break;
-                }
-            }
-
-
-
+            cmd({
+                    type: "mongo",
+                    method: "POST",
+                    db: 'admin', //params[2],
+                    collection: coll,
+                    content: req.body
+                })
+                .then(() => {
+                    //res.status(200).send(JSON.stringify(req.body) + " received!");
+                    //Push de datos a los webhooks suscriptos (POST REQUEST).
+                    //Verificar body (Si son datos para urbe, ejecutar evento).
+                    return cmd({
+                            type: "mongo",
+                            method: "GET", //Aggregate() o GET de webhooks?
+                            db: "admin",
+                            collection: "Webhooks",
+                            query: {},
+                            queryOptions: {}
+                        })
+                        .then((suscribers) => {
+                            let urlParams = {
+                                bus: parseInt(req.body.Interno),
+                                fecha: setUTCTimezoneTo(req.body.Fecha, -3)
+                            };
+                            let initFetch = {
+                                method: "GET",
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': '3d524a53c110e4c22463b10ed32cef9d'
+                                }
+                            };
+                            for (let index = 0; index < suscribers.length; index++) {
+                                const elem = suscribers[index];
+                                const url = new URL(elem.content.url);
+                                url.search = new URLSearchParams(urlParams);
+                                const urlWithParams = url;
+                                console.log(url);
+                                fetchToWebhook(initFetch, urlWithParams, elem.content.codigos, req);
+                            }
+                        })
+                        .catch(err => res.status(500).send("Error:" + err));
+                })
+                .catch(error => res.status(500).send(error));
         },
         "get": (req, res) => {
             var params = req.params[0].split('/');
@@ -2534,7 +1483,7 @@ const endpoints = {
                             cmd({
                                     type: "mongo",
                                     method: "GET",
-                                    db: 'admin',
+                                    db: bd,
                                     collection: col,
                                     query: req.query.query,
                                     queryOptions: req.query.queryOptions
@@ -2545,7 +1494,7 @@ const endpoints = {
                                     return cmd({
                                         type: "mongo",
                                         method: "COUNT",
-                                        db: 'admin',
+                                        db: bd,
                                         collection: col,
                                         query: req.query.query,
                                         queryOptions: {}
@@ -2554,36 +1503,6 @@ const endpoints = {
                                 .then(count => {
                                     console.log("Count: " + JSON.stringify(count));
                                     result.count = count;
-                                    res.status(200).send(result);
-                                })
-                                .catch(err => res.status(500).send(err));
-                            break;
-                        default:
-                            res.status(401).send("Invalid http method!");
-                            break;
-                    }
-                })
-                .catch((err) => res.status(403).send("Access-token invalido: " + err.msg));
-        },
-        "clear": (req, res) => {
-            var params = req.params[0].split('/');
-            var bd = params[2];
-            var col = params[3];
-            checkAccessToken(req, res, { $or: [{ role: "client" }, { role: "admin" }] })
-                .then((token) => {
-                    switch (req.method) {
-                        case "GET":
-                            var result = {};
-                            console.log("req.query.queryOptions: " + req.query.queryOptions);
-                            cmd({
-                                    type: "mongo",
-                                    method: "DELETE",
-                                    db: 'admin',
-                                    collection: col,
-                                    query: req.query.query,
-                                    queryOptions: req.query.queryOptions
-                                })
-                                .then(result => {
                                     res.status(200).send(result);
                                 })
                                 .catch(err => res.status(500).send(err));
@@ -2826,13 +1745,6 @@ const websocket = {
     }
 };
 
-const repo = {
-    users: {
-        db: "users",
-        col: "users"
-    }
-};
-
 // Incializo mi app semilla
 const onStart = () => {
     console.log(`adn@setup: starting!`);
@@ -2852,4 +1764,4 @@ const onReady = () => {
     });
 };
 
-module.exports = { onStart, onReady, config, queues, bds, endpoints, workers, websocket, repo };
+module.exports = { onStart, onReady, config, queues, bds, endpoints, workers, websocket };
