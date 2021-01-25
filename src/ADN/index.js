@@ -13,7 +13,7 @@ const {
     suscribeToWebhook,
     deleteOneWebhook,
     updateOneWebhook,
-    fetchToSubscriber,
+    //fetchToSubscriber,
     compareEncrypted,
     fetch
 } = require('./lib');
