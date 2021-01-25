@@ -1422,54 +1422,128 @@ const endpoints = {
         },
         "post": (req, res) => {
             req.headers["Content-Type"] = "application/json";
+
+            console.log("Evento recibido: + " + JSON.stringify(req.body));
+            
             var params = req.params[0].split('/');
             var coll = params[3];
             if (coll == 'urbe') {
                 coll = 'Events';
             }
-            cmd({
-                    type: "mongo",
-                    method: "POST",
-                    db: 'admin', //params[2],
-                    collection: coll,
-                    content: req.body
-                })
-                .then(() => {
-                    //res.status(200).send(JSON.stringify(req.body) + " received!");
-                    //Push de datos a los webhooks suscriptos (POST REQUEST).
-                    //Verificar body (Si son datos para urbe, ejecutar evento).
-                    return cmd({
-                            type: "mongo",
-                            method: "GET", //Aggregate() o GET de webhooks?
-                            db: "admin",
-                            collection: "Webhooks",
-                            query: {},
-                            queryOptions: {}
-                        })
-                        .then((suscribers) => {
-                            let urlParams = {
-                                bus: parseInt(req.body.Interno),
-                                fecha: setUTCTimezoneTo(req.body.Fecha, -3)
-                            };
-                            let initFetch = {
-                                method: "GET",
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'Authorization': '3d524a53c110e4c22463b10ed32cef9d'
-                                }
-                            };
-                            for (let index = 0; index < suscribers.length; index++) {
-                                const elem = suscribers[index];
-                                const url = new URL(elem.content.url);
-                                url.search = new URLSearchParams(urlParams);
-                                const urlWithParams = url;
-                                console.log(url);
-                                fetchToWebhook(initFetch, urlWithParams, elem.content.codigos, req);
-                            }
-                        })
-                        .catch(err => res.status(500).send("Error:" + err));
-                })
-                .catch(error => res.status(500).send(error));
+            var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+            //TODO: Armar una whitelist decente
+            console.log("ip: " + ip);
+            if (ip != "::ffff:201.251.141.243" && ip != "200.51.194.60") {
+                checkAccessToken(req, res, { $or: [{ role: "client" }, { role: "admin" }] })
+                    .then((token) => {
+                        switch (req.method) {
+                            case "POST":
+                                cmd({
+                                        type: "mongo",
+                                        method: "POST",
+                                        db: 'admin', //params[2],
+                                        collection: coll,
+                                        content: req.body
+                                    })
+                                    .then(() => {
+                                        res.status(200).send(JSON.stringify(req.body) + " received!");
+                                        //Push de datos a los webhooks suscriptos (POST REQUEST).
+                                        //Verificar body (Si son datos para urbe, ejecutar evento).
+                                        // return cmd({
+                                        //         type: "mongo",
+                                        //         method: "GET", //Aggregate() o GET de webhooks?
+                                        //         db: "admin",
+                                        //         collection: "Webhooks",
+                                        //         query: {},
+                                        //         queryOptions: {}
+                                        //     })
+                                        //     .then((suscribers) => {
+                                        //         let urlParams = {
+                                        //             bus: parseInt(req.body.Interno),
+                                        //             fecha: setUTCTimezoneTo(req.body.Fecha, -3)
+                                        //         };
+                                        //         let initFetch = {
+                                        //             method: "GET",
+                                        //             headers: {
+                                        //                 'Content-Type': 'application/json',
+                                        //                 'Authorization': '3d524a53c110e4c22463b10ed32cef9d'
+                                        //             }
+                                        //         };
+                                        //         for (let index = 0; index < suscribers.length; index++) {
+                                        //             const elem = suscribers[index];
+                                        //             const url = new URL(elem.content.url);
+                                        //             url.search = new URLSearchParams(urlParams);
+                                        //             const urlWithParams = url;
+                                        //             console.log(url);
+                                        //             fetchToWebhook(initFetch, urlWithParams, elem.content.codigos, req);
+                                        //         }
+                                        //     })
+                                        //     .catch(err => console.log("Error:" + err));
+                                    })
+                                    .catch(error => res.status(500).send(error));
+                                break;
+                            default:
+                                res.status(401).send("Invalid http method!");
+                                break;
+                        }
+                    })
+                    .catch((err) => res.status(403).send("Access-token invalido: " + err.msg));
+            } else {
+                console.log("ip de la whitelist autorizado: " + ip);
+                switch (req.method) {
+                    case "POST":
+                        cmd({
+                                type: "mongo",
+                                method: "POST",
+                                db: 'admin', //params[2],
+                                collection: coll,
+                                content: req.body
+                            })
+                            .then(() => {
+                                res.status(200).send(JSON.stringify(req.body) + " saved!");
+                                //Push de datos a los webhooks suscriptos (POST REQUEST).
+                                //Verificar body (Si son datos para urbe, ejecutar evento).
+
+                                console.log("Evento recibido: + " + req.body);
+                                console.log("Evento recibido: + " + JSON.stringify(req.body));
+                                // return cmd({
+                                //         type: "mongo",
+                                //         method: "GET", //Aggregate() o GET de webhooks?
+                                //         db: "admin",
+                                //         collection: "Webhooks",
+                                //         query: {},
+                                //         queryOptions: {}
+                                //     })
+                                //     .then((suscribers) => {
+                                //         let urlParams = {
+                                //             bus: parseInt(req.body.Interno),
+                                //             fecha: setUTCTimezoneTo(req.body.Fecha, -3)
+                                //         };
+                                //         let initFetch = {
+                                //             method: "GET",
+                                //             headers: {
+                                //                 'Content-Type': 'application/json',
+                                //                 'Authorization': '3d524a53c110e4c22463b10ed32cef9d'
+                                //             }
+                                //         };
+                                //         for (let index = 0; index < suscribers.length; index++) {
+                                //             const elem = suscribers[index];
+                                //             const url = new URL(elem.content.url);
+                                //             url.search = new URLSearchParams(urlParams);
+                                //             const urlWithParams = url;
+                                //             console.log(url);
+                                //             fetchToWebhook(initFetch, urlWithParams, elem.content.codigos, req);
+                                //         }
+                                //     })
+                                //     .catch(err => console.log(err));
+                            })
+                            .catch(error => console.log(error));
+                        break;
+                    default:
+                        res.status(401).send("Invalid http method!");
+                        break;
+                }
+            }
         },
         "get": (req, res) => {
             var params = req.params[0].split('/');
