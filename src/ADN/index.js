@@ -1485,6 +1485,7 @@ const endpoints = {
                             default:
                                 res.status(401).send("Invalid http method!");
                                 break;
+                            
                         }
                     })
                     .catch((err) => res.status(403).send("Access-token invalido: " + err.msg));
