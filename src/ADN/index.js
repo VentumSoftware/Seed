@@ -188,6 +188,8 @@ const getDashboardData = (token) => {
                                             title: "URBETRACK",
                                             fetchPath: "/api/aggregate/admin/Events",
                                             headers: {
+
+                                                
                                                 0: {
                                                     name: "Fecha",
                                                     label: "Fecha",
