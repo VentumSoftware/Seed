@@ -189,6 +189,7 @@ const getDashboardData = (token) => {
                                             fetchPath: "/api/aggregate/admin/Events",
                                             headers: {
                                                 0: {
+                                                    
                                                     name: "Fecha",
                                                     label: "Fecha",
                                                 },
