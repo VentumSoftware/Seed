@@ -1,4 +1,5 @@
-Category show: {
+{
+  "id": "noId",
   "name": "INGRESO",
   "access": {
     "names": {
@@ -8,459 +9,256 @@ Category show: {
       "0": "Admin"
     }
   },
+  "postUrl": null,
+  "type": "category",
   "content": {
     "rows": {
       "0": {
         "cols": {
           "0": {
+            "0": "wizard"
+          }
+        }
+      }
+    }
+  },
+  "childs": {
+    "wizard": {
+      "id": "noId",
+      "name": "No Name",
+      "pages": {
+        "0": {
+          "rows": {
             "0": {
-              "type": "wizard",
-              "payload": {
-                "pages": {
+              "cols": {
+                "0": {
+                  "0": "tableIngresos"
+                }
+              }
+            }
+          }
+        }
+      },
+      "selectedPage": "0",
+      "type": "wizard",
+      "childs": {
+        "tableIngresos": {
+          "id": "noID",
+          "title": "INGRESOS",
+          "fetchPath": "/api/aggregate/IngesurERP/Ingesos",
+          "headers": {
+            "0": {
+              "name": "Grupo",
+              "label": "Grupo"
+            },
+            "1": {
+              "name": "Marca",
+              "label": "Marca"
+            },
+            "2": {
+              "name": "Modelo",
+              "label": "Modelo"
+            },
+            "3": {
+              "name": "No.Serie",
+              "label": "No.Serie"
+            },
+            "4": {
+              "name": "Duración Calibración",
+              "label": "Duración Calibración"
+            },
+            "5": {
+              "name": "Comentarios",
+              "label": "Comentarios"
+            }
+          },
+          "filters": {
+            "0": {
+              "label": "Buscar",
+              "inputs": {
+                "nombre": {
+                  "name": "Buscar",
+                  "type": "text",
+                  "placeholder": "Buscar...",
+                  "value": "",
+                  "required": "",
+                  "stage": {
+                    "type": "match",
+                    "var": "nombre"
+                  }
+                }
+              }
+            }
+          },
+          "headerBtns": {
+            "0": {
+              "enabled": "true",
+              "type": "filter",
+              "label": "filtrar",
+              "onClick": {
+                "cmds": {
                   "0": {
-                    "content": {
-                      "rows": {
+                    "type": "filter",
+                    "payload": {}
+                  }
+                }
+              }
+            },
+            "1": {
+              "enabled": "true",
+              "type": "erase",
+              "label": "filtrar",
+              "targeted": true,
+              "onClick": {
+                "cmds": {
+                  "0": {
+                    "type": "erase",
+                    "payload": {}
+                  }
+                }
+              }
+            },
+            "2": {
+              "enabled": "true",
+              "type": "edit",
+              "label": "editar",
+              "targeted": true,
+              "onClick": {
+                "cmds": {
+                  "1": {
+                    "type": "modal",
+                    "form": {
+                      "title": "INTI",
+                      "cols": {
                         "0": {
-                          "cols": {
-                            "0": {
-                              "0": {
-                                "type": "form",
-                                "payload": {
-                                  "title": "DESPACHANTE",
-                                  "cols": {
-                                    "0": {
-                                      "0": {
-                                        "type": "text",
-                                        "label": "DNI",
-                                        "placeholder": "DNI"
-                                      },
-                                      "1": {
-                                        "type": "text",
-                                        "label": "Nombre",
-                                        "placeholder": "Nombre"
-                                      },
-                                      "2": {
-                                        "type": "text",
-                                        "label": "Apellido",
-                                        "placeholder": "Apellido"
-                                      },
-                                      "3": {
-                                        "type": "date",
-                                        "label": "Fecha N.",
-                                        "placeholder": ""
-                                      },
-                                      "4": {
-                                        "type": "text",
-                                        "label": "Empresa",
-                                        "placeholder": "Empresa"
-                                      }
-                                    },
-                                    "1": {
-                                      "0": {
-                                        "type": "text",
-                                        "label": "Sector",
-                                        "placeholder": "Sector"
-                                      },
-                                      "1": {
-                                        "type": "text",
-                                        "label": "Posición",
-                                        "placeholder": "Posición"
-                                      },
-                                      "2": {
-                                        "type": "text",
-                                        "label": "Mail",
-                                        "placeholder": "Mail"
-                                      },
-                                      "3": {
-                                        "type": "text",
-                                        "label": "Teléfono",
-                                        "placeholder": ""
-                                      },
-                                      "4": {
-                                        "type": "text",
-                                        "label": "Dirección",
-                                        "placeholder": "Dirección"
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            },
-                            "1": {
-                              "0": {
-                                "type": "form",
-                                "payload": {
-                                  "title": "RECEPTOR",
-                                  "cols": {
-                                    "0": {
-                                      "0": {
-                                        "type": "fixed",
-                                        "label": "Nombre",
-                                        "value": "Nicolas Gonzalez"
-                                      },
-                                      "1": {
-                                        "type": "fixed-date",
-                                        "label": "Fecha"
-                                      },
-                                      "2": {
-                                        "type": "fixed-hour",
-                                        "label": "Hora"
-                                      },
-                                      "3": {
-                                        "type": "fixed",
-                                        "label": "Ubicación",
-                                        "value": "Oficina Rada Tilly"
-                                      },
-                                      "4": {
-                                        "type": "text",
-                                        "label": "Comentarios",
-                                        "placeholder": "Comentarios"
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            }
+                          "0": {
+                            "type": "text",
+                            "label": "DNI",
+                            "placeholder": "DNI"
+                          },
+                          "1": {
+                            "type": "text",
+                            "label": "Nombre",
+                            "placeholder": "Nombre"
+                          },
+                          "2": {
+                            "type": "text",
+                            "label": "Apellido",
+                            "placeholder": "Apellido"
+                          },
+                          "3": {
+                            "type": "date",
+                            "label": "Fecha N.",
+                            "placeholder": ""
+                          },
+                          "4": {
+                            "type": "text",
+                            "label": "Empresa",
+                            "placeholder": "Empresa"
                           }
                         },
                         "1": {
-                          "cols": {
-                            "0": {
-                              "0": {
-                                "type": "table",
-                                "payload": {
-                                  "title": "INGRESO",
-                                  "fetchPath": "/api/aggregate/Masterbus-IOT/INTI",
-                                  "headers": {
-                                    "0": {
-                                      "name": "Grupo",
-                                      "label": "Grupo"
-                                    },
-                                    "1": {
-                                      "name": "Marca",
-                                      "label": "Marca"
-                                    },
-                                    "2": {
-                                      "name": "Modelo",
-                                      "label": "Modelo"
-                                    },
-                                    "3": {
-                                      "name": "No.Serie",
-                                      "label": "No.Serie"
-                                    },
-                                    "4": {
-                                      "name": "Duración Calibración",
-                                      "label": "Duración Calibración"
-                                    },
-                                    "5": {
-                                      "name": "Comentarios",
-                                      "label": "Comentarios"
-                                    }
-                                  },
-                                  "filters": {
-                                    "0": {
-                                      "label": "Buscar",
-                                      "inputs": {
-                                        "nombre": {
-                                          "name": "Buscar",
-                                          "type": "text",
-                                          "placeholder": "Buscar...",
-                                          "value": "",
-                                          "required": "",
-                                          "stage": {
-                                            "type": "match",
-                                            "var": "nombre"
-                                          }
-                                        }
-                                      }
-                                    }
-                                  },
-                                  "finalStages": {
-                                    "0": "{\"$sort\":{\"paquete.Fecha\":-1,\"paquete.Hora\":-1}}"
-                                  },
-                                  "headerBtns": {
-                                    "0": {
-                                      "enabled": "true",
-                                      "type": "filter",
-                                      "label": "filtrar",
-                                      "onClick": {
-                                        "cmds": {
-                                          "0": {
-                                            "type": "filter",
-                                            "payload": {}
-                                          }
-                                        }
-                                      }
-                                    },
-                                    "1": {
-                                      "enabled": "true",
-                                      "type": "erase",
-                                      "label": "filtrar",
-                                      "targeted": true,
-                                      "onClick": {
-                                        "cmds": {
-                                          "0": {
-                                            "type": "erase",
-                                            "payload": {}
-                                          }
-                                        }
-                                      }
-                                    },
-                                    "2": {
-                                      "enabled": "true",
-                                      "type": "edit",
-                                      "label": "editar",
-                                      "targeted": true,
-                                      "onClick": {
-                                        "cmds": {
-                                          "1": {
-                                            "type": "modal",
-                                            "form": {
-                                              "title": "INTI",
-                                              "cols": {
-                                                "0": {
-                                                  "0": {
-                                                    "type": "text",
-                                                    "label": "DNI",
-                                                    "placeholder": "DNI"
-                                                  },
-                                                  "1": {
-                                                    "type": "text",
-                                                    "label": "Nombre",
-                                                    "placeholder": "Nombre"
-                                                  },
-                                                  "2": {
-                                                    "type": "text",
-                                                    "label": "Apellido",
-                                                    "placeholder": "Apellido"
-                                                  },
-                                                  "3": {
-                                                    "type": "date",
-                                                    "label": "Fecha N.",
-                                                    "placeholder": ""
-                                                  },
-                                                  "4": {
-                                                    "type": "text",
-                                                    "label": "Empresa",
-                                                    "placeholder": "Empresa"
-                                                  }
-                                                },
-                                                "1": {
-                                                  "0": {
-                                                    "type": "text",
-                                                    "label": "Sector",
-                                                    "placeholder": "Sector"
-                                                  },
-                                                  "1": {
-                                                    "type": "text",
-                                                    "label": "Posición",
-                                                    "placeholder": "Posición"
-                                                  },
-                                                  "2": {
-                                                    "type": "text",
-                                                    "label": "Mail",
-                                                    "placeholder": "Mail"
-                                                  },
-                                                  "3": {
-                                                    "type": "text",
-                                                    "label": "Teléfono",
-                                                    "placeholder": ""
-                                                  },
-                                                  "4": {
-                                                    "type": "text",
-                                                    "label": "Dirección",
-                                                    "placeholder": "Dirección"
-                                                  }
-                                                }
-                                              },
-                                              "footerBtns": {
-                                                "cancel": {
-                                                  "enabled": "true",
-                                                  "type": "edit",
-                                                  "label": "editar",
-                                                  "onClick": {}
-                                                },
-                                                "acept": {
-                                                  "enabled": "true",
-                                                  "type": "edit",
-                                                  "label": "editar",
-                                                  "onClick": {}
-                                                }
-                                              }
-                                            }
-                                          }
-                                        }
-                                      }
-                                    },
-                                    "3": {
-                                      "enabled": "true",
-                                      "type": "add",
-                                      "label": "agregar",
-                                      "onClick": {
-                                        "cmds": {
-                                          "0": {
-                                            "type": "modal",
-                                            "payload": {
-                                              "content": {
-                                                "rows": {
-                                                  "0": {
-                                                    "cols": {
-                                                      "0": {
-                                                        "0": {
-                                                          "type": "form",
-                                                          "payload": {
-                                                            "title": "CONFIRMACIÓN",
-                                                            "cols": {
-                                                              "0": {
-                                                                "0": {
-                                                                  "type": "text",
-                                                                  "label": "DNI",
-                                                                  "placeholder": "DNI"
-                                                                },
-                                                                "1": {
-                                                                  "type": "text",
-                                                                  "label": "Nombre",
-                                                                  "placeholder": "Nombre"
-                                                                },
-                                                                "2": {
-                                                                  "type": "text",
-                                                                  "label": "Apellido",
-                                                                  "placeholder": "Apellido"
-                                                                },
-                                                                "3": {
-                                                                  "type": "date",
-                                                                  "label": "Fecha N.",
-                                                                  "placeholder": ""
-                                                                },
-                                                                "4": {
-                                                                  "type": "text",
-                                                                  "label": "Empresa",
-                                                                  "placeholder": "Empresa"
-                                                                }
-                                                              },
-                                                              "1": {
-                                                                "0": {
-                                                                  "type": "text",
-                                                                  "label": "Sector",
-                                                                  "placeholder": "Sector"
-                                                                },
-                                                                "1": {
-                                                                  "type": "text",
-                                                                  "label": "Posición",
-                                                                  "placeholder": "Posición"
-                                                                },
-                                                                "2": {
-                                                                  "type": "text",
-                                                                  "label": "Mail",
-                                                                  "placeholder": "Mail"
-                                                                },
-                                                                "3": {
-                                                                  "type": "text",
-                                                                  "label": "Teléfono",
-                                                                  "placeholder": ""
-                                                                },
-                                                                "4": {
-                                                                  "type": "text",
-                                                                  "label": "Dirección",
-                                                                  "placeholder": "Dirección"
-                                                                }
-                                                              }
-                                                            },
-                                                            "footerBtns": {
-                                                              "0": {
-                                                                "enabled": "true",
-                                                                "type": "filter",
-                                                                "label": "Cancelar ",
-                                                                "onClick": {
-                                                                  "cmds": {
-                                                                    "0": {
-                                                                      "type": "parent-cmd",
-                                                                      "payload": {
-                                                                        "cmds": {
-                                                                          "0": {
-                                                                            "type": "return-correct",
-                                                                            "payload": {}
-                                                                          }
-                                                                        }
-                                                                      }
-                                                                    }
-                                                                  }
-                                                                }
-                                                              },
-                                                              "1": {
-                                                                "enabled": "true",
-                                                                "type": "add",
-                                                                "label": "Agregar ",
-                                                                "onClick": {
-                                                                  "cmds": {
-                                                                    "0": {
-                                                                      "type": "parent-cmd",
-                                                                      "payload": {
-                                                                        "cmds": {
-                                                                          "0": {
-                                                                            "type": "return-correct",
-                                                                            "payload": {}
-                                                                          }
-                                                                        }
-                                                                      }
-                                                                    }
-                                                                  }
-                                                                }
-                                                              }
-                                                            }
-                                                          }
-                                                        }
-                                                      }
-                                                    }
-                                                  }
-                                                }
-                                              }
-                                            }
-                                          },
-                                          "1": {
-                                            "type": "post",
-                                            "payload": {
-                                              "url": "api/post/test/test",
-                                              "method": "POST"
-                                            }
-                                          },
-                                          "2": {
-                                            "type": "update",
-                                            "payload": {}
-                                          }
-                                        }
-                                      }
-                                    }
-                                  },
-                                  "footerBtns": {
-                                    "0": {
-                                      "enabled": true,
-                                      "type": "add",
-                                      "label": "Finalizar ",
-                                      "onClick": {
-                                        "cmds": {
-                                          "0": {
-                                            "type": "filter",
-                                            "payload": {}
-                                          }
-                                        }
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            }
+                          "0": {
+                            "type": "text",
+                            "label": "Sector",
+                            "placeholder": "Sector"
+                          },
+                          "1": {
+                            "type": "text",
+                            "label": "Posición",
+                            "placeholder": "Posición"
+                          },
+                          "2": {
+                            "type": "text",
+                            "label": "Mail",
+                            "placeholder": "Mail"
+                          },
+                          "3": {
+                            "type": "text",
+                            "label": "Teléfono",
+                            "placeholder": ""
+                          },
+                          "4": {
+                            "type": "text",
+                            "label": "Dirección",
+                            "placeholder": "Dirección"
                           }
+                        }
+                      },
+                      "footerBtns": {
+                        "cancel": {
+                          "enabled": "true",
+                          "type": "edit",
+                          "label": "editar",
+                          "onClick": {}
+                        },
+                        "acept": {
+                          "enabled": "true",
+                          "type": "edit",
+                          "label": "editar",
+                          "onClick": {}
                         }
                       }
                     }
                   }
                 }
               }
+            },
+            "3": {
+              "enabled": "true",
+              "type": "add",
+              "label": "agregar",
+              "onClick": {
+                "cmds": {
+                  "0": {
+                    "type": "modal",
+                    "payload": {
+                      "content": {
+                        "rows": {
+                          "0": {
+                            "cols": {
+                              "0": {
+                                "0": "modalForm"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "1": {
+                    "type": "post",
+                    "payload": {
+                      "url": "api/post/test/test",
+                      "method": "POST"
+                    }
+                  },
+                  "2": {
+                    "type": "update",
+                    "payload": {}
+                  }
+                }
+              }
             }
-          }
+          },
+          "initialStages": {},
+          "finalStages": {
+            "0": "{\"$sort\":{\"paquete.Fecha\":-1,\"paquete.Hora\":-1}}"
+          },
+          "footerBtns": {},
+          "rowsData": [],
+          "rowsCheckboxs": [],
+          "targetedBtns": [],
+          "emptyCellChar": "-",
+          "selectedPage": 0,
+          "paginationIndex": 0,
+          "type": "table",
+          "childs": {},
+          "path": "dashboard/0/wizard/tableIngresos"
         }
-      }
+      },
+      "path": "dashboard/0/wizard"
     }
-  }
+  },
+  "path": "dashboard/0"
 }
