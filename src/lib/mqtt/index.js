@@ -1,40 +1,32 @@
-const { cmd } = require('../../ADN/lib/index');
 const mqtt = require('mqtt');
 
+//TODO: manejo de desconexiones y eso...
+const setup = async (env) => {
+    try {
+        const options = {
+            clientId:env.id,
+            username:env.user,
+            password:env.pass,
+            clean: true
+        };
+        const cli = mqtt.connect(env.URL, options);
+        
+        cli.on("connect", () => {
+            console.log(`Connected ${env.user} (${env.id}) to ${env.URL}`);
+            client.subscribe('presence');
+            client.publish('presence', `Hello ${env.user} (${env.id})`);
+        });
 
-
-function connectToBroker(url, credentials, topics){
-    const mqttClient = mqtt.connect(url, credentials);
-    //TODO: Manipulación de los mensajes recibidos según tópico.
-    console.log("Starting...");
-    mqttClient.on("connect", ()=>{
-        console.log("Cliente conectado a BROKER MQTT.");
-        mqttClient.subscribe(topics);
-    });
-
-    mqttClient.on("message", (topic, message)=>{
-        try {
-            console.log(`Mensaje: ${message} --- Recibido de Topico ${topic}.`);
-            sendMessageToDB(topic, message);
-            console.log(`Mensaje ${message} con tópico ${topic} enviado a la colección -> ${topic}`);
-        } catch (error) {
-            console.log(`Message error: ${error}`);
-        }
-    });
+        // TODO: Acá agrego los listeners de las colas
+        // client.on('message', function (topic, message) {
+        //     // message is Buffer
+        //     console.log(message.toString());
+        //     client.end();
+        // });
+    } catch (e) {
+        console.log(e);
+        throw "Failed MQTT setup!";
+    }
 }
 
-const sendMessageToDB = (topic, message) => {
-    let mensaje = JSON.parse(message.toString());
-    cmd({
-        type: "mongo",
-        method: "POST",
-        db: 'admin', 
-        collection: "INTI-MQTT",
-        content: {
-                topic: topic,
-                mensaje: mensaje
-            }
-    })
-}
-
-module.exports = {connectToBroker}
+module.exports = {setup}

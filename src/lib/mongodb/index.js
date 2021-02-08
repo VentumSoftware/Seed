@@ -1,8 +1,5 @@
-const { mongo } = require('mongoose');
-
 const MongoClient = require('mongodb').MongoClient;
 
-var url = null;
 var client = null;
 var dbs = {};
 
@@ -10,22 +7,27 @@ var dbs = {};
 --------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------*/
 
-const getClient = () => {
-    return new Promise((resolve, reject) => {
-        if (client) resolve(client);
-        else {
-            client = new MongoClient(url, { useUnifiedTopology: true, useNewUrlParser: true });
-            client.connect(function(err) {
+const getClient = async (uri) => {
+
+    const connect = async (client) => {
+        return new Promise((resolve, reject) => {
+            client.connect(err => {
                 if (err) {
-                    console.log(url);
-                    client = null;
-                    reject("Error conectando a mongodb: %s" + String.toString(err));
+                    console.log(err);
+                    reject("Mongodb Failed to connect!");
                 } else {
                     resolve(client);
                 }
             });
-        }
+        });
+    }
+
+    var cli = new MongoClient(uri, { useUnifiedTopology: true, useNewUrlParser: true });
+    cli = await connect(cli).catch(e => {
+        throw e;
     });
+
+    return cli;
 };
 
 const initPool = (dbName) => {
@@ -49,7 +51,7 @@ const getDb = (db) => {
     }
 };
 
-//----------------------------------- IMPLEMENTACION DE FUNCIONES AUXILIARES --------------------------------------------
+//----------------------------------- IMPLEMENTACION DE FUNCIONES AUXILIARES ---------------------------------------
 //----------------------------------------------- DE CONSULTA -----------------------------------------------------
 
 //Me aseguro de que el query y el query options sean objetos
@@ -65,7 +67,7 @@ function formatQuery(query) {
     }
 };
 
-//TODO: reemplazar get y gecount por este metodo generico
+//TODO: reemplazar get y getcount por este metodo generico
 function aggregate(database, collection, pipeline, options) {
     console.log(`mongo@aggregate: db: ${database} col: ${collection} pipeline: ${pipeline} options:${options}`);
     // pipeline = formatQuery(pipeline);
@@ -251,28 +253,19 @@ const query = (msg) => {
     }
 };
 
-const setup = (data) => {
-    return new Promise((resolve, reject) => {
-        if (data == null) {
-            console.log("Mongodb not set.");
-            resolve();
-        }
-        try {
-            if (client) client.close();
-            client = null;
-            dbs = {};
-            url = data.url;
-            getDb(data.dfltDb)
-                .then(db => resolve())
-                .catch(e => {
-                    console.log(e);
-                    resolve();
-                });
-        } catch (err) {
-            console.log(err);
-            resolve();
-        }
-    });
+const setup = async (env, ADN) => {
+    try {
+        if (client) client.close();
+
+        client = await getClient(env.URI).catch(e => {
+            console.log(e);
+            throw "Failed to connecto to client at: " + env.URI;
+        });
+        console.log(`Mongodb: cliente connected succesfully to ${env.URI}`);
+    } catch (err) {
+        console.log(err);
+        reject(err);
+    }
 };
 
 // Interfaz con la bd de MongoDb

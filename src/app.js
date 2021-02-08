@@ -1,118 +1,47 @@
 // Framework de Node para crear servidores
 const express = require('express');
-const WebSocket = require('ws');
-const url = require('url');
-const bodyParser = require('body-parser');
-const config = require('./config');
-// Herramientas para manipular el "ADN" de la app
-const ADNTools = require('./seedLib/ADNTools');
-// Script que administra las colas
-const queues = require('./seedLib/queues');
-// Script que administra los "Endpoints" y sus middlewares
-const endpoints = require('./seedLib/endpoints');
-// Script que arranca los "workers" que mueven los mensajes de la cola a la bd
-const workers = require('./seedLib/workers');
-// Script que administra las bds y colas del sistema
-const bds = require('./seedLib/bds');
+// Librería de nuestro runtime "Seed" que interpreta un "ADN"
+const seed = require('./seed');
+// JSON con todas las variables de entorno y config
+const env = require('./env');
 
 //TODO: agregar certificados ssl y caa
-// El servidor comienza a escuchar los requests
 var server = null;
 
-const startListening = () => {
-    new Promise((resolve, reject) => {
-        try {
-            const port = app.get('port');
-            server = app.listen(port, () => {
-                console.log(`App: Servidor escuchando en el puerto:  ${app.get('port')}`);
-                resolve(port);
-            });
-            data = {
-                onConnection: (ws) => {
-                    console.log("Connection succesful!");
-                    ws.on("message", (message) => {
-                        console.log('ws received: %s', message);
-                    });
-
-                    ws.on("close", () => {
-                        console.log("Connection closed! :(");
-                    });
-
-                    ws.send("Probando envío de datos por WebSocket Protocol.");
-                }
-            }
-            const wss = new WebSocket.Server({ noServer: true });
-            wss.on('connection', data.onConnection);
-
-            server.on('upgrade', (request, socket, head) => {
-                const pathname = url.parse(request.url).pathname;
-
-                if (pathname != null) {
-                    wss.handleUpgrade(request, socket, head, (ws) => {
-                        console.log("Upgraded!");
-                        wss.emit('connection', ws, request);
-                    });
-                } else {
-                    socket.destroy();
-                }
-            });
-        } catch (error) {
-            reject(error);
+//Esto sirve para resetear el servidor
+const reset = async () => {
+    try {
+        console.log(`App@Reset - Restarting App...`);
+        //Si ya hay una app corriendo la apago
+        if (server) {
+            server.close();
+            console.log(`App@Reset - Old server closed.`);
         }
-    });
-};
+        // Obtengo el "ADN" (data de la app), puedo volver a descargarlo o cargarlo localmente
+        const ADN = await seed.getADN(env.ADN);
+        // Intento armar una app a partir de la data del "ADN" anterior
+        var app = await seed.buildApp(env, ADN);
+        // Si el la app se armó correctamente empiezo a escuchar en el puerto configurado
+        server = await app.listen(env.port);
+        console.log("App@Reset - Server listening in port: " + env.port);
 
-// Inicializo el servidor
-console.log(`App: Inicializando Servidor...`);
-const app = express();
-
-//Esto sirve para resetear el servidor y cambiar la configuración
-//TODO: Hacer algo mas prolijo y seguro que esto...
-app.use(bodyParser.urlencoded());
-app.use(bodyParser.json());
-
-app.post('/reset', function(req, res) {
-    console.log(req.body);
-    if (req.body.secret == "secreto") {
-        config.ADNGitRepo = req.body.gitRepo || config.ADNGitRepo;
-        config.ADNGitUser = req.body.gitUser || config.ADNGitUser;
-        config.ADNGitAuthToken = req.body.gitToken || config.ADNGitAuthToken;
-        reset()
-            .then(a => res.send("app restarted!"))
-            .catch(err => res.status(500).send(err));
-    } else {
-        res.send("Incorrect secret!");
+        console.log("App@Reset - App restarted succesfully!!");
+    } catch (e) {
+        console.log("App@Reset - Error restarting App: " + e);
     }
-});
-
-
-const reset = () => {
-    if (server)
-        server.close();
-    return new Promise((resolve, reject) =>
-        //el parametro "updateADN" define si va a descargar el ADN, o va a buscarlo directo en ADN/index.js
-        ADNTools.getADN({ updateADN: true })
-        //  Inicializo la semilla, descargo files adicionales, copio los files publicos del ADN al seed...
-        .then(adn => ADNTools.initADN(adn, { deleteExistingContent: true }))
-        // Incializo las colas (RabbitMQ)
-        .then(adn => queues.setup(app, adn))
-        // Seteo los endpoints y el middleware correspondiente
-        .then(adn => endpoints.setup(app, adn))
-        // Configuro BDs y creao el usuario root de la app, para asegurarme que siempre haya al menos un usuario 
-        .then(adn => bds.setup(adn))
-        // Prendo workers que van a mover los mensajes de las colas a la bd
-        .then(adn => workers.setup(adn))
-        //Función del ADN que se llama al final del setup
-        .then(adn => ADNTools.readyADN(adn, {}))
-        //El servidor comienza a escuchar
-        .then(adn => startListening(adn))
-        .then(adn => resolve(adn))
-        .catch(err => {
-            console.log(err);
-            reject(err);
-        }));
 };
 
-reset();
+//Inicio la app
+const start = async () => {
+    try {
+        //TODO: seguramente esto se va a ir en el futuro
+        //Agrego un endpoint en otro puerto para poder resetear la app remotamente
+        await seed.addDevOpsPort(env, reset);
+        await reset();
+    } catch (e) {
+        console.log("Error starting app: " + e);
+        throw e;
+    }
+}
 
-module.exports = { reset };
+start().catch(e => "App failed to start!");

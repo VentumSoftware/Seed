@@ -1,3 +1,5 @@
+//TODO: Revisar esto
+
 var amqp = require('amqplib/callback_api');
 //https://www.cloudamqp.com/docs/nodejs.html
 // if the connection is closed or fails to be established at all, we will reconnect

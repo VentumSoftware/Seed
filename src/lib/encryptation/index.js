@@ -1,5 +1,4 @@
 const bcrypt = require('bcrypt'); // Librería para encryptación
-const config = require('../../config');
 const mingo = require('mingo');
 const jwt = require('jsonwebtoken');
 

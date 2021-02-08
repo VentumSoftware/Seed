@@ -1,4 +1,3 @@
-const config = require('../../config/index');
 const mariadb = require('mariadb');
 
 const setConnection = (data) => {
