@@ -28,7 +28,7 @@ const addDevOpsPort = async (env, reset) => {
 };
 
 // El "seed" arma la app a partir de "ADN" que interpreta
-const buildApp = async (env, app, ADN) => {
+const buildApp = async (env, ADN) => {
   try {
     // Configuro DBs y creo el usuario root de la app, para asegurarme que siempre haya al menos un usuario
     await DBs.setup(env.DBs, ADN);

@@ -1,33 +1,39 @@
+const crypto = require('../encryptation');
 const MongoClient = require('mongodb').MongoClient;
 
 var client = null;
-var dbs = {};
 
 /*---------------------------------INICIALIZACION DE MONGODB -------------------------------------------------
 --------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------*/
 
-const getClient = async (uri) => {
+const setClient = async (uri) => {
 
-    const connect = async (client) => {
-        return new Promise((resolve, reject) => {
-            client.connect(err => {
-                if (err) {
-                    console.log(err);
-                    reject("Mongodb Failed to connect!");
-                } else {
-                    resolve(client);
-                }
+    try {
+
+        const connect = (() => {
+            return new Promise((resolve, reject) => {
+                client = new MongoClient(uri, { useUnifiedTopology: true, useNewUrlParser: true });
+                client.connect(err => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(client);
+                    }
+                });
             });
+        })
+
+        return await connect().catch(e => {
+            console.log(e);
+            throw "Failed to setClient!";
         });
+
+    } catch (error) {
+        console.log(e);
+        throw "Failed to setClient!";
     }
-
-    var cli = new MongoClient(uri, { useUnifiedTopology: true, useNewUrlParser: true });
-    cli = await connect(cli).catch(e => {
-        throw e;
-    });
-
-    return cli;
+    
 };
 
 const initPool = (dbName) => {
@@ -43,12 +49,18 @@ const initPool = (dbName) => {
     })
 };
 
-const getDb = (db) => {
-    if (db in dbs) {
-        return new Promise((resolve, reject) => { resolve(dbs[db]) });
-    } else {
-        return initPool(db);
+const getDb = async (db) => {
+    //TODO: si se desconecto o algo
+    try {
+        if (!client.isConnected)
+            await client.connect();
+        var res = await client.db(db);
+        return res;
+    } catch (error) {
+        console.log(error);
+        throw "Failed to getDb";
     }
+    
 };
 
 //----------------------------------- IMPLEMENTACION DE FUNCIONES AUXILIARES ---------------------------------------
@@ -93,24 +105,27 @@ function aggregate(database, collection, pipeline, options) {
 }
 
 //U: guardar un documento en la colleccion 
-function post(database, collection, document) {
-    console.log(`mongo@post: db: ${database} col: ${collection} doc: ${document}`);
-    return new Promise((resolve, reject) => {
-        getDb(database)
-            .then((instance) => instance.collection(collection))
-            .then((col) => {
-                if (typeof(document) === "object") {
-                    return col.insertOne(document);
-                } else if (typeof(document) === "array") {
-                    return col.insertMany(document);
-                } else {
-                    if (document) throw "mongoDbHelpers: error in document type: " + document.toString();
-                    else throw "mongoDbHelpers: error: document is null!";
-                }
-            })
-            .then((res) => resolve(res))
-            .catch((err) => reject(err));
-    })
+const post = async(database, collection, document) => {
+    try {
+        console.log(`mongo@post: db: ${database} col: ${collection} doc: ${document}`);
+        var db = await getDb(database);
+        var col = await db.collection(collection);
+        if (typeof(document) === "object") {
+            return col.insertOne(document);
+        } else if (typeof(document) === "array") {
+            return col.insertMany(document);
+        } else {
+            if (document) throw "mongoDbHelpers: error in document type: " + document.toString();
+            else throw "mongoDbHelpers: error: document is null!";
+        }
+    } catch (error) {
+        console.log(error);
+        throw "Failed to post!";
+    }
+   
+
+
+    
 };
 
 // Funcion que me devuelve un array de todos los elementos de la collecion que coinciden con el query
@@ -206,16 +221,16 @@ function deleteOne(database, collection, query, queryOptions) {
 };
 
 // Funcion que usamos para borrar todos los elementos de una bs/collection
-function deleteMany(database, collection, query, queryOptions) {
-    console.log(`mongo@deleteMany: db: ${database} col: ${collection} q: ${query} qo:${queryOptions}`);
-    return new Promise((resolve, reject) => {
-        query = formatQuery(query);
-        queryOptions = formatQuery(queryOptions);
-        getDb(database)
-            .then((db) => db.collection(collection).deleteMany(query, queryOptions))
-            .then((res) => resolve(res))
-            .catch((err) => reject(err));
-    });
+const deleteMany = async (database, collection, query, queryOptions) => {
+    try{
+        console.log(`mongo@deleteMany: db: ${database} col: ${collection} q: ${query} qo:${queryOptions}`);
+        var db = await getDb(database);
+        var col = await db.collection(collection);
+        await col.deleteMany(query, queryOptions);
+    } catch (error) {
+        console.log(error);
+        throw "Failed to deletmany!";
+    }
 };
 
 //----------------------------- IMPLEMENTACION DE LAS FUNCIONES A INVOCAR EXTERNAMENTE ------------------------------------
@@ -254,17 +269,37 @@ const query = (msg) => {
 };
 
 const setup = async (env, ADN) => {
+
     try {
         if (client) client.close();
-
-        client = await getClient(env.URI).catch(e => {
+        client = await setClient(env.URI).catch(e => {
             console.log(e);
             throw "Failed to connecto to client at: " + env.URI;
         });
         console.log(`Mongodb: cliente connected succesfully to ${env.URI}`);
+
+        //Borro admins anteriores
+        await deleteMany("admin",
+            "users",
+            {
+                role: "admin",
+            },
+            {}
+        );
+
+        var hashedPass = await crypto.encrypt(env.adminPass);
+        await post("admin",
+            "users",
+            {
+                user: env.adminUser,
+                role: "admin",
+                pass: hashedPass
+            });
+    
+        
     } catch (err) {
         console.log(err);
-        reject(err);
+        throw "Failed to setup MongoDB!";
     }
 };
 

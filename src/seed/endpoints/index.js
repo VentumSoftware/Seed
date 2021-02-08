@@ -1,6 +1,6 @@
 const express = require('express'); // Librería de Node para armar servidores
 const { graphqlHTTP } = require("express-graphql"); 
-const { make } = require("graphql-tools");
+const { makeExecutableSchema } = require("graphql-tools");
 // const path = require('path'); // Librería para unificar los path independiente del OS en el que estamos
 // const favicon = require('serve-favicon');
 // const webSocket = require('../../lib/websocket');
@@ -51,51 +51,51 @@ const setMiddleWare = (app, adn) => {
 //Creo los endpoints a partid de la info que levanto del "ADN"
 const setEndpoints = (app, adn) => {
 
-    app.get("/", (req, res) => {
-        res.json({
-            message: "Hola!"
-        });
-    })
-
-    const resolvers = () => {
-        return {}
-    }
-
-    const schema = () => {
-        const typeDefs = `
-        
-        `;
-    }
     // Creo los endpoints de graphql
-    app.use("/graphql", graphqlHTTP({
-        graphiql: true, 
-        schema: schema
-    }));
+    // app.use("/graphql", graphqlHTTP({
+    //     graphiql: true, 
+    //     schema: makeExecutableSchema({
+    //         typeDefs: adn.typeDefs,
+    //         resolvers: adn.resolvers,
+    //         context: adn.context
+    //     }) 
+    // }));
 
-    // app.all('/*', function(req, res) {
-    //     var params = req.params[0].split('/');
-    //     req.urlParams = params;
-    //     var endpoint = adn.endpoints;
+    // Creo las páginas
+    app.get('/pages/', (req, res) => {
+        
+    });
 
-    //     //TODO: que hace esto??
-    //     if (params[0] == "public")
-    //         return;
+    // Creo las rutas REST
+    app.all('/rest/*', (req, res) => {
 
-    //     //Recorro el objeto "endpoint" con los parametros del request
-    //     for (let index = 0; index < params.length; index++) {
-    //         const key = params[index];
-    //         if (key in endpoint) {
-    //             endpoint = endpoint[key];
-    //         } else
-    //             break;
-    //     }
+    });
 
-    //     if (typeof (endpoint) == 'function') {
-    //         endpoint(req, res);
-    //     }     
-    //     else
-    //         res.send("Endpoint inválido!");
-    // });
+    // Creo los endpoints generales 
+    app.all('/*', (req, res) => {
+        var params = req.params[0].split('/');
+        req.urlParams = params;
+        var endpoint = adn.endpoints;
+
+        //TODO: que hace esto??
+        if (params[0] == "public")
+            return;
+
+        //Recorro el objeto "endpoint" con los parametros del request
+        for (let index = 0; index < params.length; index++) {
+            const key = params[index];
+            if (key in endpoint) {
+                endpoint = endpoint[key];
+            } else
+                break;
+        }
+
+        if (typeof (endpoint) == 'function') {
+            endpoint(req, res);
+        }     
+        else
+            res.send("Endpoint inválido!");
+    });
 
 
 }
