@@ -1,5 +1,8 @@
 // Framework de Node para crear servidores
 const express = require('express');
+const { getADN } = require('../ADNTools');
+// Levanta las variables de entorno del archivo .env
+require('dotenv').config({ path: require('path').join(__dirname, '.env') })
 
 // Agrego un endpoint en otro puerto para resetear la app de manera remota
 const init = async (env, reset) => {
@@ -48,13 +51,15 @@ const init = async (env, reset) => {
 
     if (req.body.secret == "secreto") {
       console.log("DevOps: restarting! " + req.body);
-      env.ADNGitRepo = req.body.gitRepo || env.ADNGitRepo;
-      env.ADNGitUser = req.body.gitUser || env.ADNGitUser;
-      env.ADNGitAuthToken = req.body.gitToken || env.ADNGitAuthToken;
 
+      env.ADN.updateADN = true;
+      env.ADN.gitUser = req.body.gitUser || env.ADN.gitUser;
+      env.ADN.gitRepo = req.body.gitRepo || env.ADN.gitRepo;
+      env.ADN.gitAuthToken = req.body.gitToken || env.ADN.gitAuthToken;
+      
       var msg = "DevOps: App restarted succesfully!"
 
-      await reset().catch(err => {
+      await reset(env).catch(err => {
         console.log(err);
         msg = "DevOps App failed to restart!";
       })

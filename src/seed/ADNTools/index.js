@@ -19,6 +19,7 @@ const downloadADN = async (env) => {
         const user = env.gitUser;
         const repo = env.gitRepo;
         const token = env.gitAuthToken;
+        
         console.log("ADNTools@downloadADN: downloading 'ADN' from github repo: " + user + "/" + repo);
         const res = await github.cloneRepo(user, repo, "", token, "./src/ADN");
         return res;
