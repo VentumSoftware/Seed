@@ -129,55 +129,61 @@ const post = async(database, collection, document) => {
 };
 
 // Funcion que me devuelve un array de todos los elementos de la collecion que coinciden con el query
-function get(database, collection, query, queryOptions) {
-    console.log(`mongo@get: db: ${database} col: ${collection} q: ${query} qo:${queryOptions}`);
-    query = formatQuery(query);
-    queryOptions = formatQuery(queryOptions);
-    return new Promise((resolve, reject) => {
-        getDb(database)
-            .then((db) => {
-                return db.collection(collection);
-            })
-            .then((col) => {
-                return col.find(query, queryOptions);
-            })
-            .then((res) => {
-                return res.toArray();
-            })
-            .then((res) => {
-                console.log(`mongo@get: result: ${res}`);
-                resolve(res);
-            })
-            .catch((err) => {
-                console.log(`mongo@get: error:${err}`);
-                reject(err);
-            });
-    })
+const get = async (database, collection, query, queryOptions) => {
+    try {
+        console.log(`mongo@get: db: ${database} col: ${collection} q: ${query} qo:${queryOptions}`);
+        query = formatQuery(query);
+        queryOptions = formatQuery(queryOptions);
+
+        var db = await getDb(database);
+        var col = await db.collection(collection);
+        var res = await col.find(query, queryOptions);
+        return res.toArray();
+    } catch (error) {
+        console.log(error);
+        throw `Failed to get from: ${database}/${collection}`;
+    }
+    
 };
 //FUNCION PARA ACTUALIZAR LOS VALORES DE UN DOCUMENTO
-function update(database, collection, query, updateValues) {
-    console.log(`mongo@Update: db: ${database} col: ${collection} q: ${query} values: ${updateValues}`);
-    query = formatQuery(query);
-    valuesToUpdate = formatQuery(updateValues); //$set operator PARA HACER UPDATE
+//TODO: Este update no es un update (replaceOne)
+const update = async (database, collection, replacement, query, queryOptions) => {
+    try {
+        console.log(`mongo@Update: db: ${database} col: ${collection} q: ${query} qo: ${queryOptions}`);
+        query = formatQuery(query);
+        queryOptions = formatQuery(queryOptions);
 
-    return new Promise((resolve, reject) => {
-        getDb(database)
-            .then((db) => {
-                return db.collection(collection);
-            })
-            .then((col) => { //TODO: VERIFICAR QUE LA QUERY TENGA LA ESTRUCTURA SIGUIENTE: updateOne(queryFilter, queryToUpdate) 
-                //queryToUpdate es una expresión con el operador $set.
-                return col.updateOne(query, valuesToUpdate); // {usuario: "Pepito"} , {$set: {codigos: [920,910]}}
-            })
-            .then((res) => {
-                console.log(`mongo@update: result: ${res}`);
-                resolve(res);
-            })
-            .catch((err) => {
-                console.log(`mongo@update: error:${err}`);
-                reject(err);
-            })
-    });
+        var db = await getDb(database);
+        var col = await db.collection(collection);
+        var res = await col.replaceOne(query, replacement, { upsert: true });
+        return res;
+    } catch (error) {
+        console.log(error);
+        throw `Failed to get from: ${database}/${collection}`;
+    }
+    
+
+    // console.log(`mongo@Update: db: ${database} col: ${collection} q: ${query} values: ${updateValues}`);
+    // query = formatQuery(query);
+    // valuesToUpdate = formatQuery(updateValues); //$set operator PARA HACER UPDATE
+    // return new Promise((resolve, reject) => {
+    //     getDb(database)
+    //         .then((db) => {
+    //             return db.collection(collection);
+    //         })
+    //         .then((col) => { //TODO: VERIFICAR QUE LA QUERY TENGA LA ESTRUCTURA SIGUIENTE: updateOne(queryFilter, queryToUpdate) 
+    //             //queryToUpdate es una expresión con el operador $set.
+    //             return col.updateOne(query, valuesToUpdate); // {usuario: "Pepito"} , {$set: {codigos: [920,910]}}
+    //         })
+    //         .then((res) => {
+    //             console.log(`mongo@update: result: ${res}`);
+    //             resolve(res);
+    //         })
+    //         .catch((err) => {
+    //             console.log(`mongo@update: error:${err}`);
+    //             reject(err);
+    //         })
+    // });
 }
 
 // Funcion que me devuelve la cantidad de elementos de la collecion que coinciden con el query
@@ -206,18 +212,20 @@ function getCount(database, collection, query, queryOptions) {
 };
 
 // Funcion que usamos para borrar un elemento de una bs/collection
-function deleteOne(database, collection, query, queryOptions) {
-    console.log(`mongo@deleteOne: db: ${database} col: ${collection} q: ${query} qo:${queryOptions}`);
-    return new Promise((resolve, reject) => {
+const deleteOne = async (database, collection, query, queryOptions) => {
+    try {
+        console.log(`mongo@deleteOne: db: ${database} col: ${collection} q: ${query} qo:${queryOptions}`);
         query = formatQuery(query);
         queryOptions = formatQuery(queryOptions);
 
-        getDb(database)
-            .then((db) => db.collection(collection).deleteOne(query, queryOptions))
-            .then((res) => resolve(res))
-            .catch((err) => reject(err));
-    });
-
+        var db = await getDb(database);
+        var col = await db.collection(collection);
+        var res = await col.deleteOne(query, queryOptions);
+        return res;
+    } catch (error) {
+        console.log(error);
+        throw `Failed to delete one from: ${database}/${collection}`;
+    }
 };
 
 // Funcion que usamos para borrar todos los elementos de una bs/collection
@@ -240,31 +248,50 @@ const validateMsg = (msg) => {
     return true;
 };
 
-const query = (msg) => {
-    console.log("Mongodb query: " + JSON.stringify(msg));
-    if (validateMsg(msg))
-        switch (msg.method) {
-            case 'AGGREGATE':
-                return aggregate(msg.db, msg.collection, msg.pipeline, msg.options)
-            case 'POST':
-                return post(msg.db, msg.collection, msg.content)
-            case 'GET':
-                return get(msg.db, msg.collection, msg.query, msg.queryOptions)
-            case 'UPDATE':
-                return update(msg.db, msg.collection, msg.query, msg.update);
-            case 'DELETE_ONE':
-                return deleteOne(msg.db, msg.collection, msg.query, msg.queryOptions)
-            case 'DELETE':
-                return deleteMany(msg.db, msg.collection, msg.query, msg.queryOptions)
-            case 'COUNT':
-                return getCount(msg.db, msg.collection, msg.query, msg.queryOptions)
-            default:
-                reject("Invalid method for mongodb: %s", msg.method);
-                return new Promise((res, rej) => { res() });
+const query = async (msg) => {
+    try {
+        console.log("Mongodb query: " + JSON.stringify(msg));
+        if (validateMsg(msg))
+            switch (msg.method) {
+                case 'AGGREGATE':
+                    return aggregate(msg.db, msg.col, msg.pipeline, msg.options)
+                case 'POST':
+                    return await post(msg.db, msg.col, msg.content)
+                case 'GET':
+                    return await get(msg.db, msg.col, msg.query, msg.queryOptions)
+                case 'UPDATE':
+                    return await update(msg.db, msg.col, msg.replacement, msg.query, msg.content);
+                case 'DELETE_ONE':
+                    return deleteOne(msg.db, msg.col, msg.query, msg.queryOptions)
+                case 'DELETE':
+                    return deleteMany(msg.db, msg.col, msg.query, msg.queryOptions)
+                case 'COUNT':
+                    return getCount(msg.db, msg.col, msg.query, msg.queryOptions)
+                default:
+                    throw "Invalid method for mongodb: " + msg.method;
+            }
+        else {
+            throw "Invalid query format for mongodb: " + msg;
         }
-    else {
-        reject("Invalid query format for mongodb: %s", msg);
-        return new Promise((res, rej) => { res() });
+    } catch (error) {
+        console.log(error);
+        throw "Failed query!";
+    }
+    
+};
+
+const getCollections = async (dbName) => {
+    try {
+        var result = [];
+        var db = await client.db(dbName);
+        var collections = await db.collections();
+        collections.forEach(col => {
+            result.push(col.s.namespace.collection)
+        });
+        return result;
+    } catch (error) {
+        console.log(error);
+        throw "Failed to get collection!"
     }
 };
 
@@ -304,4 +331,4 @@ const setup = async (env, ADN) => {
 };
 
 // Interfaz con la bd de MongoDb
-module.exports = { setup, query }
+module.exports = { setup, query, getCollections }

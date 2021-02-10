@@ -37,6 +37,9 @@ let vars = {
         },
         //rabbitmq: {},
         //kafka: {} TODO
+        fcm: {
+            serverToken:"AAAAscooTHY:APA91bEdTsVwgqcxhP9xk4YXVq47vSa7rlglolxUm8RBAQnpvnLPaiYOJbQ5uoqDpkbiHcyHx5h4yULs7ZSRXSoStP657rWoCX9SS6b5_bW898lybWhLAkVyP9dP4gb-ayLpKudHzgQH"
+        }
     },
 
     //JSON WEB TOKEN

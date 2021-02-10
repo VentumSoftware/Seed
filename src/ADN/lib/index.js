@@ -6,9 +6,24 @@ const mingo = require('mingo');
 const fetch = require('node-fetch');
 
 const { query } = require('../../lib/mongodb');
-const decodeJWT = crypto.decodeJWT;
+const createJWT = crypto.createJWT;
 
-const login = async (res, req) => {
+const decodeAccessToken = async (req) => {
+    try {
+        var hashedToken = req.headers['access-token'] || req.cookies['access-token'] || req.body['access-token'];
+        if (hashedToken) {
+            hashedToken.replace(/"/g, ""); //Las cookies traen las comillas
+            var token = await crypto.decodeJWT(hashedToken);
+            return token;
+        }
+        else throw "Access-token not found in headers,cookies or body!"
+    } catch (error) {
+        console.log(error);
+        throw "Failed to decode token!";
+    }
+}
+
+const login = async (req, res) => {
 
     try {
         if (req.method == "POST") {
@@ -17,25 +32,33 @@ const login = async (res, req) => {
                 type: "mongo",
                 method: "GET",
                 db: "admin",
-                collection: "users",
+                col: "users",
                 query: { user: req.body.user }
             };
 
             var founds = await query(findUserQuery).catch(e => console.log(e));
             var user = null;
-            if (!founds) rej("lib@login: Error looking for user %s in db!", user);
-                else if (founds.length == 0) throw (`Error: No user found with: ${user}`);
-                else if (founds.length > 1) throw (`Error: More than one user found with: ${user}`);
-                else user = founds[0];
-            
-            var valid = await crypto.compareEncrypted(req.body.pass, user.pass).catch(e => console.log(e));
-            if (valid) {
-                delete user.pass;
-                const token = createJWT(user);
-                res.send(token);
-            } else {
-                res.status(401).send("Invalid username or pass!");
-            }         
+            if (!founds) throw `lib@login: Error looking for user ${user} in db!`;
+            else if (founds.length == 0) res.status(401).send("Invalid username or pass!"); // No existe el usuario
+            else if (founds.length > 1) throw (`Error: More than one user found with: ${user}`);
+            else {
+                user = founds[0];
+                var valid = await crypto.compareEncrypted(req.body.pass, user.pass).catch(e => console.log(e));
+                if (valid) {
+                    delete user.pass;
+                    const token = await createJWT(user);
+                    res
+                        .cookie("access-token", JSON.stringify(token), {})
+                        .send({
+                        msg: "Logged in succesfully!",
+                        user: user,
+                        token: token,
+                    });
+                } else {
+                    res.status(401).send("Invalid username or pass!"); // Pass incorrecto
+                }   
+            }
+
         } else {
             console.log("Invalid method for login: " + req.method);
             res.status(405).send("Invalid method for login: " + req.method + " use POST instead!");
@@ -120,7 +143,6 @@ const setUTCTimezoneTo = (dateToTransform, timezone) => {
     }
 
 };
-
 
 // const createUsers = () => {
 
@@ -226,4 +248,4 @@ const setUTCTimezoneTo = (dateToTransform, timezone) => {
 // };
 
 
-module.exports = { views, login, query, fetch, fetchGitFile, decodeJWT, validateJSON, setUTCTimezoneTo };
+module.exports = { views, login, query, fetch, fetchGitFile, decodeAccessToken, validateJSON, setUTCTimezoneTo };

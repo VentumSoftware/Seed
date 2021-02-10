@@ -1,9 +1,21 @@
 const express = require('express'); // Librería de Node para armar servidores
-const { graphqlHTTP } = require("express-graphql"); 
+const { graphqlHTTP } = require("express-graphql");
 const { makeExecutableSchema } = require("graphql-tools");
+const { getCollections, query } = require("../../lib/mongodb");
+const ObjectID = require('mongodb').ObjectID;
 // const path = require('path'); // Librería para unificar los path independiente del OS en el que estamos
 // const favicon = require('serve-favicon');
 // const webSocket = require('../../lib/websocket');
+const {
+    views,
+    login,
+    fetch,
+    fetchGitFile,
+    decodeAccessToken,
+    validateJSON,
+    setUTCTimezoneTo
+} = require('../../ADN/lib');
+
 
 //Marco la carpeta que voy a compartir con el frontend
 const setPublicFolder = (app, adn) => {
@@ -62,41 +74,139 @@ const setEndpoints = (app, adn) => {
     // }));
 
     // Creo las páginas
-    app.get('/pages/', (req, res) => {
-        
+    app.all('/pages/*', async (req, res) => {
+
     });
 
     // Creo las rutas REST
-    app.all('/rest/*', (req, res) => {
+    app.all('/rest/*', async (req, res) => {
+        try {
+            var params = req.params[0].split('/');
+            var result = {};
 
+            const structure = adn.rest;
+            const db = params[0] || null;
+            const col = params[1] || null;
+
+            const token = await decodeAccessToken(req)
+                .catch(e => console.log(e));
+            const valid = validateJSON(token, { $or: [{ role: "client" }, { role: "admin" }] })
+
+            if (valid)
+                switch (req.method) {
+                    case "GET":
+                        if (col) {
+                            result = await query({
+                                method: "GET",
+                                db: db,
+                                col: col, 
+                                query: {},
+                                queryOptions: {limit: 1000}
+                            });
+                            res.send(result);
+                        } else if (db) {
+                            result = await getCollections(db);
+                            res.send(result);
+                        } else {
+                            res.send("Invalid path!");
+                        }
+                        break;
+                    case "POST":
+                        if (col) {
+                            result = await query({
+                                method: "POST",
+                                db: db,
+                                col: col,
+                                content: req.body,
+                                queryOptions: {limit: 1000}
+                            });
+                            res.send(result.ops[0]);
+                        } else {
+                            res.send("Invalid path!");
+                        }
+                        break;
+                    case "PUT":
+                        if (col) {
+                            const id = params[2] || null;
+                            result = await query({
+                                method: "UPDATE",
+                                db: db,
+                                col: col,
+                                query: { _id: ObjectID(id) }, 
+                                replacement: req.body,
+                                queryOptions: {limit: 1000}
+                            });
+                            res.send(result.ops[0]);
+                        } else {
+                            res.send("Invalid path!");
+                        }
+                        break;
+                    case "PATCH":
+                        // if (col) {
+                        //     const id = params[2] || null;
+                        //     result = await query({
+                        //         method: "UPDATE",
+                        //         db: db,
+                        //         col: col,
+                        //         query: { _id: ObjectID(id) }, 
+                        //         replacement: req.body,
+                        //         queryOptions: {limit: 1000}
+                        //     });
+                        //     res.send(result.ops[0]);
+                        // } else {
+                        //     res.send("Invalid path!");
+                        // }
+                        break;
+                    case "DELETE":
+                        if (col) {
+                            const id = params[2] || null;
+                            result = await query({
+                                method: "DELETE_ONE",
+                                db: db,
+                                col: col,
+                                query: { _id: ObjectID(id) }
+                            });
+                            res.send(result);
+                        } else {
+                            res.send("Invalid path!");
+                        }
+                        break;
+                    default:
+                        console.log("Invalid Method! " + req.method);
+                        res.status(405).send("Invalid Method! " + req.method);
+                        break;
+                }
+            else {
+                console.log("Invalid token!");
+                res.status(401).send("Invalid token!");
+            }
+        } catch (error) {
+            console.log(error);
+            res.status(500).send("Something went wrong!");
+        }
     });
 
-    // Creo los endpoints generales 
-    app.all('/*', (req, res) => {
+    // Creo los apis generales 
+    app.all('/api/*', async (req, res) => {
+        var endpoint = adn.apis;
         var params = req.params[0].split('/');
-        req.urlParams = params;
-        var endpoint = adn.endpoints;
-
-        //TODO: que hace esto??
-        if (params[0] == "public")
-            return;
-
+        var keys = Object.values(params);
+        console.log(keys);
         //Recorro el objeto "endpoint" con los parametros del request
-        for (let index = 0; index < params.length; index++) {
-            const key = params[index];
-            if (key in endpoint) {
-                endpoint = endpoint[key];
-            } else
-                break;
+        for (let index = 0; index < keys.length; index++) {
+            if (keys[index] in endpoint) endpoint = endpoint[keys[index]];
+            else break;
         }
 
         if (typeof (endpoint) == 'function') {
-            endpoint(req, res);
-        }     
-        else
+            await endpoint(req, res);
+        }
+        else {
+            console.log("Error endpoint type: " + typeof (endpoint));
             res.send("Endpoint inválido!");
-    });
+        }
 
+    });
 
 }
 
