@@ -14,8 +14,9 @@ function saveFile(data, folder, filename) {
             if (!fs.existsSync(folder))
                 fs.mkdirSync(folder, { recursive: true }, err => { if (err) throw err });
 
-            fs.writeFileSync(pathTool.join(folder, filename), data);
-            console.log(`github@saveFile: saved: ${filename} in ${folder}`);
+            const savePath = pathTool.join(__dirname, '../../../', folder, filename);
+            fs.writeFileSync(savePath, data);
+            console.log(`github@saveFile: saved: ${filename} in ${savePath}`);
             resolve('ok');
 
         } catch (error) {
