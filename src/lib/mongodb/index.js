@@ -234,7 +234,8 @@ const deleteMany = async (database, collection, query, queryOptions) => {
         console.log(`mongo@deleteMany: db: ${database} col: ${collection} q: ${query} qo:${queryOptions}`);
         var db = await getDb(database);
         var col = await db.collection(collection);
-        await col.deleteMany(query, queryOptions);
+        var res = await col.deleteMany(query, queryOptions);
+        return res;
     } catch (error) {
         console.log(error);
         throw "Failed to deletmany!";
@@ -313,7 +314,7 @@ const setup = async (env, ADN) => {
             },
             {}
         );
-
+        
         var hashedPass = await crypto.encrypt(env.adminPass);
         await post("admin",
             "users",

@@ -39,9 +39,9 @@ const login = async (req, res) => {
             };
 
             var founds = await query(findUserQuery).catch(e => console.log(e));
-            
-            console.log(`lib@login:  ${founds.length} ${userName} found in users db!`)
-            if (!founds) throw `lib@login: Error looking for user ${userName} in db!`;
+
+            console.log(`lib@login:  ${founds.length} ${userName} found in admin/users!`)
+            if (!founds) throw `lib@login: Error looking for user ${userName} in admin/users!`;
             else if (founds.length == 0) res.status(401).send("Invalid username or pass!"); // No existe el usuario
             else if (founds.length > 1) throw (`Error: More than one user found with: founds`);
             else {
