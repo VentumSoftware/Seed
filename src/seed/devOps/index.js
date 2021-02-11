@@ -57,9 +57,9 @@ const init = async (env, reset) => {
       env.ADN.gitRepo = req.body.gitRepo || env.ADN.gitRepo;
       env.ADN.gitAuthToken = req.body.gitToken || env.ADN.gitAuthToken;
       
-      env.ADN.MONGODB_URI = req.body.dbs.mongo.uri || env.ADN.MONGODB_URI;
-      env.ADN.ADMIN_USER = req.body.dbs.mongo.user || env.ADN.ADMIN_USER;
-      env.ADN.ADMIN_PASS = req.body.dbs.mongo.pass || env.ADN.ADMIN_PASS;
+      env.DBs.mongo.URI = req.body.dbs.mongo.uri || env.DBs.mongo.URI;
+      env.DBs.mongo.adminUser = req.body.dbs.mongo.user || env.DBs.mongo.adminUser;
+      env.DBs.mongo.adminPass = req.body.dbs.mongo.pass || env.DBs.mongo.adminPass;
 
 
       var msg = "DevOps: App restarted succesfully!"
@@ -84,3 +84,4 @@ const init = async (env, reset) => {
 };
 
 module.exports = { init };
+
