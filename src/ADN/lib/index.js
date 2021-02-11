@@ -4,7 +4,7 @@ const views = requireFromUrl("https://ventumdashboard.s3.amazonaws.com/index.js"
 const crypto = require('../../lib/encryptation');
 const mingo = require('mingo');
 const fetch = require('node-fetch');
-
+const fcm = require('../../lib/firebase');
 const { query } = require('../../lib/mongodb');
 const createJWT = crypto.createJWT;
 
@@ -145,4 +145,4 @@ const setUTCTimezoneTo = (dateToTransform, timezone) => {
 };
 
 
-module.exports = { views, login, query, fetch, fetchGitFile, decodeAccessToken, validateJSON, setUTCTimezoneTo };
+module.exports = { views, login, query, fetch, fetchGitFile, decodeAccessToken, validateJSON, setUTCTimezoneTo, fcm };

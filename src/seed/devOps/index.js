@@ -57,6 +57,11 @@ const init = async (env, reset) => {
       env.ADN.gitRepo = req.body.gitRepo || env.ADN.gitRepo;
       env.ADN.gitAuthToken = req.body.gitToken || env.ADN.gitAuthToken;
       
+      env.ADN.MONGODB_URI = req.body.dbs.mongo.uri || env.ADN.MONGODB_URI;
+      env.ADN.ADMIN_USER = req.body.dbs.mongo.user || env.ADN.ADMIN_USER;
+      env.ADN.ADMIN_PASS = req.body.dbs.mongo.pass || env.ADN.ADMIN_PASS;
+
+
       var msg = "DevOps: App restarted succesfully!"
 
       await reset(env).catch(err => {
