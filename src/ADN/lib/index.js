@@ -28,18 +28,20 @@ const login = async (req, res) => {
     try {
         if (req.method == "POST") {
 
+            var user = null;
+            var userName = req.body.user;
             var findUserQuery = {
                 type: "mongo",
                 method: "GET",
                 db: "admin",
                 col: "users",
-                query: { user: req.body.user }
+                query: { user: userName }
             };
 
             var founds = await query(findUserQuery).catch(e => console.log(e));
-            var user = null;
-            console.log(`lib@login:  ${founds.length} ${user} found in users db!`)
-            if (!founds) throw `lib@login: Error looking for user ${user} in db!`;
+            
+            console.log(`lib@login:  ${founds.length} ${userName} found in users db!`)
+            if (!founds) throw `lib@login: Error looking for user ${userName} in db!`;
             else if (founds.length == 0) res.status(401).send("Invalid username or pass!"); // No existe el usuario
             else if (founds.length > 1) throw (`Error: More than one user found with: founds`);
             else {
