@@ -38,15 +38,17 @@ const login = async (req, res) => {
 
             var founds = await query(findUserQuery).catch(e => console.log(e));
             var user = null;
+            console.log(`lib@login:  ${founds.length} ${user} found in users db!`)
             if (!founds) throw `lib@login: Error looking for user ${user} in db!`;
             else if (founds.length == 0) res.status(401).send("Invalid username or pass!"); // No existe el usuario
-            else if (founds.length > 1) throw (`Error: More than one user found with: ${user}`);
+            else if (founds.length > 1) throw (`Error: More than one user found with: founds`);
             else {
                 user = founds[0];
                 var valid = await crypto.compareEncrypted(req.body.pass, user.pass).catch(e => console.log(e));
                 if (valid) {
                     delete user.pass;
                     const token = await createJWT(user);
+                    console.log(`lib@login: ${user} logged in!`)
                     res
                         .cookie("access-token", JSON.stringify(token), {})
                         .send({
