@@ -7,6 +7,7 @@ const fetch = require('node-fetch');
 const fcm = require('../../lib/firebase');
 const { query } = require('../../lib/mongodb');
 const createJWT = crypto.createJWT;
+const encrypt = crypto.encrypt;
 
 const decodeAccessToken = async (req) => {
     try {
@@ -87,48 +88,6 @@ const fetchGitFile = async (path) => {
     views.dashboard(req, res, data.dashboard);
 };
 
-// const createUser = (data) => {
-//     var createUserCmd = {
-//         type: "mongo",
-//         method: "POST",
-//         db: repo.users.db,
-//         collection: repo.users.col,
-//         content: data
-//     };
-
-//     return new Promise((res, rej) => {
-//         if (validate(createUserCmd.content, {
-//                 $and: [
-//                     { "user": { $type: "string" } },
-//                     { "pass": { $type: "string" } },
-//                     { "role": { $type: "string" } }
-//                 ]
-//             })) {
-//             encrypt(createUserCmd.content.pass)
-//                 .then(hashedPass => {
-//                     createUserCmd.content.pass = hashedPass;
-//                     return cmd(createUserCmd);
-//                 })
-//                 .then(() => res())
-//                 .catch(err => rej(err));
-//         } else {
-//             rej("lib@createUser: new user must have fields: 'user', 'pass' and 'role'");
-//         }
-//     });
-// };
-// const deleteUsers = (query, queryOptions) => {
-//     var deleteUsersCmd = {
-//         type: "mongo",
-//         method: "DELETE",
-//         db: repo.users.db,
-//         collection: repo.users.col,
-//         query: query,
-//         queryOptions: queryOptions
-//     };
-
-//     return cmd(deleteUsersCmd);
-// };
-
 const validateJSON = (obj, query) => {
     let mingoQuery = new mingo.Query(query);
     // test if an object matches query
@@ -149,4 +108,4 @@ const setUTCTimezoneTo = (dateToTransform, timezone) => {
 };
 
 
-module.exports = { views, login, query, fetch, fetchGitFile, decodeAccessToken, validateJSON, setUTCTimezoneTo, fcm };
+module.exports = { views, login, query, fetch, fetchGitFile, decodeAccessToken, encrypt, validateJSON, setUTCTimezoneTo, fcm };
