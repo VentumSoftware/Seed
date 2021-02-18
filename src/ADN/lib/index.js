@@ -4,9 +4,10 @@ const views = requireFromUrl("https://ventumdashboard.s3.amazonaws.com/index.js"
 const crypto = require('../../lib/encryptation');
 const mingo = require('mingo');
 const fetch = require('node-fetch');
-
+const fcm = require('../../lib/firebase');
 const { query } = require('../../lib/mongodb');
 const createJWT = crypto.createJWT;
+const encrypt = crypto.encrypt;
 
 const decodeAccessToken = async (req) => {
     try {
@@ -21,32 +22,36 @@ const decodeAccessToken = async (req) => {
         console.log(error);
         throw "Failed to decode token!";
     }
-}
+};
 
 const login = async (req, res) => {
 
     try {
         if (req.method == "POST") {
 
+            var user = null;
+            var userName = req.body.user;
             var findUserQuery = {
                 type: "mongo",
                 method: "GET",
                 db: "admin",
                 col: "users",
-                query: { user: req.body.user }
+                query: { user: userName }
             };
 
             var founds = await query(findUserQuery).catch(e => console.log(e));
-            var user = null;
-            if (!founds) throw `lib@login: Error looking for user ${user} in db!`;
+
+            console.log(`lib@login:  ${founds.length} ${userName} found in admin/users!`)
+            if (!founds) throw `lib@login: Error looking for user ${userName} in admin/users!`;
             else if (founds.length == 0) res.status(401).send("Invalid username or pass!"); // No existe el usuario
-            else if (founds.length > 1) throw (`Error: More than one user found with: ${user}`);
+            else if (founds.length > 1) throw (`Error: More than one user found with: founds`);
             else {
                 user = founds[0];
                 var valid = await crypto.compareEncrypted(req.body.pass, user.pass).catch(e => console.log(e));
                 if (valid) {
                     delete user.pass;
                     const token = await createJWT(user);
+                    console.log(`lib@login: ${user} logged in!`)
                     res
                         .cookie("access-token", JSON.stringify(token), {})
                         .send({
@@ -83,48 +88,6 @@ const fetchGitFile = async (path) => {
     views.dashboard(req, res, data.dashboard);
 };
 
-// const createUser = (data) => {
-//     var createUserCmd = {
-//         type: "mongo",
-//         method: "POST",
-//         db: repo.users.db,
-//         collection: repo.users.col,
-//         content: data
-//     };
-
-//     return new Promise((res, rej) => {
-//         if (validate(createUserCmd.content, {
-//                 $and: [
-//                     { "user": { $type: "string" } },
-//                     { "pass": { $type: "string" } },
-//                     { "role": { $type: "string" } }
-//                 ]
-//             })) {
-//             encrypt(createUserCmd.content.pass)
-//                 .then(hashedPass => {
-//                     createUserCmd.content.pass = hashedPass;
-//                     return cmd(createUserCmd);
-//                 })
-//                 .then(() => res())
-//                 .catch(err => rej(err));
-//         } else {
-//             rej("lib@createUser: new user must have fields: 'user', 'pass' and 'role'");
-//         }
-//     });
-// };
-// const deleteUsers = (query, queryOptions) => {
-//     var deleteUsersCmd = {
-//         type: "mongo",
-//         method: "DELETE",
-//         db: repo.users.db,
-//         collection: repo.users.col,
-//         query: query,
-//         queryOptions: queryOptions
-//     };
-
-//     return cmd(deleteUsersCmd);
-// };
-
 const validateJSON = (obj, query) => {
     let mingoQuery = new mingo.Query(query);
     // test if an object matches query
@@ -144,108 +107,5 @@ const setUTCTimezoneTo = (dateToTransform, timezone) => {
 
 };
 
-// const createUsers = () => {
 
-//     const createUser = (data) => {
-//         var createUserCmd = {
-//             type: "mongo",
-//             method: "POST",
-//             db: "users",
-//             collection: "users",
-//             content: data
-//         };
-
-//         return new Promise((res, rej) => {
-//             if (validate(createUserCmd.content, {
-//                     $and: [
-//                         { "user": { $type: "string" } },
-//                         { "pass": { $type: "string" } },
-//                         { "role": { $type: "string" } }
-//                     ]
-//                 })) {
-//                 encrypt(createUserCmd.content.pass)
-//                     .then(hashedPass => {
-//                         createUserCmd.content.pass = hashedPass;
-//                         return cmd(createUserCmd);
-//                     })
-//                     .then(() => res())
-//                     .catch(err => rej(err));
-//             } else {
-//                 rej("lib@createUser: new user must have fields: 'user', 'pass' and 'role'");
-//             }
-//         });
-//     };
-//     const deleteUsers = (query, queryOptions) => {
-//         var deleteUsersCmd = {
-//             type: "mongo",
-//             method: "DELETE",
-//             db: "users",
-//             collection: "users",
-//             query: query,
-//             queryOptions: queryOptions
-//         };
-
-//         return cmd(deleteUsersCmd);
-//     };
-//     return new Promise((res, rej) => {
-//         console.log("Creating users...");
-//         deleteUsers({}) //Borró todos los usuarios viejos
-//             .then(() => createUser({ user: "Admin", pass: "123456", role: "admin" }))
-//             .then(() => createUser({ user: "INTI", pass: "INTI-MB", role: "client" }))
-//             .then(() => createUser({ user: "URBE", pass: "URBE-MB", role: "client" }))
-//             .then(() => createUser({ user: "LEO", pass: "LEO-MB", role: "client" }))
-//             .then(() => createUser({ user: "FACEID", pass: "FACEID-MB", role: "client" }))
-//             .then(() => res())
-//             .catch(err => {
-//                 rej(err);
-//                 console.log("Creating failed: " + err);
-//             });
-//     });
-// };
-
-// const checkAccessToken = (req, res, criteria) => {
-//     return new Promise((resolve, reject) => {
-//         try {
-//             console.log(req.headers);
-//             var accessToken = req.cookies['access-token'];
-//             if (accessToken == null || accessToken == undefined) {
-//                 accessToken = req.headers['access-token'];
-//                 if (accessToken != null && accessToken != undefined) {
-//                     decodeJWT(accessToken)
-//                         .then(res => {
-//                             accessToken = res;
-//                             console.log(accessToken);
-//                             console.log(criteria);
-//                             if (validate(accessToken, criteria)) {
-//                                 console.log(`${accessToken.user} with ${accessToken.role} role, logged in!`);
-//                                 resolve(accessToken);
-//                             } else {
-//                                 console.log(`${accessToken.user} with ${accessToken.role} role, failed to logged in!`);
-//                                 reject("access-token invalid");
-//                             }
-//                         })
-//                         .catch(err => reject(err));
-//                 } else
-//                     reject("no access-token");
-//             } else {
-//                 decodeJWT(accessToken.replace(/"/g, ""))
-//                     .then(res => {
-//                         accessToken = res;
-//                         if (validate(accessToken, criteria)) {
-//                             console.log(`${accessToken.user} with ${accessToken.role} role, logged in!`);
-//                             resolve(accessToken);
-//                         } else {
-//                             console.log(`${accessToken.user} with ${accessToken.role} role, failed to logged in!`);
-//                             reject("access-token invalid");
-//                         }
-//                     })
-//                     .catch(err => reject(err));
-//             }
-//         } catch (error) {
-//             reject(error);
-//         }
-//     });
-// };
-
-
-module.exports = { views, login, query, fetch, fetchGitFile, decodeAccessToken, validateJSON, setUTCTimezoneTo };
+module.exports = { views, login, query, fetch, fetchGitFile, decodeAccessToken, encrypt, validateJSON, setUTCTimezoneTo, fcm };

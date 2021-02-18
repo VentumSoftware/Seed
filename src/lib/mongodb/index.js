@@ -139,6 +139,7 @@ const get = async (database, collection, query, queryOptions) => {
         var db = await getDb(database);
         var col = await db.collection(collection);
         var res = await col.find(query, queryOptions);
+        console.log(res);
         return res.toArray();
     } catch (error) {
         console.log(error);
@@ -240,6 +241,7 @@ const deleteOne = async (database, collection, query, queryOptions) => {
         var db = await getDb(database);
         var col = await db.collection(collection);
         var res = await col.deleteOne(query, queryOptions);
+        console.log(res);
         return res;
     } catch (error) {
         console.log(error);
@@ -253,7 +255,9 @@ const deleteMany = async (database, collection, query, queryOptions) => {
         console.log(`mongo@deleteMany: db: ${database} col: ${collection} q: ${query} qo:${queryOptions}`);
         var db = await getDb(database);
         var col = await db.collection(collection);
-        await col.deleteMany(query, queryOptions);
+        var res = await col.deleteMany(query, queryOptions);
+        console.log(`Deleted docs: ${res.deletedCount}`);
+        return res;
     } catch (error) {
         console.log(error);
         throw "Failed to deletmany!";
@@ -347,7 +351,7 @@ const setup = async (env, ADN) => {
             },
             {}
         );
-
+        
         var hashedPass = await crypto.encrypt(env.adminPass);
         await post("admin",
             "users",

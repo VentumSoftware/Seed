@@ -23,13 +23,8 @@ const cmd = (msg) => {
 
 // Inicializo el repositorio del proyecto
 const setup = async (env, ADN) => {
-    try {
-        await mongoDb.setup(env.mongo, ADN).catch(e => "Mongodb setup failed! " + e);
-        //await mariaDb.setup(env, ADN).catch(e => console.log("Failed to setup MariaDB! " + e));
-    } catch (e) {
-        console.log(e);
-        throw (e);
-    }
+    await mongoDb.setup(env.mongo, ADN).catch(e => "Mongodb setup failed! " + e);
+    //await mariaDb.setup(env, ADN).catch(e => console.log("Failed to setup MariaDB! " + e));
 };
 
 module.exports = { setup, cmd };

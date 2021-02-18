@@ -9,7 +9,7 @@ const env = require('./env');
 var server = null;
 
 //Esto sirve para resetear el servidor
-const reset = async () => {
+const reset = async (env) => {
     try {
         console.log(`App@Reset - Restarting App...`);
         //Si ya hay una app corriendo la apago
@@ -37,7 +37,7 @@ const start = async () => {
         //TODO: seguramente esto se va a ir en el futuro
         //Agrego un endpoint en otro puerto para poder resetear la app remotamente
         await seed.addDevOpsPort(env, reset);
-        await reset();
+        await reset(env);
     } catch (e) {
         console.log("Error starting app: " + e);
         throw e;
