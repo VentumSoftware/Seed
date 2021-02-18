@@ -2,6 +2,7 @@ const crypto = require('../encryptation');
 const MongoClient = require('mongodb').MongoClient;
 
 var client = null;
+var runs = [];
 
 /*---------------------------------INICIALIZACION DE MONGODB -------------------------------------------------
 --------------------------------------------------------------------------------------------------------------
@@ -147,6 +148,24 @@ const get = async (database, collection, query, queryOptions) => {
     
 };
 //FUNCION PARA ACTUALIZAR LOS VALORES DE UN DOCUMENTO
+const updateOne = async (database,collection, filter, update, options) => {
+    try {
+        console.log(`mongo@get: db: ${database} col: ${collection} q: ${filter} qo:${options} updValues:${update}`);
+        query = formatQuery(filter);
+        queryOptions = formatQuery(options);
+        update = formatQuery(update);
+
+        let db = await getDb(database);
+        let col = await db.collection(collection);
+        let res = await col.updateOne(query, update, queryOptions);
+        return res;
+    } catch (err) {
+        console.log(err);
+        throw `Failed to update!`;
+    }  
+};
+
+//FUNCION PARA ACTUALIZAR LOS VALORES DE UN DOCUMENTO
 //TODO: Este update no es un update (replaceOne)
 const update = async (database, collection, replacement, query, queryOptions) => {
     try {
@@ -263,6 +282,8 @@ const query = async (msg) => {
                     return await post(msg.db, msg.col, msg.content)
                 case 'GET':
                     return await get(msg.db, msg.col, msg.query, msg.queryOptions)
+                case 'UPDATE_ONE':
+                    return await updateOne(msg.db, msg.col, msg.filter, msg.update, msg.options);    
                 case 'UPDATE':
                     return await update(msg.db, msg.col, msg.replacement, msg.query, msg.content);
                 case 'DELETE_ONE':
@@ -299,6 +320,16 @@ const getCollections = async (dbName) => {
     }
 };
 
+const setRecorridos = (ADN) => {
+    Object.values(ADN.queuesListeners).forEach(async (listener) => {
+        if (listener.queue === "recorridos") {
+            console.log("Seteando Runs...");
+            return await listener.action();
+        }
+    });
+}
+
+
 const setup = async (env, ADN) => {
 
     try {
@@ -308,6 +339,9 @@ const setup = async (env, ADN) => {
             throw "Failed to connecto to client at: " + env.URI;
         });
         console.log(`Mongodb: cliente connected succesfully to ${env.URI}`);
+        //Popula la base de datos con los recorridos a partir de los eventos de INTI
+        //console.log("Iniciando Runs");
+        //await setRecorridos(ADN);
 
         //Borro admins anteriores
         await deleteMany("admin",
@@ -326,7 +360,6 @@ const setup = async (env, ADN) => {
                 role: "admin",
                 pass: hashedPass
             });
-    
         
     } catch (err) {
         console.log(err);
