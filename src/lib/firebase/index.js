@@ -20,15 +20,22 @@ const send = async (devicesTokens, msg, retrys = 1) => {
         notification: msg.notification
       });
 
-      sender.send(message,
-        { registrationTokens: devicesTokens },
+      sender.send(
+        message,
+        {
+          registrationTokens: devicesTokens
+        },
         retrys,
         (err, response) => {
-          if (err) throw err
-          var failed_tokens = devicesTokens.filter((token, i) => response.results[i].error != null);
-          console.log('Res:', response);
-          console.log('These tokens are no longer ok:', failed_tokens);
-          res({ res: response, failed_tokens: failed_tokens });
+          if (err) {
+            console.log(err);
+            rej("Failed to send Firebase Msg!");
+          } else {
+            var failed_tokens = devicesTokens.filter((token, i) => response.results[i].error != null);
+            console.log('Res:', response);
+            console.log('These tokens are no longer ok:', failed_tokens);
+            res({ res: response, failed_tokens: failed_tokens });
+          }
         });
     } catch (error) {
       console.log(error);

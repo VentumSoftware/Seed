@@ -46,13 +46,16 @@ const setMiddleWare = (app, adn) => {
     //TODO: ver q es el favicon y si es necesario esto
     //app.use(favicon(path.join(__dirname, '../../public/assets/icons', 'favicon.ico')));
     // Agrego una función que me devuelve la URL que me resulta cómoda
+    
+
     app.use((req, res, next) => {
-        req.getUrl = () => {
-            const url = req.protocol + "://" + req.get('host') + req.originalUrl;
-            console.log("Req URL: %s", url);
-            return url;
-        };
-        req.getUrl();
+        
+        req.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        req.url = req.protocol + "://" + req.get('host') + req.originalUrl;
+
+        console.log("Req IP: %s", req.ip);
+        console.log("Req URL: %s", req.url);
+
         return next();
     });
     // TODO: SEGURIDAD, VALIDACIONES, ETC...
@@ -142,20 +145,6 @@ const setEndpoints = (app, adn) => {
                         }
                         break;
                     case "PATCH":
-                        // if (col) {
-                        //     const id = params[2] || null;
-                        //     result = await query({
-                        //         method: "UPDATE",
-                        //         db: db,
-                        //         col: col,
-                        //         query: { _id: ObjectID(id) }, 
-                        //         replacement: req.body,
-                        //         queryOptions: {limit: 1000}
-                        //     });
-                        //     res.send(result.ops[0]);
-                        // } else {
-                        //     res.send("Invalid path!");
-                        // }
                         break;
                     case "DELETE":
                         if (col) {
@@ -191,7 +180,7 @@ const setEndpoints = (app, adn) => {
         var endpoint = adn.apis;
         var params = req.params[0].split('/');
         var keys = Object.values(params);
-        console.log(keys);
+
         //Recorro el objeto "endpoint" con los parametros del request
         for (let index = 0; index < keys.length; index++) {
             if (keys[index] in endpoint) endpoint = endpoint[keys[index]];
