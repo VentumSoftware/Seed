@@ -78,7 +78,23 @@ const setEndpoints = (app, adn) => {
 
     // Creo las páginas
     app.all('/pages/*', async (req, res) => {
+        var endpoint = adn.pages;
+        var params = req.params[0].split('/');
+        var keys = Object.values(params);
 
+        //Recorro el objeto "endpoint" con los parametros del request
+        for (let index = 0; index < keys.length; index++) {
+            if (keys[index] in endpoint) endpoint = endpoint[keys[index]];
+            else break;
+        }
+
+        if (typeof (endpoint) == 'function') {
+            await endpoint(req, res);
+        }
+        else {
+            console.log("Error endpoint type: " + typeof (endpoint));
+            res.send("Endpoint inválido!");
+        }
     });
 
     // Creo las rutas REST

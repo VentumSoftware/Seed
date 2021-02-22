@@ -8,12 +8,15 @@ const fcm = require('../../lib/firebase');
 const { query } = require('../../lib/mongodb');
 const createJWT = crypto.createJWT;
 const encrypt = crypto.encrypt;
+const env = require('../../env');
+const fs = require('fs');
 
 const decodeAccessToken = async (req) => {
     try {
         var hashedToken = req.headers['access-token'] || req.cookies['access-token'] || req.body['access-token'];
         if (hashedToken) {
-            hashedToken.replace(/"/g, ""); //Las cookies traen las comillas
+            hashedToken = hashedToken.replace(/"/g, ""); //Las cookies traen las comillas
+            console.log("hashedToken: " + hashedToken);
             var token = await crypto.decodeJWT(hashedToken);
             return token;
         }
@@ -77,15 +80,17 @@ const login = async (req, res) => {
 const fetchGitFile = async (path) => {
     //TODO: VALIDATE path
     const gitAPI = "";
-    fetch(gitAPI + "/" + path)
+    //const path = gitAPI + "/" + path;
 
     // Path de donde voy a sacar los JSONs para views
-    const gitPath = "VentumSoftware/Ingesur-ERP_Views/views.json";
-    const data = await fetchJSON(gitPath, {
-        'Authorization': `token ${gitToken}`,
+    
+    const gitPath = "https://api.github.com/VentumSoftware/ADN-Masterbus-IOT/blob/master/dashboard.json";
+    console.log("Fetching: " + gitPath);
+    const data = await fetch(gitPath, {
+        'Authorization': `token ${env.ADN.gitAuthToken}`,
         'Accept': 'application/vnd.github.v3.raw'
     });
-    views.dashboard(req, res, data.dashboard);
+    return data;
 };
 
 const validateJSON = (obj, query) => {
@@ -108,4 +113,4 @@ const setUTCTimezoneTo = (dateToTransform, timezone) => {
 };
 
 
-module.exports = { views, login, query, fetch, fetchGitFile, decodeAccessToken, encrypt, validateJSON, setUTCTimezoneTo, fcm };
+module.exports = { views, login, query, fetch, fetchGitFile, decodeAccessToken, encrypt, validateJSON, setUTCTimezoneTo, fcm,fs };

@@ -24,9 +24,11 @@ const encrypt = async(input) => {
     }
 };
 
-const compareEncrypted = (data, hashedData) => {
+const compareEncrypted = async (data, hashedData) => {
     console.log("Crypto comparing: " + data + " with " + hashedData);
-    return bcrypt.compare(data, hashedData);
+    var val = await bcrypt.compare(data, hashedData).catch(e => console.log(e));
+    console.log("Crypto compare: " + val.toString());
+    return val;
 };
 
 const createJWT = (token, expiresIn) => {

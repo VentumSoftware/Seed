@@ -139,7 +139,6 @@ const get = async (database, collection, query, queryOptions) => {
         var db = await getDb(database);
         var col = await db.collection(collection);
         var res = await col.find(query, queryOptions);
-        console.log(res);
         return res.toArray();
     } catch (error) {
         console.log(error);
