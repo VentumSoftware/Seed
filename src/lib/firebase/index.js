@@ -11,11 +11,11 @@ const send = async (devicesTokens, msg, retrys = 1) => {
       var message = new gcm.Message({
         collapseKey: msg.options.collapseKey || 'demo',
         priority: msg.options.priority || 'high',
-        contentAvailable: msg.options.priority || true,
-        delayWhileIdle: msg.options.priority || true,
-        timeToLive: msg.options.priority || 3,
-        restrictedPackageName: msg.options.priority || "somePackageName",
-        dryRun: msg.options.priority || true,
+        contentAvailable: msg.options.contentAvailable || true,
+        delayWhileIdle: msg.options.delayWhileIdle || true,
+        timeToLive: msg.options.timeToLive || 3,
+        restrictedPackageName: msg.options.restrictedPackageName,
+        dryRun: msg.options.dryRun || false,
         data: msg.data,
         notification: msg.notification
       });
