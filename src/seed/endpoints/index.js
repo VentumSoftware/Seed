@@ -3,7 +3,7 @@ const { graphqlHTTP } = require("express-graphql");
 const { makeExecutableSchema } = require("graphql-tools");
 const { getCollections, query } = require("../../lib/mongodb");
 const ObjectID = require('mongodb').ObjectID;
-// const path = require('path'); // Librería para unificar los path independiente del OS en el que estamos
+ const path = require('path'); // Librería para unificar los path independiente del OS en el que estamos
 // const favicon = require('serve-favicon');
 // const webSocket = require('../../lib/websocket');
 const {
@@ -76,6 +76,10 @@ const setEndpoints = (app, adn) => {
     // Creo las páginas
     app.all('/pages/*', async (req, res) => {
 
+    });
+
+    app.get('/mapa', async(req,res)=>{
+        res.status(200).sendFile(path.join(__dirname+"../../../mapa.html"));
     });
 
     // Creo las rutas REST

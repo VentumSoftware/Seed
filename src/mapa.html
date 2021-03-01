@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+   crossorigin=""></script>
+    <title>Mapa</title>
+</head>
+<body>
+    <div>
+        <div>
+            <h1>Mapa</h1>
+            <div id="mapid" style="height: 480px;">
+
+            </div>
+        </div>
+    </div>
+    <script>
+        drawRunOf(25);
+        //DIBUJA EL RECORRIDO DE UN SOLO IMEI ----- TODO: DIBUJAR PARA TODOS LOS IMEI
+        async function drawRunOf(imeiNumber){
+                
+            var mymap = L.map('mapid').setView([-34.7824, -58.3995], 13);
+            L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZ29uemFsb3NhbnRvIiwiYSI6ImNra2g3OXdnNDA2eXgyb3BrZ2VhN3FiZncifQ.GmjKnrwqMiR7Xbvusdfqeg', {
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                maxZoom: 18,
+                id: 'mapbox/streets-v11',
+                tileSize: 512,
+                zoomOffset: -1,
+                accessToken: 'pk.eyJ1IjoiZ29uemFsb3NhbnRvIiwiYSI6ImNra2g3OXdnNDA2eXgyb3BrZ2VhN3FiZncifQ.GmjKnrwqMiR7Xbvusdfqeg'
+            }).addTo(mymap);
+            
+            var latlngs = await getRunCoordsFrom_(imeiNumber);
+            console.log(latlngs);
+
+            var polyline = L.polyline(latlngs, {
+                color: 'red',
+                weight: 5,
+                opacity: 1
+
+            })
+            .addTo(mymap);
+        }    
+
+
+
+        async function getRunCoordsFrom_(imeiNumber){
+
+            var res = await fetch("http://localhost:80/rest/inti/recorridos", {
+                method:"GET",
+                headers: {
+                    "access-token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Il9pZCI6IjYwMmZlNDQxY2Q0NWRiMDdmNDQyNmEyMCIsInVzZXIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiJ9LCJpYXQiOjE2MTM3NjQ1MDIsImV4cCI6MTYxMzc2ODEwMn0.MvyOIu8w6M_h74SZhKOZL7q0lFggsuW4KHdkA7rf7W0"
+                }
+            });
+            const response = await res.json();
+            var coords = coordinatesFrom_(response, imeiNumber);
+            return(coords);            
+        }
+        
+        function coordinatesFrom_(obj, imeiNumber){
+            let listaDeCoords = []
+            console.log(obj);
+            //ITERA SOBRE TODOS LOS ELEMENTOS TRAIDOS. TODO: ITERAR CONDICIONALMENTE.
+            for (const element in obj) {
+                if (Object.hasOwnProperty.call(obj, element) && obj[element].imei === imeiNumber) {                    
+                    var elem = (obj[element]);
+                    console.log(elem);
+                    let run = elem.recorrido;
+                    for (let i = 0; i < run.length; i++) {
+                        const element = run[i];
+                        let position = Object.keys(element).toString();
+                        console.log(position);
+                        switch (position) {
+                            case "inicioPos":
+                                listaDeCoords.push(element.inicioPos);
+                                break;
+                            case "runningPos":
+                                for (let i = 0; i < element.runningPos.length; i++) {
+                                    const elem = element.runningPos[i];
+                                    listaDeCoords.push(elem);
+                                }
+                                break;
+                            case "finalPos":
+                                listaDeCoords.push(element.finalPos);
+                                break;
+                            default:
+                                console.error("Valores incorrectos");
+                                break;
+                        }
+
+                        //listaDeCoords.push([element.inicioPos, element.runningPos, element.finalPos]); 
+                    }
+                    console.log(listaDeCoords);
+                }
+            }
+            return(listaDeCoords);
+            
+        }
+    </script>
+</body>
+</html>
