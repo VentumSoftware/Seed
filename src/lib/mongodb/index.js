@@ -132,13 +132,14 @@ const post = async(database, collection, document) => {
 // Funcion que me devuelve un array de todos los elementos de la collecion que coinciden con el query
 const get = async (database, collection, query, queryOptions) => {
     try {
-        console.log(`mongo@get: db: ${database} col: ${collection} q: ${query} qo:${queryOptions}`);
+        //console.log(`mongo@get: db: ${database} col: ${collection} q: ${query} qo:${queryOptions}`);
         query = formatQuery(query);
         queryOptions = formatQuery(queryOptions);
 
         var db = await getDb(database);
         var col = await db.collection(collection);
         var res = await col.find(query, queryOptions);
+        //console.log(res);
         return res.toArray();
     } catch (error) {
         console.log(error);
@@ -150,9 +151,9 @@ const get = async (database, collection, query, queryOptions) => {
 const updateOne = async (database,collection, filter, update, options) => {
     try {
         console.log(`mongo@get: db: ${database} col: ${collection} q: ${filter} qo:${options} updValues:${update}`);
-        query = formatQuery(filter);
-        queryOptions = formatQuery(options);
-        update = formatQuery(update);
+        var query = formatQuery(filter);
+        var queryOptions = formatQuery(options);
+        var update = formatQuery(update);
 
         let db = await getDb(database);
         let col = await db.collection(collection);
@@ -168,9 +169,9 @@ const updateOne = async (database,collection, filter, update, options) => {
 //TODO: Este update no es un update (replaceOne)
 const update = async (database, collection, replacement, query, queryOptions) => {
     try {
-        console.log(`mongo@Update: db: ${database} col: ${collection} q: ${query} qo: ${queryOptions}`);
-        query = formatQuery(query);
-        queryOptions = formatQuery(queryOptions);
+        //console.log(`mongo@Update: db: ${database} col: ${collection} q: ${query} qo: ${queryOptions}`);
+        var query = formatQuery(query);
+        var queryOptions = formatQuery(queryOptions);
 
         var db = await getDb(database);
         var col = await db.collection(collection);
@@ -272,7 +273,7 @@ const validateMsg = (msg) => {
 
 const query = async (msg) => {
     try {
-        console.log("Mongodb query: " + JSON.stringify(msg));
+        //console.log("Mongodb query: " + JSON.stringify(msg));
         if (validateMsg(msg))
             switch (msg.method) {
                 case 'AGGREGATE':
@@ -319,13 +320,9 @@ const getCollections = async (dbName) => {
     }
 };
 
-const setRecorridos = (ADN) => {
-    Object.values(ADN.queuesListeners).forEach(async (listener) => {
-        if (listener.queue === "recorridos") {
-            console.log("Seteando Runs...");
-            return await listener.action();
-        }
-    });
+//Setea la base de datos de recorridos al iniciar el server
+const initRecorridos = async (ADN) => {
+    await ADN.initRecorridos();
 }
 
 
@@ -338,9 +335,9 @@ const setup = async (env, ADN) => {
             throw "Failed to connecto to client at: " + env.URI;
         });
         console.log(`Mongodb: cliente connected succesfully to ${env.URI}`);
+
         //Popula la base de datos con los recorridos a partir de los eventos de INTI
-        //console.log("Iniciando Runs");
-        //await setRecorridos(ADN);
+        await initRecorridos(ADN);
 
         //Borro admins anteriores
         await deleteMany("admin",
