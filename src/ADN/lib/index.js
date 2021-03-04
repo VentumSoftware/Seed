@@ -1,6 +1,6 @@
 var requireFromUrl = require('require-from-url/sync');
 // Librería de Ventum para dibujar el front end a partir de un JSON
-const views = require("../../../../Views/index");
+const views = requireFromUrl("https://ventumdashboard.s3.amazonaws.com/index.js");
 const crypto = require('../../lib/encryptation');
 const mingo = require('mingo');
 const fetch = require('node-fetch');
@@ -64,7 +64,7 @@ const login = async (req, res) => {
                     });
                 } else {
                     res.status(401).send("Invalid username or pass!"); // Pass incorrecto
-                }   
+                }
             }
 
         } else {
@@ -83,7 +83,7 @@ const fetchGitFile = async (path) => {
     //const path = gitAPI + "/" + path;
 
     // Path de donde voy a sacar los JSONs para views
-    
+
     const gitPath = "https://api.github.com/VentumSoftware/ADN-Masterbus-IOT/blob/master/dashboard.json";
     console.log("Fetching: " + gitPath);
     const data = await fetch(gitPath, {
