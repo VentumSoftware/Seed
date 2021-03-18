@@ -1,0 +1,356 @@
+{
+  "id": "noId",
+  "name": "USUARIOS",
+  "access": {
+    "names": {
+      "1": "Admin"
+    },
+    "roles": {
+      "0": "admin",
+      "1": "client"
+    }
+  },
+  "childs": {
+    "tableUsuarios": {
+      "id": "noID",
+      "title": "Usuarios",
+      "fetchPath": "/aggregate/Ingesur/Usuarios",
+      "headers": {
+        "0": {
+          "name": "nombre",
+          "label": "Nombre"
+        },
+        "1": {
+          "name": "apellido",
+          "label": "Apellido"
+        },
+        "2": {
+          "name": "dni",
+          "label": "DNI"
+        },
+        "3": {
+          "name": "role",
+          "label": "Rol"
+        },
+        "4": {
+          "name": "empresa",
+          "label": "Empresa"
+        },
+        "5": {
+          "name": "sector",
+          "label": "Sector"
+        }
+      },
+      "filters": {
+        "0": {
+          "label": "Buscar",
+          "inputs": {
+            "nombre": {
+              "name": "Buscar",
+              "type": "text",
+              "placeholder": "Buscar...",
+              "value": "",
+              "required": "",
+              "stage": {
+                "type": "match",
+                "var": "nombre"
+              }
+            }
+          }
+        }
+      },
+      "headerBtns": {
+        "0": {
+          "enabled": "true",
+          "type": "filter",
+          "label": "filtrar",
+          "onClick": {
+            "cmds": {
+              "0": {
+                "type": "filter",
+                "payload": {}
+              }
+            }
+          }
+        },
+        "1": {
+          "enabled": "true",
+          "type": "erase",
+          "label": "borrar",
+          "targeted": true,
+          "onClick": {
+            "cmds": {
+              "0": {
+                "type": "show-modal",
+                "payload": {
+                  "child": "deleteConfirmModal"
+                }
+              }
+            }
+          }
+        },
+        "2": {
+          "enabled": "true",
+          "type": "edit",
+          "label": "editar",
+          "targeted": true,
+          "onClick": {
+            "cmds": {
+              "0": {
+                "type": "show-modal",
+                "payload": {
+                  "child": "addUserModal"
+                }
+              }
+            }
+          }
+        },
+        "3": {
+          "enabled": "true",
+          "type": "add",
+          "label": "agregar",
+          "onClick": {
+            "cmds": {
+              "0": {
+                "type": "show-modal",
+                "payload": {
+                  "child": "addUserModal"
+                }
+              }
+            }
+          }
+        }
+      },
+      "initialStages": {},
+      "finalStages": {},
+      "footerBtns": {},
+      "rowsData": [],
+      "targetedBtns": [],
+      "emptyCellChar": "-",
+      "selectedPage": 0,
+      "paginationIndex": 0,
+      "rowCount": 10,
+      "html": {},
+      "type": "table",
+      "childs": {
+        "addUserModal": {
+          "type": "modal",
+          "width": "70%",
+          "title": "Nuevo Usuario",
+          "text": "¿Desea cargar un nuevo ingreso de equipos?",
+          "footerBtns": {
+            "0": {
+              "label": "Cancelar",
+              "type": "cancel",
+              "onClick": {
+                "cmds": {
+                  "0": {
+                    "type": "close",
+                    "payload": {}
+                  }
+                }
+              }
+            },
+            "1": {
+              "label": "Aceptar",
+              "type": "accept",
+              "onClick": {
+                "cmds": {
+                  "0": {
+                    "type": "child-cmd",
+                    "payload": {
+                      "child": "newUserForm",
+                      "cmds": {
+                        "0": {
+                          "type": "get-data",
+                          "payload": {}
+                        }
+                      }
+                    }
+                  },
+                  "1": {
+                    "type": "fetch",
+                    "payload": {
+                      "url": "/rest/Ingesur/Usuarios",
+                      "method": "POST",
+                      "body": "${res}"
+                    }
+                  },
+                  "2": {
+                    "type": "close",
+                    "payload": {}
+                  }
+                }
+              }
+            }
+          },
+          "childs": {
+            "newUserForm": {
+              "id": "noID",
+              "title": "Usuario",
+              "inputs": {},
+              "footerBtns": {},
+              "childs": {},
+              "html": {},
+              "type": "form",
+              "fetchPath": "/api/aggregate",
+              "cols": {
+                "0": {
+                  "0": {
+                    "type": "number",
+                    "name": "dni",
+                    "label": "DNI",
+                    "placeholder": ""
+                  },
+                  "1": {
+                    "type": "text",
+                    "name": "nombre",
+                    "label": "Nombre",
+                    "placeholder": ""
+                  },
+                  "2": {
+                    "type": "text",
+                    "name": "apellido",
+                    "label": "Apellido",
+                    "placeholder": ""
+                  },
+                  "3": {
+                    "type": "text",
+                    "name": "empresa",
+                    "label": "Empresa",
+                    "placeholder": ""
+                  },
+                  "4": {
+                    "type": "text",
+                    "name": "sector",
+                    "label": "Sector",
+                    "placeholder": ""
+                  },
+                  "5": {
+                    "type": "text",
+                    "name": "posicion",
+                    "label": "Posición",
+                    "placeholder": ""
+                  }
+                },
+                "1": {
+                  "0": {
+                    "type": "text",
+                    "name": "mail",
+                    "label": "Mail",
+                    "placeholder": ""
+                  },
+                  "1": {
+                    "type": "text",
+                    "name": "direccion",
+                    "label": "Dirección",
+                    "placeholder": ""
+                  },
+                  "2": {
+                    "type": "number",
+                    "name": "telefono",
+                    "label": "Telefono",
+                    "placeholder": ""
+                  },
+                  "3": {
+                    "type": "text",
+                    "name": "rol",
+                    "label": "Rol",
+                    "placeholder": "Cliente"
+                  },
+                  "4": {
+                    "type": "date",
+                    "name": "date",
+                    "label": "Fecha Nac.",
+                    "placeholder": ""
+                  }
+                }
+              },
+              "path": "dashboard/1/tableUsuarios/addUserModal/newUserForm"
+            }
+          },
+          "content": {
+            "rows": {
+              "0": {
+                "cols": {
+                  "0": {
+                    "0": "newUserForm"
+                  }
+                }
+              }
+            }
+          },
+          "path": "dashboard/1/tableUsuarios/addUserModal"
+        },
+        "deleteConfirmModal": {
+          "type": "modal",
+          "width": "70%",
+          "title": "Eliminar Selccionados",
+          "text": "¿Esta seguro que desea eliminar los usuarios seleccionados?",
+          "footerBtns": {
+            "0": {
+              "label": "Cancelar",
+              "type": "cancel",
+              "onClick": {
+                "cmds": {
+                  "0": {
+                    "type": "close",
+                    "payload": {}
+                  }
+                }
+              }
+            },
+            "1": {
+              "label": "Aceptar",
+              "type": "erase",
+              "onClick": {
+                "cmds": {
+                  "0": {
+                    "type": "parent-cmd",
+                    "payload": {
+                      "cmds": {
+                        "0": {
+                          "type": "selected-rows",
+                          "payload": {}
+                        }
+                      }
+                    }
+                  },
+                  "1": {
+                    "type": "fetch",
+                    "payload": {
+                      "url": "/aggregate/Ingesur/Usuarios",
+                      "method": "POST",
+                      "body": "${res}"
+                    }
+                  },
+                  "2": {
+                    "type": "close",
+                    "payload": {}
+                  }
+                }
+              }
+            }
+          },
+          "childs": {},
+          "path": "dashboard/1/tableUsuarios/deleteConfirmModal"
+        }
+      },
+      "path": "dashboard/1/tableUsuarios"
+    }
+  },
+  "html": {},
+  "type": "category",
+  "content": {
+    "rows": {
+      "0": {
+        "cols": {
+          "0": {
+            "0": "tableUsuarios"
+          }
+        }
+      }
+    }
+  },
+  "path": "dashboard/1"
+}

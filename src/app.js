@@ -5,7 +5,6 @@ const seed = require('./seed');
 // JSON con todas las variables de entorno y config
 const env = require('./env');
 
-//TODO: agregar certificados ssl y caa
 var server = null;
 
 //Esto sirve para resetear el servidor

@@ -25,6 +25,7 @@ const setPublicFolder = (app, adn) => {
 
 //Agrego todos los middlewares
 const setMiddleWare = (app, adn) => {
+    const helmet = require("helmet");
     const multer = require('multer');
     const upload = multer({ dest: 'public/uploads/' });
     const cookieParser = require('cookie-parser') // Herramienta para parsear las cookies
@@ -32,6 +33,8 @@ const setMiddleWare = (app, adn) => {
     const morgan = require('morgan'); // Herramienta para loggear
     //Middlewares:
 
+    //Middleware que agrega algo de seguridad a express
+    //app.use(helmet()); //Esta comentado porque sino no me andan la paginas por algo del cross-sitting scripting
     //"Morgan" es una herramienta para loggear
     app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
     console.log(`endpoints@setup: 'morgan' middleware aagregado`);
@@ -52,10 +55,11 @@ const setMiddleWare = (app, adn) => {
         
         req.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
         req.url = req.protocol + "://" + req.get('host') + req.originalUrl;
-
+        
         console.log("Req IP: %s", req.ip);
         console.log("Req URL: %s", req.url);
-
+        console.log("Req headers: %s", req.headers);
+        console.log("Req body: %s", req.body);
         return next();
     });
     // TODO: SEGURIDAD, VALIDACIONES, ETC...
@@ -103,9 +107,16 @@ const setEndpoints = (app, adn) => {
             var params = req.params[0].split('/');
             var result = {};
 
+            const querys = req.query;
             const structure = adn.rest;
             const db = params[0] || null;
             const col = params[1] || null;
+            const aggregate = params[2] || null;
+
+            //Creo un endpoint especial para aggregate, ya que no existe un metodo http para esto
+            if (aggregate === "aggregate") {
+                
+            }
 
             const token = await decodeAccessToken(req)
                 .catch(e => console.log(e));
@@ -119,8 +130,8 @@ const setEndpoints = (app, adn) => {
                                 method: "GET",
                                 db: db,
                                 col: col, 
-                                query: {},
-                                queryOptions: {limit: 1000}
+                                query:  querys.query || {},
+                                queryOptions: JSON.stringify(querys.options) || {limit: 1000}
                             });
                             res.send(result);
                         } else if (db) {
@@ -137,7 +148,8 @@ const setEndpoints = (app, adn) => {
                                 db: db,
                                 col: col,
                                 content: req.body,
-                                queryOptions: {limit: 1000}
+                                query: querys.query || {},
+                                queryOptions:JSON.stringify(querys.options) || {limit: 1000}
                             });
                             res.send(result.ops[0]);
                         } else {
@@ -153,7 +165,7 @@ const setEndpoints = (app, adn) => {
                                 col: col,
                                 query: { _id: ObjectID(id) }, 
                                 replacement: req.body,
-                                queryOptions: {limit: 1000}
+                                queryOptions: JSON.stringify(querys.options) || {limit: 1000}
                             });
                             res.send(result.ops[0]);
                         } else {
@@ -169,7 +181,8 @@ const setEndpoints = (app, adn) => {
                                 method: "DELETE_ONE",
                                 db: db,
                                 col: col,
-                                query: { _id: ObjectID(id) }
+                                query: { _id: ObjectID(id) },
+                                queryOptions: JSON.stringify(querys.options) || {limit: 1000}
                             });
                             res.send(result);
                         } else {
@@ -182,6 +195,43 @@ const setEndpoints = (app, adn) => {
                         break;
                 }
             else {
+                console.log("Invalid token!");
+                res.status(401).send("Invalid token!");
+            }
+        } catch (error) {
+            console.log(error);
+            res.status(500).send("Something went wrong!");
+        }
+    });
+
+    // Enpoint especial "Aggregate"
+    app.all('/aggregate/*', async (req, res) => {
+        try {
+            var params = req.params[0].split('/');
+            var result = {};
+
+            const db = params[0];
+            const col = params[1];
+            const pipeline = req.body.pipeline;
+            const queryOptions = req.body.queryOptions;
+
+            const token = await decodeAccessToken(req).catch(e => console.log(e));
+            const valid = validateJSON(token, { $or: [{ role: "client" }, { role: "admin" }] })
+
+            if (valid) {
+                if (col) {
+                    result = await query({
+                        method: "AGGREGATE",
+                        db: db,
+                        col: col, 
+                        pipeline: pipeline,
+                        options: queryOptions || {limit: 1000}
+                    });
+                    res.send(result);
+                } else {
+                    res.send("Invalid path!");
+                }
+            } else {
                 console.log("Invalid token!");
                 res.status(401).send("Invalid token!");
             }

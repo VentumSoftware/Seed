@@ -95,7 +95,7 @@ function aggregate(database, collection, pipeline, options) {
                 return col.aggregate(JSON.parse(pipeline), { "allowDiskUse": true }).toArray();
             })
             .then((res) => {
-                console.log(`mongo@aggregate: result: ${res}`);
+                console.log(`mongo@aggregate: result: ${JSON.stringify(res)}`);
                 resolve(res);
             })
             .catch((err) => {
@@ -124,9 +124,6 @@ const post = async(database, collection, document) => {
         throw "Failed to post!";
     }
    
-
-
-    
 };
 
 // Funcion que me devuelve un array de todos los elementos de la collecion que coinciden con el query
