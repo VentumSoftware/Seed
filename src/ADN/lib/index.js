@@ -64,7 +64,7 @@ const login = async (req, res) => {
                     });
                 } else {
                     res.status(401).send("Invalid username or pass!"); // Pass incorrecto
-                }   
+                }
             }
 
         } else {
@@ -83,7 +83,7 @@ const fetchGitFile = async (path) => {
     //const path = gitAPI + "/" + path;
 
     // Path de donde voy a sacar los JSONs para views
-    
+
     const gitPath = "https://api.github.com/VentumSoftware/ADN-Masterbus-IOT/blob/master/dashboard.json";
     console.log("Fetching: " + gitPath);
     const data = await fetch(gitPath, {

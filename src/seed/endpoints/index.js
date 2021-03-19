@@ -15,6 +15,7 @@ const {
     validateJSON,
     setUTCTimezoneTo
 } = require('../../ADN/lib');
+const path = require('path');
 
 
 //Marco la carpeta que voy a compartir con el frontend
@@ -81,6 +82,9 @@ const setEndpoints = (app, adn) => {
     // }));
 
     // Creo las páginas
+    app.get('/mapa', async(req,res)=>{
+        res.status(200).sendFile(path.join(__dirname+"../../../mapa.html"));
+    });
     app.all('/pages/*', async (req, res) => {
         var endpoint = adn.pages;
         var params = req.params[0].split('/');
