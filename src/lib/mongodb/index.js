@@ -334,7 +334,7 @@ const setup = async (env, ADN) => {
         console.log(`Mongodb: cliente connected succesfully to ${env.URI}`);
 
         //Popula la base de datos con los recorridos a partir de los eventos de INTI
-        await initRecorridos(ADN);
+        //await initRecorridos(ADN);
 
         //Borro admins anteriores
         await deleteMany("admin",

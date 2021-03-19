@@ -16,8 +16,8 @@ const send = async (devicesTokens, msg, retrys = 1) => {
         timeToLive: msg.options.timeToLive || 3,
         restrictedPackageName: msg.options.restrictedPackageName,
         dryRun: msg.options.dryRun || false,
-        data: msg.msg.data,
-        notification: msg.notification
+        data: msg.msg.data || {},
+        notification: msg.notification || {}
       });
 
       sender.send(
