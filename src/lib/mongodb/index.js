@@ -95,7 +95,7 @@ function aggregate(database, collection, pipeline, options) {
                 return col.aggregate(JSON.parse(pipeline), { "allowDiskUse": true }).toArray();
             })
             .then((res) => {
-                console.log(`mongo@aggregate: result: ${JSON.stringify(res)}`);
+                console.log(`mongo@aggregate: result: ${res}`);
                 resolve(res);
             })
             .catch((err) => {
@@ -124,6 +124,9 @@ const post = async(database, collection, document) => {
         throw "Failed to post!";
     }
    
+
+
+    
 };
 
 // Funcion que me devuelve un array de todos los elementos de la collecion que coinciden con el query
@@ -317,10 +320,11 @@ const getCollections = async (dbName) => {
     }
 };
 
-//Setea la base de datos de recorridos al iniciar el server
-const initRecorridos = async (ADN) => {
-    await ADN.initRecorridos();
-}
+//TODO: mover initRecorridos() a otro lado, es algo especifico de la app. No de mongoDB
+
+//const initRecorridos = async (ADN) => {
+ //   await ADN.initRecorridos();
+//}
 
 
 const setup = async (env, ADN) => {
