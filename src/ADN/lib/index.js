@@ -1,6 +1,7 @@
 var requireFromUrl = require('require-from-url/sync');
 // Librería de Ventum para dibujar el front end a partir de un JSON
-const views = requireFromUrl("https://ventumdashboard.s3.amazonaws.com/index.js");
+//const views = requireFromUrl("https://ventumdashboard.s3.amazonaws.com/index.js");
+const views = require("../../../../Views/index.js");
 const crypto = require('../../lib/encryptation');
 const mingo = require('mingo');
 const fetch = require('node-fetch');
