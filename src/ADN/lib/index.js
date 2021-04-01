@@ -1,7 +1,6 @@
 var requireFromUrl = require('require-from-url/sync');
 // Librería de Ventum para dibujar el front end a partir de un JSON
-//const views = requireFromUrl("https://ventumdashboard.s3.amazonaws.com/index.js");
-const views = require("../../../../Views/index.js");
+const views = require("../../public/views/index.js");
 const crypto = require('../../lib/encryptation');
 const mingo = require('mingo');
 const fetch = require('node-fetch');
@@ -77,6 +76,58 @@ const login = async (req, res) => {
         res.status(500).send("Internal error with login!");
     }
 };
+const loginUser = async (req, res) => {
+
+    try {
+        if (req.method == "POST") {
+
+            var user = null;
+            var userName = req.body.user;
+            var findUserQuery = {
+                type: "mongo",
+                method: "GET",
+                db: "ingesur",
+                col: "usuarios",
+                query: { mail: userName }
+            };
+
+            var founds = await query(findUserQuery).catch(e => console.log(e));
+
+            console.log(`lib@login:  ${founds.length} ${userName} found in admin/users!`)
+            if (!founds) throw `lib@login: Error looking for user ${userName} in admin/users!`;
+            else if (founds.length == 0) res.status(401).send("Invalid username or pass!"); // No existe el usuario
+            else if (founds.length > 1) throw (`Error: More than one user found with: founds`);
+            else {
+                user = founds[0];
+                var valid = await crypto.compareEncrypted(req.body.pass, user.pass).catch(e => console.log(e));
+                if (valid) {
+                    delete user.pass;
+                    const token = await createJWT(user);
+                    console.log(`lib@login: ${user} logged in!`)
+                    res
+                        .cookie("access-token", JSON.stringify(token), {})
+                        .send({
+                        msg: "Logged in succesfully!",
+                        user: user,
+                        token: token,
+                    });
+                } else {
+                    res.status(401).send("Invalid username or pass!"); // Pass incorrecto
+                }
+            }
+
+        } else {
+            console.log("Invalid method for login: " + req.method);
+            res.status(405).send("Invalid method for login: " + req.method + " use POST instead!");
+        }
+    } catch (e) {
+        console.log(e);
+        res.status(500).send("Internal error with login!");
+    }
+};
+
+
+
 
 const fetchGitFile = async (path) => {
     //TODO: VALIDATE path
@@ -114,4 +165,4 @@ const setUTCTimezoneTo = (dateToTransform, timezone) => {
 };
 
 
-module.exports = { views, login, query, fetch, fetchGitFile, decodeAccessToken, encrypt, validateJSON, setUTCTimezoneTo, fcm,fs };
+module.exports = { loginUser,views, login, query, fetch, fetchGitFile, decodeAccessToken, encrypt, validateJSON, setUTCTimezoneTo, fcm,fs };
