@@ -34,7 +34,7 @@ const setClient = async (uri) => {
         console.log(e);
         throw "Failed to setClient!";
     }
-    
+
 };
 
 const initPool = (dbName) => {
@@ -61,7 +61,7 @@ const getDb = async (db) => {
         console.log(error);
         throw "Failed to getDb";
     }
-    
+
 };
 
 //----------------------------------- IMPLEMENTACION DE FUNCIONES AUXILIARES ---------------------------------------
@@ -105,7 +105,7 @@ function aggregate(database, collection, pipeline, options) {
     })
 }
 
-//U: guardar un documento en la colleccion 
+//U: guardar un documento en la colleccion
 const post = async(database, collection, document) => {
     try {
         console.log(`mongo@post: db: ${database} col: ${collection} doc: ${document}`);
@@ -123,10 +123,10 @@ const post = async(database, collection, document) => {
         console.log(error);
         throw "Failed to post!";
     }
-   
 
 
-    
+
+
 };
 
 // Funcion que me devuelve un array de todos los elementos de la collecion que coinciden con el query
@@ -145,7 +145,7 @@ const get = async (database, collection, query, queryOptions) => {
         console.log(error);
         throw `Failed to get from: ${database}/${collection}`;
     }
-    
+
 };
 //FUNCION PARA ACTUALIZAR LOS VALORES DE UN DOCUMENTO
 const updateOne = async (database,collection, filter, update, options) => {
@@ -162,7 +162,7 @@ const updateOne = async (database,collection, filter, update, options) => {
     } catch (err) {
         console.log(err);
         throw `Failed to update!`;
-    }  
+    }
 };
 
 //FUNCION PARA ACTUALIZAR LOS VALORES DE UN DOCUMENTO
@@ -181,7 +181,7 @@ const update = async (database, collection, replacement, query, queryOptions) =>
         console.log(error);
         throw `Failed to get from: ${database}/${collection}`;
     }
-    
+
 
     // console.log(`mongo@Update: db: ${database} col: ${collection} q: ${query} values: ${updateValues}`);
     // query = formatQuery(query);
@@ -191,7 +191,7 @@ const update = async (database, collection, replacement, query, queryOptions) =>
     //         .then((db) => {
     //             return db.collection(collection);
     //         })
-    //         .then((col) => { //TODO: VERIFICAR QUE LA QUERY TENGA LA ESTRUCTURA SIGUIENTE: updateOne(queryFilter, queryToUpdate) 
+    //         .then((col) => { //TODO: VERIFICAR QUE LA QUERY TENGA LA ESTRUCTURA SIGUIENTE: updateOne(queryFilter, queryToUpdate)
     //             //queryToUpdate es una expresión con el operador $set.
     //             return col.updateOne(query, valuesToUpdate); // {usuario: "Pepito"} , {$set: {codigos: [920,910]}}
     //         })
@@ -283,7 +283,7 @@ const query = async (msg) => {
                 case 'GET':
                     return await get(msg.db, msg.col, msg.query, msg.queryOptions)
                 case 'UPDATE_ONE':
-                    return await updateOne(msg.db, msg.col, msg.filter, msg.update, msg.options);    
+                    return await updateOne(msg.db, msg.col, msg.filter, msg.update, msg.options);
                 case 'UPDATE':
                     return await update(msg.db, msg.col, msg.replacement, msg.query, msg.content);
                 case 'DELETE_ONE':
@@ -302,7 +302,7 @@ const query = async (msg) => {
         console.log(error);
         throw "Failed query!";
     }
-    
+
 };
 
 const getCollections = async (dbName) => {
@@ -328,7 +328,6 @@ const getCollections = async (dbName) => {
 
 
 const setup = async (env, ADN) => {
-
     try {
         if (client) client.close();
         client = await setClient(env.URI).catch(e => {
@@ -348,7 +347,7 @@ const setup = async (env, ADN) => {
             },
             {}
         );
-        
+
         var hashedPass = await crypto.encrypt(env.adminPass);
         await post("admin",
             "users",
@@ -357,7 +356,7 @@ const setup = async (env, ADN) => {
                 role: "admin",
                 pass: hashedPass
             });
-        
+
     } catch (err) {
         console.log(err);
         throw "Failed to setup MongoDB!";

@@ -17,7 +17,7 @@ let vars = {
         gitRepo: process.env.ADN_GIT_REPO || 'ADN-Masterbus-IOT', //Repo de donde voy a descargar el ADN
         gitAuthToken: process.env.ADN_GIT_AUTH_TOKEN || '',
     },
-    
+
     DBs: {
         mongo: {
             URI: process.env.MONGODB_URI || "mongodb://localhost:27017",
@@ -49,7 +49,7 @@ let vars = {
         saltWorkFactor: process.env.SALT_WORK_FACTOR || 10, //A: las vueltas que usa bcrypt para encriptar las password
     }
 
-    
+
 }
 
 module.exports = vars;
