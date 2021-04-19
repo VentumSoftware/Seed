@@ -1,4 +1,4 @@
-import utils from 'http://localhost/public/views/lib/utils.js';
+import utils from '../../lib/utils.js';
 
 const dflt = {
     id: "noId",

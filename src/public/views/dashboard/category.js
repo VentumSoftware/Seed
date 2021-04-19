@@ -1,4 +1,4 @@
-import views from "http://localhost/public/views/views.js";
+import views from "../views.js";
 
 //Caracteristicas de este componente (category)
 const component = {

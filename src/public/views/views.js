@@ -1,20 +1,20 @@
 //Herramientas utiles que usamos por ahí
-import utils from 'http://localhost/public/views/lib/utils.js';
+import utils from './lib/utils.js';
 
 //Componente "root" del view
-import dashboard from "http://localhost/public/views/dashboard/dashboard.js";
+import dashboard from "./dashboard/dashboard.js";
 
 //Componentes que pueden ser hijos del "dashboard"
-import category from 'http://localhost/public/views/dashboard/category.js';
-import categoryParent from 'http://localhost/public/views/dashboard/categoryParent.js';
+import category from './dashboard/category.js';
+import categoryParent from './dashboard/categoryParent.js';
 
 //Componentes que pueden ser hijos del "category"
-import form from 'http://localhost/public/views/dashboard/forms/form.js';
-import table from 'http://localhost/public/views/dashboard/table/table.js';
-import wizard from 'http://localhost/public/views/dashboard/wizard/wizard.js';
-import map from 'http://localhost/public/views/dashboard/maps/maps.js';
-import modal from 'http://localhost/public/views/dashboard/modal/modal.js';
-import chart from 'http://localhost/public/views/dashboard/chart/chart.js';
+import form from './dashboard/forms/form.js';
+import table from './dashboard/table/table.js';
+import wizard from './dashboard/wizard/wizard.js';
+import map from './dashboard/maps/maps.js';
+import modal from './dashboard/modal/modal.js';
+import chart from './dashboard/chart/chart.js';
 
 //Comandos genéricos para cualquier elemento
 var cmds = {

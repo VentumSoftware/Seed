@@ -1,8 +1,8 @@
-import utils from 'https://ventumdashboard.s3.amazonaws.com/lib/utils.js';
-import card from 'https://ventumdashboard.s3.amazonaws.com/dashboard/card/card.js';
-import buttons from 'https://ventumdashboard.s3.amazonaws.com/dashboard/buttons/buttons.js';
-import modal from 'https://ventumdashboard.s3.amazonaws.com/dashboard/modal/modal.js';
-import dashboard from 'https://ventumdashboard.s3.amazonaws.com/dashboard/dashboard.js';
+import utils from '../../lib/utils.js';
+import card from '../card/card.js';
+import buttons from '../buttons/buttons.js';
+import modal from '../modal/modal.js';
+import dashboard from '../dashboard.js';
 
 const dfltState = {
   type: "dialog-box",

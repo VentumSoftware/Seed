@@ -1,4 +1,4 @@
-import views from "http://localhost/public/views//views.js";
+import views from "../views.js";
 //TODO: Ver como podemos hacer para no tener que referenciar esto acá (nos queda "doblemente enlazado")
 
 //Caracteristicas de este componente (dashboard)

@@ -10,7 +10,7 @@ const views = {
                 .then(dom => {
                     var script = dom.window.document.createElement("script");
                     script.type = "module";
-                    var innerHTML = `import views from "http://localhost/public/views/views.js";`;
+                    var innerHTML = `import views from "../public/views/views.js";`;
                     innerHTML += `var globalState = {};`;
                     innerHTML += `globalState.dashboard = views.create(${JSON.stringify(data)});`;
                     innerHTML += `console.log(JSON.stringify(globalState));`;

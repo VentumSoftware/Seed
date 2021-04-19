@@ -1,7 +1,7 @@
-import utils from 'http://localhost/public/views/lib/utils.js';
-import form from 'http://localhost/public/views/dashboard/forms/form.js';
-import modal from 'http://localhost/public/views/dashboard/modal/modal.js';
-import table from 'http://localhost/public/views/dashboard/table/table.js';
+import utils from '../../lib/utils.js';
+import form from '../forms/form.js';
+import modal from '../modal/modal.js';
+import table from '../table/table.js';
 
 //Caracteristicas de este componente (modal)
 const component = {

@@ -1,7 +1,7 @@
-import card from 'http://localhost/public/views/dashboard/card/card.js';
-import buttons from 'http://localhost/public/views/dashboard/buttons/buttons.js';
+import card from '../card/card.js';
+import buttons from '../buttons/buttons.js';
 //import views from '../../views';
-import views from "http://localhost/public/views/views.js";
+import views from "../../views.js";
 
 //Caracteristicas de este componente (category)
 const component = {

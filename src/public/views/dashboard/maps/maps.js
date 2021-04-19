@@ -1,6 +1,6 @@
-import utils from 'https://ventumdashboard.s3.amazonaws.com/lib/utils.js';
-import card from 'https://ventumdashboard.s3.amazonaws.com/dashboard/card/card.js';
-import buttons from 'https://ventumdashboard.s3.amazonaws.com/dashboard/buttons/buttons.js';
+import utils from '../../lib/utils.js';
+import card from '../card/card.js';
+import buttons from '../buttons/buttons.js';
 
 //Caracteristicas de este componente (map)
 const component = {
